@@ -160,7 +160,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 34 "parser.y"
+#line 37 "parser.y"
 {
   number_t                     number;
   double                       double_val;

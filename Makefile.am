@@ -20,7 +20,7 @@
 AUTOMAKE_OPTIONS= foreign subdir-objects
 ACLOCAL_AMFLAGS= -I m4
 
-#
+#	
 # What to build and install
 #
 lib_LTLIBRARIES = libcandbc.la libcanasc.la
@@ -59,15 +59,14 @@ asctomat_SOURCES = src/asctomat/asctomat.c \
                    src/hashtable/hashtable_private.h
 
 asctomat_LDADD     = libcandbc.la libcanasc.la
-AM_CFLAGS          = -DZ_PREFIX=1
 
 # additional include pathes necessary
 INCLUDES = -I$(top_srcdir)/src/libcandbc -I$(top_srcdir)/hashtable
 
 DEFS = $(YYDEBUG)
 
-# YACC & LEX
-AM_YFLAGS = -d
+# YACC & LEX: enable -d for debugging
+# AM_YFLAGS = -d
 
 ## Uncomment to enable debugging of linker script parser
 YYDEBUG = -DYYDEBUG=1
@@ -94,7 +93,7 @@ libcanasc_la_SOURCES= \
         src/libcanasc/messageDecoder.c
 
 libcandbc_la_CPPFLAGS= -I$(top_builddir)/src/libcandbc
-libcandbc_la_LDFLAGS= -version-info 0:0:0
+libcandbc_la_LDFLAGS= -version-info 0:2:0
 
 libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc
-libcanasc_la_LDFLAGS= -version-info 0:0:0
+libcanasc_la_LDFLAGS= -version-info 0:2:0

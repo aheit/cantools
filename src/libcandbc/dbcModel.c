@@ -38,7 +38,7 @@ void attribute_value_free(attribute_value_t *attribute_value)
   if(attribute_value != NULL) {
     switch(attribute_value->value_type) {
     case vt_string:
-      string_free(attribute_value->value.string);
+      string_free(attribute_value->value.string_val);
       break;
     case vt_enum:
       string_free(attribute_value->value.enum_val);
@@ -68,11 +68,11 @@ static void attribute_definition_free(
       string_list_free(attribute_definition->range.enum_list);
 
       /* free default */
-      string_free(attribute_definition->default_value.enum_value);
+      string_free(attribute_definition->default_value.enum_val);
       break;
     case vt_string:
       /* free default */
-      string_free(attribute_definition->default_value.string_value);
+      string_free(attribute_definition->default_value.string_val);
       break;
     }
     free(attribute_definition);
@@ -216,19 +216,19 @@ attribute_value_t * attribute_value_dup(attribute_value_t *orig)
     copy->value_type = orig->value_type;
     switch(orig->value_type) {
     case vt_integer:
-      copy->value.integer    = orig->value.integer;
+      copy->value.int_val    = orig->value.int_val;
       break;
     case vt_float:
       copy->value.double_val = orig->value.double_val;
       break;
     case vt_string:
-      copy->value.string     = string_dup(orig->value.string);
+      copy->value.string_val = string_dup(orig->value.string_val);
       break;
     case vt_enum:
       copy->value.enum_val   = string_dup(orig->value.enum_val);
       break;
     case vt_hex:
-      copy->value.hex = orig->value.hex;
+      copy->value.hex_val    = orig->value.hex_val;
       break;
     }
     return copy;

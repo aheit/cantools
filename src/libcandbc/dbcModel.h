@@ -122,11 +122,11 @@ typedef enum {
 
 /* attribute value union */
 typedef union {
-  sint32       integer;
+  sint32       int_val;
   double       double_val;
-  string_t     string;
+  string_t     string_val;
   string_t     enum_val;
-  uint32       hex;
+  uint32       hex_val;
 } value_union_t;
 
 /* attribute value */
@@ -259,13 +259,7 @@ typedef struct {
   } range;
 
   /* default value */
-  union {
-    sint32   integer_value;
-    double   double_value;
-    string_t string_value;
-    string_t enum_value;
-    uint32   hex_value;
-  } default_value;
+  value_union_t default_value;
 
 } attribute_definition_t;
 

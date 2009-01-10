@@ -55,7 +55,7 @@ struct hashtable *messageHash_create(message_list_t *message_list)
       hashtable_insert(h, key, message);
     }
   } else {
-    printf("ERROR: could not create message hash.\n");
+    fprintf(stderr, "error: could not create message hash.\n");
   }
 
   return h;

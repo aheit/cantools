@@ -55,19 +55,19 @@ static void show_attribute(attribute_t *a)
   }
   switch(a->value->value_type) {
   case vt_integer:
-    printf("%ld (INT)\n",a->value->value.integer);
+    printf("%ld (INT)\n",a->value->value.int_val);
     break;
   case vt_float:
     printf("%f (DOUBLE)\n",a->value->value.double_val);
     break;
   case vt_string:
-    printf("\"%s\" (STRING)\n",a->value->value.string);
+    printf("\"%s\" (STRING)\n",a->value->value.string_val);
     break;
   case vt_enum:
     printf("\"%s\" (ENUM)\n",a->value->value.enum_val);
     break;
   case vt_hex:
-    printf("0x%lx (HEX)\n",a->value->value.hex);
+    printf("0x%lx (HEX)\n",a->value->value.hex_val);
     break;
   default:
     printf(" (UNKNOWN)\n");

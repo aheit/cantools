@@ -1239,7 +1239,7 @@ case 49:
 YY_RULE_SETUP
 #line 115 "lexer.l"
 {
-                   yylval.double_val = atof(yytext);
+                   yylval.double_val = strtod(yytext, NULL);
                    return T_DOUBLE_VAL;
                  }
 	YY_BREAK

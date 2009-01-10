@@ -57,8 +57,7 @@ DIST_COMMON = README $(am__configure_deps) $(include_HEADERS) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/config.h.in $(top_srcdir)/configure ChangeLog TODO \
 	config.guess config.sub depcomp install-sh ltmain.sh missing \
-	src/libcandbc/lexer.c src/libcandbc/parser.c \
-	src/libcandbc/parser.h ylwrap
+	src/libcandbc/lexer.c src/libcandbc/parser.c ylwrap
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -276,7 +275,7 @@ top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign subdir-objects
 ACLOCAL_AMFLAGS = -I m4
 
-#
+#	
 # What to build and install
 #
 lib_LTLIBRARIES = libcandbc.la libcanasc.la
@@ -314,13 +313,12 @@ asctomat_SOURCES = src/asctomat/asctomat.c \
                    src/hashtable/hashtable_private.h
 
 asctomat_LDADD = libcandbc.la libcanasc.la
-AM_CFLAGS = -DZ_PREFIX=1
 
 # additional include pathes necessary
 INCLUDES = -I$(top_srcdir)/src/libcandbc -I$(top_srcdir)/hashtable
 
-# YACC & LEX
-AM_YFLAGS = -d
+# YACC & LEX: enable -d for debugging
+# AM_YFLAGS = -d
 YYDEBUG = -DYYDEBUG=1
 
 #
@@ -345,9 +343,9 @@ libcanasc_la_SOURCES = \
         src/libcanasc/messageDecoder.c
 
 libcandbc_la_CPPFLAGS = -I$(top_builddir)/src/libcandbc
-libcandbc_la_LDFLAGS = -version-info 0:0:0
+libcandbc_la_LDFLAGS = -version-info 0:2:0
 libcanasc_la_CPPFLAGS = -I$(top_builddir)/src/libcanasc
-libcanasc_la_LDFLAGS = -version-info 0:0:0
+libcanasc_la_LDFLAGS = -version-info 0:2:0
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -458,11 +456,6 @@ src/libcandbc/libcandbc_la-dbcReader.lo:  \
 src/libcandbc/libcandbc_la-dbcWriter.lo:  \
 	src/libcandbc/$(am__dirstamp) \
 	src/libcandbc/$(DEPDIR)/$(am__dirstamp)
-src/libcandbc/parser.h: src/libcandbc/parser.c
-	@if test ! -f $@; then \
-	  rm -f src/libcandbc/parser.c; \
-	  $(MAKE) $(AM_MAKEFLAGS) src/libcandbc/parser.c; \
-	else :; fi
 src/libcandbc/libcandbc_la-parser.lo: src/libcandbc/$(am__dirstamp) \
 	src/libcandbc/$(DEPDIR)/$(am__dirstamp)
 src/libcandbc/libcandbc_la-lexer.lo: src/libcandbc/$(am__dirstamp) \
@@ -931,7 +924,6 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 	-rm -f src/libcandbc/lexer.c
 	-rm -f src/libcandbc/parser.c
-	-rm -f src/libcandbc/parser.h
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \

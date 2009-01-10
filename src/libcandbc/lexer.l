@@ -113,7 +113,7 @@ nl              [\n\r]
                  }
 
 {double_val}     {
-                   yylval.double_val = atof(yytext);
+                   yylval.double_val = strtod(yytext, NULL);
                    return T_DOUBLE_VAL;
                  }
 

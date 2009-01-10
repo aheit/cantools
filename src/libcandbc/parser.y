@@ -29,6 +29,9 @@
  */
 #define YYPARSE_PARAM dbcptr
 
+/* Tell Bison how much stack space is needed. */
+#define YYMAXDEPTH 20000
+
 %}
 
 %union {
@@ -164,7 +167,7 @@ static envvar_t *envvar_find(string_t name)
 }
 
 /*
- * create a new attribute and prepend it to the attribute list "al".
+ * create a new attribute and append it to the attribute list "al".
  *
  * name - name of the new attribute
  * av   - value of the new attribute
@@ -173,13 +176,25 @@ static envvar_t *envvar_find(string_t name)
  * current_dbc->attribute_defition_list, the value is cast to the
  * already existing type.
  */
-static void attribute_prepend(
+void attribute_append(
   attribute_list_t **al,
   string_t           name,
   attribute_value_t *av)
 {
   CREATE(attribute_t,a);
   CREATE(attribute_list_t,al_new);
+
+  /* search for the end of the list and link new node */
+  if(*al == NULL) {
+    *al = al_new;
+  } else {
+    attribute_list_t *linkfrom = linkfrom = *al;
+    while(linkfrom->next != NULL) {
+      linkfrom = linkfrom->next;
+    }
+    linkfrom ->next = al_new;
+  }
+  al_new->next = NULL;
 
   /* look up value type in attribute definition list */
   attribute_definition_t *const ad =
@@ -189,15 +204,16 @@ static void attribute_prepend(
     /* dynamic cast */
     if(   av->value_type == vt_integer
        && ad->value_type == vt_float) {
-      av->value.double_val = (double)av->value.integer;
+      av->value.double_val = (double)av->value.int_val;
       av->value_type = ad->value_type;
     } else if(   av->value_type == vt_integer
               && ad->value_type == vt_hex) {
-      av->value.hex = (uint32)av->value.integer;
+      av->value.hex_val = (uint32)av->value.int_val;
       av->value_type = ad->value_type;
     } else if(   av->value_type == vt_integer
               && ad->value_type == vt_enum) {
-      int eindex = av->value.integer;
+#ifdef CONVERT_INT_TO_ENUM
+      int eindex = av->value.int_val;
       string_list_t *el;
 
       /* goto element eindex in the enum list and set the string */
@@ -209,8 +225,9 @@ static void attribute_prepend(
         }
       }
       av->value_type = ad->value_type;
+#endif
     } else if(av->value_type != ad->value_type) {
-      fprintf(stderr, "unhandled type conversion: %d->%d\n",
+      fprintf(stderr, "error: unhandled type conversion: %d->%d\n",
               av->value_type,
               ad->value_type);
     }
@@ -219,11 +236,9 @@ static void attribute_prepend(
   /* copy attribute name and value*/
   a->name  = name;
   a->value = av;
+
   /* fill new list element */
   al_new->attribute = a;
-  /* chain new list element  */
-  al_new->next = *al;
-  *al = al_new;
 }
 
 %}
@@ -323,12 +338,10 @@ static void attribute_prepend(
 dbc:
       {
         CREATE(network_t, network);
-        /* printf("created network ptr = %p\n", network); */
         current_dbc = (dbc_t *)dbcptr;
         current_dbc->network = network;
         current_dbc->network->comment = NULL;
         current_dbc->network->attribute_list = NULL;
-
       }
         version                   /* -> dbcptr */
         symbol_section            /* ignored */
@@ -361,7 +374,7 @@ symbol_section: T_NS T_COLON symbol_list;
 
 symbol_list:
       symbol
-    | symbol_list symbol
+    | symbol symbol_list
     ;
 
 symbol:
@@ -400,18 +413,11 @@ envvar_list:
     {
       $$ = NULL;
     }
-    | envvar
+    | envvar envvar_list
     {
       CREATE(envvar_list_t,list);
       list->envvar = $1;
-      list->next = NULL;
-      $$ = list;
-    }
-    | envvar_list envvar
-    {
-      CREATE(envvar_list_t,list);
-      list->envvar = $2;
-      list->next    = $1;
+      list->next   = $2;
       $$ = list;
     }
     ;
@@ -452,8 +458,7 @@ envvar:
 
 envvar_data_list:
       /* empty */
-    | envvar_data
-    | envvar_data_list envvar_data
+    | envvar_data envvar_data_list
     ;
 
 envvar_data:
@@ -468,20 +473,20 @@ envvar_data:
 attribute_value:
     /*
      * may be int, hex or enum selector, depending on attribute definition
-     * the data type will be fixed later during attribute_prepend
+     * the data type will be fixed later during attribute_append
      */
       T_INT_VAL
     {
       CREATE(attribute_value_t, av);
       av->value_type    = vt_integer; /* preliminary value type */
-      av->value.integer = $1;
+      av->value.int_val = $1;
       $$ = av;
     }
     | T_STRING_VAL
     {
       CREATE(attribute_value_t, av);
       av->value_type = vt_string;
-      av->value.string = $1;
+      av->value.string_val = $1;
       $$ = av;
     }
     | T_DOUBLE_VAL
@@ -495,15 +500,14 @@ attribute_value:
 
 attribute_list:
       /* empty */
-    | attribute
-    | attribute_list attribute
+    | attribute attribute_list
     ;
 
 attribute:
       T_BA T_STRING_VAL attribute_value T_SEMICOLON
     {
       if(current_dbc->network != NULL) {
-        attribute_prepend(&current_dbc->network->attribute_list,$2,$3);
+        attribute_append(&current_dbc->network->attribute_list,$2,$3);
       } else {
         fprintf(stderr,"error: network not found\n");
         free($2);
@@ -514,7 +518,7 @@ attribute:
     {
       node_t *const node = node_find($4);
       if(node != NULL) {
-        attribute_prepend(&node->attribute_list,$2,$5);
+        attribute_append(&node->attribute_list,$2,$5);
       } else {
         fprintf(stderr,"error: node %s not found\n", $4);
         attribute_value_free($5);
@@ -525,19 +529,25 @@ attribute:
     {
       message_t *const message = message_find($4);
       if(message != NULL) {
-        attribute_prepend(&message->attribute_list,$2,$5);
+        attribute_append(&message->attribute_list,$2,$5);
       } else {
         fprintf(stderr,"error: message %d not found\n", $4);
         attribute_value_free($5);
         free($2);
       }
     }
-    | T_BA T_STRING_VAL T_SG T_INT_VAL T_ID attribute_value T_SEMICOLON
+    | T_BA             /* BA_ */
+      T_STRING_VAL     /* attribute name */
+      T_SG             /* SG_ */
+      T_INT_VAL        /* message id */
+      T_ID             /* signal name */
+      attribute_value  /* attribute value */
+      T_SEMICOLON      /* ; */
     {
       signal_t *const signal = signal_find($4,$5);
 
       if(signal != NULL) {
-        attribute_prepend(&signal->attribute_list,$2,$6);
+        attribute_append(&signal->attribute_list,$2,$6);
       } else {
         fprintf(stderr,"error: signal %d (%s) not found\n", $4, $5);
         attribute_value_free($6);
@@ -545,8 +555,15 @@ attribute:
       }
       free($5);
     }
-    | T_BA_REL T_STRING_VAL T_BU_SG_REL T_ID
-      T_SG T_INT_VAL T_ID attribute_value T_SEMICOLON
+    | T_BA_REL        /* BA_REL_ */
+      T_STRING_VAL    /* attribute name */
+      T_BU_SG_REL     /* BU_SG_REL */
+      T_ID            /* node name */
+      T_SG            /* SG_  */
+      T_INT_VAL       /* message id */
+      T_ID            /* signal name */
+      attribute_value /* attribute value */
+      T_SEMICOLON     /* ; */
     {
       /* not implemented */
       free($2);
@@ -558,8 +575,7 @@ attribute:
 
 attribute_definition_default_list:
       /* empty */
-    | attribute_definition_default
-    | attribute_definition_default_list attribute_definition_default
+    | attribute_definition_default attribute_definition_default_list
     ;
 
 /* set context dependent attribute value type */
@@ -571,9 +587,9 @@ attribute_definition_default:
       free($2);
       if(ad != NULL) {
         switch(ad->value_type) {
-        case vt_integer: ad->default_value.integer_value = $3; break;
-        case vt_hex:     ad->default_value.hex_value = (uint32)$3; break;
-        case vt_float:   ad->default_value.double_value = (float)$3; break;
+        case vt_integer: ad->default_value.int_val = $3; break;
+        case vt_hex:     ad->default_value.hex_val = (uint32)$3; break;
+        case vt_float:   ad->default_value.double_val = (float)$3; break;
         default:
           break;
         }
@@ -585,7 +601,7 @@ attribute_definition_default:
       attribute_definition_t *const ad = attribute_definition_find($2, $1);
       free($2);
       if(ad != NULL && ad->value_type == vt_float) {
-        ad->default_value.double_value = $3;
+        ad->default_value.double_val = $3;
       }
     }
     | attribute_definition_object_or_relation
@@ -595,10 +611,10 @@ attribute_definition_default:
       if(ad != NULL) {
         switch(ad->value_type) {
         case vt_string:
-          ad->default_value.string_value = $3;
+          ad->default_value.string_val = $3;
           break;
         case vt_enum:
-          ad->default_value.enum_value = $3;
+          ad->default_value.enum_val = $3;
           break;
         default:
           break;
@@ -621,78 +637,68 @@ attribute_definition_list:
     {
       $$ = NULL;
     }
-    | attribute_definition
+    | attribute_definition attribute_definition_list
     {
       CREATE(attribute_definition_list_t,list);
       list->attribute_definition = $1;
-      list->next                 = NULL;
-      $$ = list;
-    }
-    | attribute_definition_list attribute_definition
-    {
-      CREATE(attribute_definition_list_t,list);
-      list->attribute_definition = $2;
-      list->next                 = $1;
+      list->next                 = $2;
       $$ = list;
     }
     ;
 
-/* BA_DEF_      "BusType"       STRING ; */
-/* BA_DEF_ SG_  "New_AttrDef_3" HEX 0 4; */
-/* BA_DEF_ BO_  "New_AttrnDef_2" ENUM  "a","bb","ccc"; */
 attribute_definition:
       attribute_object_type T_STRING_VAL
       T_INT T_INT_VAL T_INT_VAL T_SEMICOLON
     {
       CREATE(attribute_definition_t,ad);
-      ad->object_type         = $1;
-      ad->name                = $2;
-      ad->value_type          = vt_integer;
-      ad->range.int_range.min = (sint32)$4;
-      ad->range.int_range.max = (sint32)$5;
-      ad->default_value.integer_value = 0;
+      ad->object_type           = $1;
+      ad->name                  = $2;
+      ad->value_type            = vt_integer;
+      ad->range.int_range.min   = (sint32)$4;
+      ad->range.int_range.max   = (sint32)$5;
+      ad->default_value.int_val = 0;
       $$ = ad;
     }
     | attribute_object_type T_STRING_VAL
       T_FLOAT double_val double_val T_SEMICOLON
     {
       CREATE(attribute_definition_t,ad);
-      ad->object_type         = $1;
-      ad->name                = $2;
-      ad->value_type          = vt_float;
-      ad->range.double_range.min = $4;
-      ad->range.double_range.max = $5;
-      ad->default_value.double_value = 0;
+      ad->object_type              = $1;
+      ad->name                     = $2;
+      ad->value_type               = vt_float;
+      ad->range.double_range.min   = $4;
+      ad->range.double_range.max   = $5;
+      ad->default_value.double_val = 0;
       $$ = ad;
     }
     | attribute_object_type T_STRING_VAL T_STRING T_SEMICOLON
     {
       CREATE(attribute_definition_t,ad);
-      ad->object_type   = $1;
-      ad->name          = $2;
-      ad->value_type    = vt_string;
-      ad->default_value.string_value = NULL;
+      ad->object_type              = $1;
+      ad->name                     = $2;
+      ad->value_type               = vt_string;
+      ad->default_value.string_val = NULL;
       $$ = ad;
     }
     | attribute_object_type T_STRING_VAL T_ENUM comma_string_list T_SEMICOLON
     {
       CREATE(attribute_definition_t,ad);
-      ad->object_type     = $1;
-      ad->name            = $2;
-      ad->value_type      = vt_enum;
-      ad->range.enum_list = $4;
-      ad->default_value.enum_value = NULL;
+      ad->object_type            = $1;
+      ad->name                   = $2;
+      ad->value_type             = vt_enum;
+      ad->range.enum_list        = $4;
+      ad->default_value.enum_val = NULL;
       $$ = ad;
     }
     | attribute_object_type T_STRING_VAL T_HEX T_INT_VAL T_INT_VAL T_SEMICOLON
     {
       CREATE(attribute_definition_t,ad);
-      ad->object_type         = $1;
-      ad->name                = $2;
-      ad->value_type          = vt_hex;
-      ad->range.hex_range.min = (uint32)$4;
-      ad->range.hex_range.max = (uint32)$5;
-      ad->default_value.hex_value = 0;
+      ad->object_type           = $1;
+      ad->name                  = $2;
+      ad->value_type            = vt_hex;
+      ad->range.hex_range.min   = (uint32)$4;
+      ad->range.hex_range.max   = (uint32)$5;
+      ad->default_value.hex_val = 0;
       $$ = ad;
     }
     ;
@@ -713,8 +719,7 @@ attribute_object_type:
 
 val_list:
       /* empty */
-    | val
-    | val_list val
+    | val val_list
     ;
 
 val:
@@ -728,11 +733,11 @@ val:
           signal->val_map = $4;
         } else {
           fprintf(stderr,
-                  "error: duplicate val_map for signal %d (%s)\n", $2, $3);
+                  "error: duplicate val_map for signal %lu (%s)\n", $2, $3);
           val_map_free($4);
         }
       } else {
-        fprintf(stderr,"error: signal %d (%s) not found\n", $2, $3);
+        fprintf(stderr,"error: signal %lu (%s) not found\n", $2, $3);
         val_map_free($4);
       }
       free($3);
@@ -763,22 +768,14 @@ val_map:
     {
       $$ = NULL;
     }
-    | val_map_entry
+    | val_map_entry val_map
     {
       CREATE(val_map_t, val_map);
       val_map->val_map_entry = $1;
-      val_map->next          = NULL;
-      $$ = val_map;
-    }
-    | val_map val_map_entry
-    {
-      CREATE(val_map_t, val_map);
-      val_map->val_map_entry = $2;
-      val_map->next          = $1;
+      val_map->next          = $2;
       $$ = val_map;
     }
     ;
-
 
 val_map_entry:
       T_INT_VAL T_STRING_VAL
@@ -794,8 +791,7 @@ val_map_entry:
 
 sig_valtype_list:
       /* empty */
-    | sig_valtype
-    | sig_valtype_list sig_valtype
+    | sig_valtype sig_valtype_list
     ;
 
 /*
@@ -824,8 +820,7 @@ sig_valtype:
 
 comment_list:
       /* empty */
-    | comment
-    | comment_list comment
+    | comment comment_list
     ;
 
 /* TODO: append comment to object */
@@ -891,18 +886,11 @@ message_list:
     {
       $$ = NULL;
     }
-    | message
+    | message message_list
     {
       CREATE(message_list_t,list);
       list->message = $1;
-      list->next    = NULL;
-      $$ = list;
-    }
-    | message_list message
-    {
-      CREATE(message_list_t,list);
-      list->message = $2;
-      list->next    = $1;
+      list->next    = $2;
       $$ = list;
     }
     ;
@@ -930,18 +918,11 @@ signal_list:
     {
       $$ = NULL;
     }
-    | signal
+    | signal signal_list
     {
       CREATE(signal_list_t,list);
       list->signal = $1;
-      list->next   = NULL;
-      $$ = list;
-    }
-    | signal_list signal
-    {
-      CREATE(signal_list_t,list);
-      list->signal = $2;
-      list->next   = $1;
+      list->next   = $2;
       $$ = list;
     }
     ;
@@ -1058,8 +1039,8 @@ comma_string_list:
 
 /* double_val or int_val as float */
 double_val:
-      T_DOUBLE_VAL  { $$ = $1;}
-    | T_INT_VAL    { $$ = (float)$1; }
+      T_DOUBLE_VAL  { $$ = $1;        }
+    | T_INT_VAL     { $$ = (float)$1; }
     ;
 
 bit_start:   T_INT_VAL    { $$ = $1; };
@@ -1084,7 +1065,7 @@ space_node_list:
     {
       $$ = NULL;
     }
-    | T_ID
+    | T_ID space_node_list
     {
       CREATE(node_list_t,list);
       CREATE(node_t,node);
@@ -1092,18 +1073,7 @@ space_node_list:
       node->comment = NULL;
       node->attribute_list = NULL;
       list->node = node;
-      list->next = NULL;
-      $$ = list;
-    }
-    | space_node_list T_ID
-    {
-      CREATE(node_list_t,list);
-      CREATE(node_t,node);
-      node->name = $2;
-      node->comment = NULL;
-      node->attribute_list = NULL;
-      list->node = node;
-      list->next = $1;
+      list->next = $2;
       $$ = list;
     }
     ;
@@ -1119,20 +1089,12 @@ valtable_list:
     {
       $$ = NULL;
     }
-    | valtable
+    | valtable valtable_list
     {
       CREATE(valtable_list_t, valtable_list);
       CREATE(valtable_t, valtable);
-      valtable_list->next     = NULL;
+      valtable_list->next     = $2;
       valtable_list->valtable = $1;
-      $$ = valtable_list;
-    }
-    | valtable_list valtable
-    {
-      CREATE(valtable_list_t, valtable_list);
-      CREATE(valtable_t, valtable);
-      valtable_list->next     = $1;
-      valtable_list->valtable = $2;
       $$ = valtable_list;
     }
     ;
@@ -1160,6 +1122,7 @@ signal_group:
       CREATE(signal_group_t,sg);
       sg->id   = $2;
       sg->name = $3;
+      /* TODO: meaning of $4? */
       sg->signal_name_list = $6;
       $$ = sg;
     }
@@ -1171,18 +1134,11 @@ signal_group_list:
     {
       $$ = NULL;
     }
-    | signal_group
+    | signal_group signal_group_list
     {
       CREATE(signal_group_list_t,list);
       list->signal_group = $1;
-      list->next         = NULL;
-      $$ = list;
-    }
-    | signal_group_list signal_group
-    {
-      CREATE(signal_group_list_t,list);
-      list->signal_group = $2;
-      list->next         = $1;
+      list->next         = $2;
       $$ = list;
     }
     ;
@@ -1203,17 +1159,12 @@ message_transmitters: T_BO_TX_BU T_INT_VAL T_COLON
     }
     ;
 
-/* signal group_list */
 message_transmitter_list:
       /* empty */
     {
       /* not implemented */
     }
-    | message_transmitters
-    {
-      /* not implemented */
-    }
-    | message_transmitter_list message_transmitters
+    | message_transmitters message_transmitter_list
     {
       /* not implemented */
     }

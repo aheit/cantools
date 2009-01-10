@@ -73,13 +73,6 @@ int matWrite(measurement_t *measurement, const char *outFileName)
         Mat_VarWrite(mat, matvar, 0);
         Mat_VarFree(matvar);
 
-	/* DEBUG */
-	printf("%s\n",signalName);
-        for(i=0;i<timeSeries->n;i++) {
-	  printf("%lf\t%lf\n",timeSeries->time[i],timeSeries->value[i]);
-        }
-	printf("\n",signalName);
-
         free(timeValue);
       } while (hashtable_iterator_advance(itr));
       free(itr);

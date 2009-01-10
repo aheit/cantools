@@ -1,5 +1,24 @@
+2009-01-10    <aheit@gollum>
+
+	* all: release version 0.2
+	* config: check for matio added
+	* config: removed default -d flags for lex & yacc
+
+2009-01-09    <aheit@gollum>
+
+	* asctomat: fixed warning on strdup protype
+	* libcandbc: fixed include filename in dbcReader.h and dbcWriter.h
+
+2009-01-06    <aheit@gollum>
+
+	* libcandbc: renamed some structure elements to increase consistency
+	* libcandbc: changed parsing of all lists to right-recursive
+          parsing. This will give us the correct element order when forming
+	  lists using element prepending.
+
 2009-01-04    <aheit@gollum>
 
+	* all: released initial version 0.1
 	* dbccopy: testcode for dbcWriter added
 
 2009-01-02    <aheit@gollum>
@@ -37,7 +56,7 @@
 
         * asctomat: bugfix: numeric mode must not skip non-digits
         * asctomat: bugfix: loop over bus assignments was not terminated
-        after assigment has been found.
+          after assigment has been found.
 
 2008-11-11    <aheit@gollum>
 
