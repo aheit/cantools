@@ -182,8 +182,8 @@ typedef struct {
   uint8             signedness;
   double            scale;
   double            offset;
-  float             min;
-  float             max;
+  double            min;
+  double            max;
   signal_val_type_t signal_val_type;
   string_t          unit;
   string_list_t    *receiver_list;
@@ -208,6 +208,18 @@ typedef struct {
 
 /* message list */
 DECLARE_PLIST(message_list, message);
+
+/* relational attribute */
+typedef struct {
+  string_t           name;
+  attribute_value_t *attribute_value;
+  node_t            *node;
+  message_t         *message;
+  signal_t          *signal;
+} attribute_rel_t;
+
+/* relational attribute list */
+DECLARE_PLIST(attribute_rel_list, attribute_rel);
 
 /* attribute_object type */
 typedef enum {
@@ -312,6 +324,7 @@ typedef struct {
   valtable_list_t             *valtable_list;
   message_list_t              *message_list;
   envvar_list_t               *envvar_list;
+  attribute_rel_list_t        *attribute_rel_list;
   attribute_definition_list_t *attribute_definition_list;
   signal_group_list_t         *signal_group_list;
   network_t                   *network;

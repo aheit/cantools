@@ -125,6 +125,14 @@ static DEFINE_PLIST_FREE(attribute_definition_list, attribute_definition);
 static DEFINE_PLIST_FREE(message_list, message);
 static DEFINE_PLIST_FREE(node_list, node);
 
+static void attribute_rel_free(attribute_rel_t *attribute_rel)
+{
+  string_free(attribute_rel->name);
+  attribute_value_free(attribute_rel->attribute_value);
+}
+
+static DEFINE_PLIST_FREE(attribute_rel_list, attribute_rel);
+
 static void val_map_entry_free(val_map_entry_t *val_map_entry)
 {
   if(val_map_entry != NULL) {
@@ -189,6 +197,7 @@ void dbc_free(dbc_t *dbc)
     valtable_list_free(dbc->valtable_list);
     message_list_free(dbc->message_list);
     envvar_list_free(dbc->envvar_list);
+    attribute_rel_list_free(dbc->attribute_rel_list);
     attribute_definition_list_free(dbc->attribute_definition_list);
     signal_group_list_free(dbc->signal_group_list);
     network_free(dbc->network);

@@ -81,7 +81,7 @@ void canMessage_decode(message_t *dbcMessage,
     uint8  start_byte   = s->bit_start / 8;
     uint8  end_byte     = start_byte + (7 + bit_len - start_offset - 1)/8;
     uint8  data;
-    uint8  work_byte;
+    sint8  work_byte;
     uint8  shift;
 
     /* align signal into ulong32 */

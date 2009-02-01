@@ -29,7 +29,7 @@ main(int argc, char **argv)
 
     /* perform copy */
     if(dbcout != NULL) {
-      dbc_write_file(dbcout, dbc);
+      dbc_write(dbcout, dbc);
       
       /* close output file */
       if(outFilename != NULL) {

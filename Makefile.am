@@ -58,15 +58,15 @@ asctomat_SOURCES = src/asctomat/asctomat.c \
                    src/hashtable/hashtable_itr.h \
                    src/hashtable/hashtable_private.h
 
-asctomat_LDADD     = libcandbc.la libcanasc.la
+asctomat_LDADD     = libcandbc.la libcanasc.la $(MATIO_LIB)
 
 # additional include pathes necessary
 INCLUDES = -I$(top_srcdir)/src/libcandbc -I$(top_srcdir)/hashtable
 
 DEFS = $(YYDEBUG)
 
-# YACC & LEX: enable -d for debugging
-# AM_YFLAGS = -d
+# YACC: generate token defines for LEX
+AM_YFLAGS = -d
 
 ## Uncomment to enable debugging of linker script parser
 YYDEBUG = -DYYDEBUG=1
@@ -93,7 +93,7 @@ libcanasc_la_SOURCES= \
         src/libcanasc/messageDecoder.c
 
 libcandbc_la_CPPFLAGS= -I$(top_builddir)/src/libcandbc
-libcandbc_la_LDFLAGS= -version-info 0:2:0
+libcandbc_la_LDFLAGS= -version-info 0:3:0
 
 libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc
-libcanasc_la_LDFLAGS= -version-info 0:2:0
+libcanasc_la_LDFLAGS= -version-info 0:3:0
