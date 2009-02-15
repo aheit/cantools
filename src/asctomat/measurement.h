@@ -21,9 +21,10 @@ typedef struct {
   double *value;
 } timeSeries_t;
 
-measurement_t *measurement_read(busAssignment_t *messageHash,
-                                const char      *asc_filename,
-                                signalFormat_t   signalFormat);
+measurement_t *measurement_read(busAssignment_t *busAssignment,
+                                const char *asc_filename,
+                                signalFormat_t signalFormat,
+				sint32 timeResolution );
 
 void measurement_free(measurement_t *m);
 

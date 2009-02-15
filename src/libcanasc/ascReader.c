@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "ascReader.h"
 
 typedef enum {
@@ -43,13 +44,14 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
 
   /* loop for reading input lines */
   while(1) {
+    char *buffer_lasts; /* reentrancy structure for strtok on buffer */
     fgets(buffer,sizeof(buffer)-1,fp);
-    if(feof(fp)) break;                /* file ended... stop loop */
-    cp = strtok (buffer," ");          /* get first token */
+    if(feof(fp)) break;                         /* EOF... stop loop */
+    cp = strtok_r (buffer," ", &buffer_lasts);  /* get first token */
     if(!strcmp(cp,"date")) {
-      ;                                /* skip date info */
-    } else if(!strcmp(cp,"base")) {    /* parse numeric base */
-      cp = strtok(NULL," ");           /* dec/hex */
+      ;                                         /* skip date info */
+    } else if(!strcmp(cp,"base")) {             /* parse numeric base */
+      cp = strtok_r(NULL," ", &buffer_lasts);    /* dec/hex */
       if(!strcmp(cp,"dec")) {
         numbase = decimal;
       } else if(!strcmp(cp,"hex")) {
@@ -85,27 +87,51 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
        * timestamps: the fractional part has 1-9 decimal places,
        * depending on the setting of the recording SW.
        */
-      message.t = atof(buffer); /* get time from first column */
-      cp = strtok(NULL,"\n"); if(cp == NULL) continue;
+      char *tp;
+      char *time_lasts;
+      tp = strtok_r(cp, ".", &time_lasts); if(tp == NULL) continue;
 
-      cp = strtok(cp," "); if(cp == NULL) continue;
+      message.t.tv_sec = 0;
+      message.t.tv_nsec = 0;
+      message.t.tv_sec = atoi(tp);
+
+      tp = strtok_r(NULL, " ", &time_lasts); if(tp == NULL) continue;
+      {
+        int i;
+        for(i = 0; i < 9; i++) {
+          message.t.tv_nsec *= 10;
+          if(isdigit(*tp)) {
+            message.t.tv_nsec += (*tp) - '0';
+            tp++;
+          }
+        }
+      }
+
+      /* remove trailing newline */
+      cp = strtok_r(NULL, "\n", &buffer_lasts); if(cp == NULL) continue;
+
+      /* get bus number */
+      cp = strtok_r(cp, " ", &buffer_lasts); if(cp == NULL) continue;
       message.bus = atoi(cp);
 
-      cp = strtok(NULL," "); if(cp == NULL) continue;
+      /* get message identifier */
+      cp = strtok_r(NULL, " ", &buffer_lasts); if(cp == NULL) continue;
       id_str = cp;
 
-      cp = strtok(NULL," "); if(cp == NULL) continue;
+      cp = strtok_r(NULL, " ", &buffer_lasts); if(cp == NULL) continue;
       rx = cp;
       if((rx[0] != 'R') || (rx[1] != 'x')) continue;
 
-      cp = strtok(NULL," "); if(cp == NULL) continue;
+      cp = strtok_r(NULL, " ", &buffer_lasts); if(cp == NULL) continue;
       d = cp;
 
-      cp = strtok(NULL," "); if(cp == NULL) continue;
+      /* get DLC */
+      cp = strtok_r(NULL, " ", &buffer_lasts); if(cp == NULL) continue;
       message.dlc = atoi(cp);
 
+      /* get message bytes */
       for(i = 0; i < message.dlc; i++) {
-        cp = strtok(NULL," "); if(cp == NULL) break;
+        cp = strtok_r(NULL, " ", &buffer_lasts); if(cp == NULL) break;
         message.byte_arr[i] = (uint8)strtol(cp,NULL,numbase);
       }
 
@@ -135,9 +161,10 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
         } else {
           /* symbolic mode with hex hint */
           char *cp;
+	  char *id_lasts;
 
-          strtok(id_str,"_");
-          cp = strtok(NULL,"h");
+          strtok_r(id_str,"_", &id_lasts);
+          cp = strtok_r(NULL, "h", &id_lasts);
 
           /* force hex mode for id string */
           message.id = (uint16)strtol(cp,NULL,16);

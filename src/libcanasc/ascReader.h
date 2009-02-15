@@ -3,10 +3,11 @@
 
 #include <stdio.h>
 #include <dbcTypes.h>
+#include <time.h>
 
 /* CAN message type */
 typedef struct {
-  float64 t;       /* time stamp */
+  struct timespec t; /* time stamp */
   uint8   bus;     /* can bus */
   uint16  id;      /* numeric CAN-ID */
   uint8   dlc;

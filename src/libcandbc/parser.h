@@ -179,6 +179,8 @@ typedef union YYSTYPE
   message_list_t              *message_list;
   attribute_value_t           *attribute_value;
   attribute_object_class_t     attribute_object_class;
+  attribute_rel_t             *attribute_rel;
+  attribute_rel_list_t        *attribute_rel_list;
   attribute_definition_t      *attribute_definition;
   attribute_definition_list_t *attribute_definition_list;
   dbc_t                       *dbc;
@@ -190,7 +192,7 @@ typedef union YYSTYPE
   valtable_t                  *valtable;
 }
 /* Line 1489 of yacc.c.  */
-#line 194 "src/libcandbc/parser.h"
+#line 196 "src/libcandbc/parser.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
