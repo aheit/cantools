@@ -20,7 +20,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <getopt.h>
 #include "signalFormat.h"
 #include "measurement.h"
@@ -50,7 +49,6 @@ static void help(void)
           "  -a, --asc <ascfile>        ASC input file to convert\n"
           "  -m, --mat <matfile>        MAT file to output\n"
           "  -f, --format <format>      signal name format\n"
-          "  -t, --timeres <nanosec>    time resolution\n"
           "      --verbose              verbose output\n"
           "      --brief                brief output (default)\n"
           "      --debug                output debug information\n"
@@ -72,7 +70,6 @@ int main(int argc, char **argv)
   signalFormat_t signalFormat = signalFormat_Name;
   measurement_t *measurement;
   int ret;
-  sint32 timeResolution = 10000;
 
   program_name = argv[0];
 
@@ -90,8 +87,7 @@ int main(int argc, char **argv)
       {"asc",     required_argument, 0, 'a'},
       {"mat",     required_argument, 0, 'm'},
       {"format",  required_argument, 0, 'f'},
-      {"timeres", required_argument, 0, 't'},
-      {"help",    no_argument,       NULL, 'h'},
+      {"help",    no_argument,       NULL,           'h'},
       {0, 0, 0, 0}
     };
 
@@ -99,7 +95,7 @@ int main(int argc, char **argv)
     int option_index = 0;
     int c;
 
-    c = getopt_long (argc, argv, "a:b:d:f:m:t:",
+    c = getopt_long (argc, argv, "a:b:d:f:m:",
                      long_options, &option_index);
 
     /* Detect the end of the options. */
@@ -143,9 +139,6 @@ int main(int argc, char **argv)
       }
       mat_filename = optarg;
       break;
-    case 't':
-      timeResolution = atoi(optarg);
-      break;
     case 'h': help(); exit(0);   break;
     case '?':
       /* getopt_long already printed an error message. */
@@ -175,10 +168,7 @@ int main(int argc, char **argv)
       fprintf(stderr,
 	      "Parsing ASC file %s\n", asc_filename?asc_filename:"<stdin>");
     }
-    measurement = measurement_read(busAssignment,
-				   asc_filename,
-				   signalFormat,
-				   timeResolution);
+    measurement = measurement_read(busAssignment, asc_filename, signalFormat);
     if(measurement != NULL) {
 
       /* write MAT file */
