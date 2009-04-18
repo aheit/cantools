@@ -18,32 +18,21 @@
 #include "config.h"
 #endif
 
-#include <dbcModel.h>
 #include "messageDecoder.h"
 
-void canMessage_decode(message_t      *dbcMessage,
-		       canMessage_t   *canMessage,
-		       sint32          timeResolution,
-		       signalProcCb_t  signalProcCb,
-		       void           *cbData)
+void canMessage_decode(message_t *dbcMessage,
+		       canMessage_t *canMessage,
+		       signalProcCb_t signalProcCb,
+		       void *cbData)
 {
   signal_list_t *sl;
-  uint32  sec = canMessage->t.tv_sec;
-  sint32 nsec = canMessage->t.tv_nsec;
-  double dtime;
-
-  /* limit time resolution */
-  if(timeResolution != 0) {
-    nsec -= (nsec % timeResolution);
-  }
-  dtime = nsec * 1e-9 + sec;
 
   /* debug: dump canMessage */
 #if 0
   fprintf(stderr,
-          "%d.%09d %d %04x     %02x %02x %02x %02x %02x %02x %02x %02x\n",
-          sec, nsec,
-          canMessage->bus, canMessage->id,
+          "%f %d %04x %d     %02x %02x %02x %02x %02x %02x %02x %02x\n",
+          canMessage->t,
+          canMessage->bus, canMessage->id, canMessage->numbytes,
           canMessage->byte_arr[0], canMessage->byte_arr[1],
           canMessage->byte_arr[2], canMessage->byte_arr[3],
           canMessage->byte_arr[4], canMessage->byte_arr[5],
@@ -92,7 +81,7 @@ void canMessage_decode(message_t      *dbcMessage,
     uint8  start_byte   = s->bit_start / 8;
     uint8  end_byte     = start_byte + (7 + bit_len - start_offset - 1)/8;
     uint8  data;
-    sint8  work_byte;
+    uint8  work_byte;
     uint8  shift;
 
     /* align signal into ulong32 */
@@ -174,7 +163,7 @@ void canMessage_decode(message_t      *dbcMessage,
       }
 
 #if 0
-      fprintf(stderr,"   %s\t=%f ~ raw=%ld\t~ %d|%d@%d%c (%f,%f)"
+      fprintf(stderr,"   %s\t=%lf ~ raw=%ld\t~ %d|%d@%d%c (%f,%f)"
              " [%f|%f] %d %ul \"%s\"\n",
              outputSignalName,
              physicalValue,
@@ -193,7 +182,7 @@ void canMessage_decode(message_t      *dbcMessage,
 #endif
 
       /* invoke signal processing callback function */
-      signalProcCb(s, dtime, rawValue, physicalValue, cbData);
+      signalProcCb(s, canMessage, rawValue, physicalValue, cbData);
     }
   }
 }

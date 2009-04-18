@@ -3,6 +3,6 @@
 
 #include <dbcModel.h>
 
-void dbc_write(FILE *out, dbc_t *dbc);
+void dbc_write_file(FILE *out, dbc_t *dbc);
 
 #endif

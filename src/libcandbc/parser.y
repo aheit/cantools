@@ -52,8 +52,6 @@
   message_list_t              *message_list;
   attribute_value_t           *attribute_value;
   attribute_object_class_t     attribute_object_class;
-  attribute_rel_t             *attribute_rel;
-  attribute_rel_list_t        *attribute_rel_list;
   attribute_definition_t      *attribute_definition;
   attribute_definition_list_t *attribute_definition_list;
   dbc_t                       *dbc;
@@ -322,8 +320,6 @@ void attribute_append(
 %type <object_type>               attribute_object_type
 %type <attribute_value>           attribute_value
 %type <attribute_object_class>    attribute_definition_object_or_relation
-%type <attribute_rel>             attribute_rel
-%type <attribute_rel_list>        attribute_rel_list
 %type <attribute_definition>      attribute_definition
 %type <attribute_definition_list> attribute_definition_list
 %type <envvar>                    envvar
@@ -347,32 +343,28 @@ dbc:
         current_dbc->network->comment = NULL;
         current_dbc->network->attribute_list = NULL;
       }
-        version                   /* 2 */
-        symbol_section            /* 3 ignored */
-        message_section           /* 4 ignored */
-        node_list                 /* 5 */
-      { current_dbc->node_list = $5; }
-        valtable_list             /* 7 */
-      { current_dbc->valtable_list = $7; }
-        message_list              /* 9 */
-      { current_dbc->message_list = $9; }
-        message_transmitter_list  /* 11 changes message */
-        envvar_list               /* 12 */
-      { current_dbc->envvar_list  = $12; }
-        envvar_data_list          /* 14 */
-        comment_list              /* 15 changes target objects */
-        attribute_definition_list /* 16 */
-      { current_dbc->attribute_definition_list = $16; }
-        attribute_definition_default_list /* 18 changes attr. definition list */
-        attribute_list            /* 19 changes target objects */
-	attribute_rel_list        /* 20 */
-        val_list                  /* 21 */
-        sig_valtype_list          /* 22 changes signals */
-        signal_group_list         /* 23 */
+        version                   /* -> dbcptr */
+        symbol_section            /* ignored */
+        message_section           /* ignored */
+        node_list                 { current_dbc->node_list = $5; }
+        valtable_list             { current_dbc->valtable_list = $7; }
+        message_list              { current_dbc->message_list = $9; }
+        message_transmitter_list  { /* not implemented */ }
+        envvar_list               { current_dbc->envvar_list  = $13; }
+        envvar_data_list
+        comment_list              /* changes target objects */
+        attribute_definition_list
       {
-        current_dbc->version            = $2;
-        current_dbc->signal_group_list  = $23;
-	current_dbc->attribute_rel_list = $20;
+        current_dbc->attribute_definition_list = $17;
+      }
+        attribute_definition_default_list /* changes attr. definition list */
+        attribute_list            /* changes target objects */
+        val_list
+        sig_valtype_list          /* changes signals */
+        signal_group_list         /* -> dbcptr */
+      {
+        ((dbc_t *)dbcptr)->version                   = $2;
+        ((dbc_t *)dbcptr)->signal_group_list         = $23;
       }
     ;
 
@@ -563,56 +555,23 @@ attribute:
       }
       free($5);
     }
-    ;
-
-attribute_rel_list:
-      /* empty */
+    | T_BA_REL        /* BA_REL_ */
+      T_STRING_VAL    /* attribute name */
+      T_BU_SG_REL     /* BU_SG_REL */
+      T_ID            /* node name */
+      T_SG            /* SG_  */
+      T_INT_VAL       /* message id */
+      T_ID            /* signal name */
+      attribute_value /* attribute value */
+      T_SEMICOLON     /* ; */
     {
-      $$ = NULL;
-    }
-    | attribute_rel attribute_rel_list
-    {
-      CREATE(attribute_rel_list_t,list);
-      list->attribute_rel = $1;
-      list->next          = $2;
-      $$ = list;
-    }
-    ;
-
-attribute_rel:
-      /* node-message relational attribute */
-      T_BA_REL        /* 1 BA_REL_ */
-      T_STRING_VAL    /* 2 attribute name */
-      T_BU_SG_REL     /* 3 BU_SG_REL */
-      T_ID            /* 4 node name */
-      T_SG            /* 5 SG_  */
-      T_INT_VAL       /* 6 message id */
-      signal_name     /* 7 signal name */
-      attribute_value /* 8 attribute value */
-      T_SEMICOLON     /* 9 ; */
-    {
-      node_t *node = node_find($4);
-      message_t *message = message_find($6);
-      signal_t *signal = signal_find($6,$7);
-
-      if(   (node != NULL)
-         && (message != NULL)
-         && (signal != NULL)) {
-        CREATE(attribute_rel_t,attribute_rel);
-        attribute_rel->name             = $2;
-        attribute_rel->node             = node;
-        attribute_rel->message          = message;
-        attribute_rel->signal           = signal;
-        attribute_rel->attribute_value  = $8;
-        $$ = attribute_rel;
-      } else {
-        free($2);
-        attribute_value_free($8);
-        $$ = NULL;
-      }
+      /* not implemented */
+      free($2);
       free($4);
       free($7);
+      attribute_value_free($8);
     }
+    ;
 
 attribute_definition_default_list:
       /* empty */
@@ -630,7 +589,7 @@ attribute_definition_default:
         switch(ad->value_type) {
         case vt_integer: ad->default_value.int_val = $3; break;
         case vt_hex:     ad->default_value.hex_val = (uint32)$3; break;
-        case vt_float:   ad->default_value.double_val = (double)$3; break;
+        case vt_float:   ad->default_value.double_val = (float)$3; break;
         default:
           break;
         }
@@ -1081,7 +1040,7 @@ comma_string_list:
 /* double_val or int_val as float */
 double_val:
       T_DOUBLE_VAL  { $$ = $1;        }
-    | T_INT_VAL     { $$ = (double)$1; }
+    | T_INT_VAL     { $$ = (float)$1; }
     ;
 
 bit_start:   T_INT_VAL    { $$ = $1; };
@@ -1202,5 +1161,11 @@ message_transmitters: T_BO_TX_BU T_INT_VAL T_COLON
 
 message_transmitter_list:
       /* empty */
+    {
+      /* not implemented */
+    }
     | message_transmitters message_transmitter_list
+    {
+      /* not implemented */
+    }
     ;

@@ -146,7 +146,7 @@ static void show_signals(dbc_t *dbc)
 
   for(ml = dbc->message_list; ml != NULL; ml = ml->next) {
     for(sl = ml->message->signal_list; sl != NULL; sl = sl->next) {
-      printf("$%X;%s;%s;\"%s\";%f;%f",
+      printf("$%X;%s;%s;\"%s\";%lf;%lf",
              ml->message->id,
              ml->message->name,
              sl->signal->name,
