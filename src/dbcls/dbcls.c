@@ -55,19 +55,19 @@ static void show_attribute(attribute_t *a)
   }
   switch(a->value->value_type) {
   case vt_integer:
-    printf("%ld (INT)\n",a->value->value.int_val);
+    printf("%ld (INT)\n",a->value->value.integer);
     break;
   case vt_float:
     printf("%f (DOUBLE)\n",a->value->value.double_val);
     break;
   case vt_string:
-    printf("\"%s\" (STRING)\n",a->value->value.string_val);
+    printf("\"%s\" (STRING)\n",a->value->value.string);
     break;
   case vt_enum:
     printf("\"%s\" (ENUM)\n",a->value->value.enum_val);
     break;
   case vt_hex:
-    printf("0x%lx (HEX)\n",a->value->value.hex_val);
+    printf("0x%lx (HEX)\n",a->value->value.hex);
     break;
   default:
     printf(" (UNKNOWN)\n");
@@ -146,7 +146,7 @@ static void show_signals(dbc_t *dbc)
 
   for(ml = dbc->message_list; ml != NULL; ml = ml->next) {
     for(sl = ml->message->signal_list; sl != NULL; sl = sl->next) {
-      printf("$%X;%s;%s;\"%s\";%f;%f",
+      printf("$%X;%s;%s;\"%s\";%lf;%lf",
              ml->message->id,
              ml->message->name,
              sl->signal->name,

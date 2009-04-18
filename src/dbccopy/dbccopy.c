@@ -10,38 +10,17 @@ int
 main(int argc, char **argv)
 {
   dbc_t *dbc;
-  char *const inFilename = (argc>1 ? argv[1] : NULL);
-  char *const outFilename = (argc>2 ? argv[2] : NULL);
-  int ret = 0;
+  char *const filename = (argc>1 ? argv[1] : NULL);
 
-  if(NULL != (dbc = dbc_read_file(inFilename))) {
+  if(NULL != (dbc = dbc_read_file(filename))) {
     FILE *dbcout;
 
-    /* open output file */
-    if(outFilename != NULL) {
-      if(NULL == (dbcout = fopen(outFilename,"w"))) {
-	fprintf(stderr, "can't open output file '%s'\n", outFilename);
-	ret = 1;
-      }
-    } else {
-      dbcout = stdout;
+    if(NULL != (dbcout = fopen("copy.dbc","w"))) {
+      dbc_write_file(dbcout, dbc);
+      fclose(dbcout);
     }
-
-    /* perform copy */
-    if(dbcout != NULL) {
-      dbc_write(dbcout, dbc);
-      
-      /* close output file */
-      if(outFilename != NULL) {
-	fclose(dbcout);
-      }
-    }
-
     dbc_free(dbc);
-  } else {
-    fprintf(stderr, "can't open input file '%s'\n", inFilename);
-    ret = 1;
   }
 
-  return ret;
+  return 0;
 }

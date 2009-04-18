@@ -38,7 +38,7 @@ void attribute_value_free(attribute_value_t *attribute_value)
   if(attribute_value != NULL) {
     switch(attribute_value->value_type) {
     case vt_string:
-      string_free(attribute_value->value.string_val);
+      string_free(attribute_value->value.string);
       break;
     case vt_enum:
       string_free(attribute_value->value.enum_val);
@@ -68,11 +68,11 @@ static void attribute_definition_free(
       string_list_free(attribute_definition->range.enum_list);
 
       /* free default */
-      string_free(attribute_definition->default_value.enum_val);
+      string_free(attribute_definition->default_value.enum_value);
       break;
     case vt_string:
       /* free default */
-      string_free(attribute_definition->default_value.string_val);
+      string_free(attribute_definition->default_value.string_value);
       break;
     }
     free(attribute_definition);
@@ -124,14 +124,6 @@ static void node_free(node_t *node)
 static DEFINE_PLIST_FREE(attribute_definition_list, attribute_definition);
 static DEFINE_PLIST_FREE(message_list, message);
 static DEFINE_PLIST_FREE(node_list, node);
-
-static void attribute_rel_free(attribute_rel_t *attribute_rel)
-{
-  string_free(attribute_rel->name);
-  attribute_value_free(attribute_rel->attribute_value);
-}
-
-static DEFINE_PLIST_FREE(attribute_rel_list, attribute_rel);
 
 static void val_map_entry_free(val_map_entry_t *val_map_entry)
 {
@@ -197,7 +189,6 @@ void dbc_free(dbc_t *dbc)
     valtable_list_free(dbc->valtable_list);
     message_list_free(dbc->message_list);
     envvar_list_free(dbc->envvar_list);
-    attribute_rel_list_free(dbc->attribute_rel_list);
     attribute_definition_list_free(dbc->attribute_definition_list);
     signal_group_list_free(dbc->signal_group_list);
     network_free(dbc->network);
@@ -225,19 +216,19 @@ attribute_value_t * attribute_value_dup(attribute_value_t *orig)
     copy->value_type = orig->value_type;
     switch(orig->value_type) {
     case vt_integer:
-      copy->value.int_val    = orig->value.int_val;
+      copy->value.integer    = orig->value.integer;
       break;
     case vt_float:
       copy->value.double_val = orig->value.double_val;
       break;
     case vt_string:
-      copy->value.string_val = string_dup(orig->value.string_val);
+      copy->value.string     = string_dup(orig->value.string);
       break;
     case vt_enum:
       copy->value.enum_val   = string_dup(orig->value.enum_val);
       break;
     case vt_hex:
-      copy->value.hex_val    = orig->value.hex_val;
+      copy->value.hex = orig->value.hex;
       break;
     }
     return copy;

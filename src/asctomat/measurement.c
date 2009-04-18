@@ -20,7 +20,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 #include "measurement.h"
 #include "busAssignment.h"
 #include "messageHash.h"
@@ -42,7 +41,6 @@ typedef struct {
   busAssignment_t *busAssignment;
   measurement_t   *measurement;
   signalFormat_t   signalFormat;
-  sint32           timeResolution;
 } messageProcCbData_t;
 
 /* simple string hash function for signal names */
@@ -77,7 +75,7 @@ static void signalProc_print(
   char *outputSignalName =
     signalFormat_stringAppend(signalProcCbData->local_prefix, s->name);
   
-  fprintf(stderr,"   %s\t=%f ~ raw=%ld\t~ %d|%d@%d%c (%f,%f)"
+  fprintf(stderr,"   %s\t=%lf ~ raw=%ld\t~ %d|%d@%d%c (%f,%f)"
 	  " [%f|%f] %d %ul \"%s\"\n",
 	  outputSignalName,
 	  physicalValue,
@@ -106,10 +104,10 @@ static void signalProc_print(
  */
 static void signalProc_timeSeries(
   const signal_t *s,
-  double          dtime,
-  uint32          rawValue,
-  double          physicalValue,
-  void           *cbData)
+  const canMessage_t *canMessage,
+  uint32 rawValue,
+  double physicalValue,
+  void *cbData)
 {
   /*
   /* realloc strategy:
@@ -153,7 +151,7 @@ static void signalProc_timeSeries(
   }
 
   /* append entry to time series */
-  timeSeries->time [timeSeries->n] = dtime;
+  timeSeries->time [timeSeries->n] = canMessage->t;
   timeSeries->value[timeSeries->n] = physicalValue;
   timeSeries->n++;
 
@@ -197,12 +195,10 @@ static void canMessage_process(canMessage_t *canMessage, void *cbData)
 	{
 	  signalProcCbData_t signalProcCbData = {
 	    messageProcCbData->measurement->timeSeriesHash,
-	    local_prefix,
+	    local_prefix
 	  };
-
 	  canMessage_decode(dbcMessage,
 			    canMessage,
-			    messageProcCbData->timeResolution,
 			    signalProc_timeSeries,
 			    &signalProcCbData);
 	}
@@ -223,8 +219,7 @@ static void canMessage_process(canMessage_t *canMessage, void *cbData)
  */
 measurement_t *measurement_read(busAssignment_t *busAssignment,
                                 const char *asc_filename,
-                                signalFormat_t signalFormat,
-				sint32 timeResolution )
+                                signalFormat_t signalFormat)
 {
   FILE *fp;
   measurement_t *measurement;
@@ -246,14 +241,13 @@ measurement_t *measurement_read(busAssignment_t *busAssignment,
       }
       if(fp != NULL) {
 	/* call ASC file processor */
-	messageProcCbData_t messageProcCbData = {
+	messageProcCbData_t messageProcessCbData = {
 	  busAssignment,
 	  measurement,
-	  signalFormat,
-	  timeResolution
+	  signalFormat
 	};
 
-        ascReader_processFile(fp, canMessage_process, &messageProcCbData);
+        ascReader_processFile(fp, canMessage_process, &messageProcessCbData);
 
 	/* close input file */
         if(asc_filename != NULL) {

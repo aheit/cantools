@@ -67,6 +67,7 @@ nl              [\n\r]
 "SIG_TYPE_REF_"        { return T_SIG_TYPE_REF;    }
 "VAL_TABLE_"           { return T_VAL_TABLE;       }
 "SIG_GROUP_"           { return T_SIG_GROUP;       }
+"SIG_VALTYPE_"         { return T_SIG_VALTYPE;     }
 "SIGTYPE_VALTYPE_"     { return T_SIGTYPE_VALTYPE; }
 "BO_TX_BU_"            { return T_BO_TX_BU;        }
 "BA_DEF_REL_"          { return T_BA_DEF_REL;      }
@@ -112,7 +113,7 @@ nl              [\n\r]
                  }
 
 {double_val}     {
-                   yylval.double_val = strtod(yytext, NULL);
+                   yylval.double_val = atof(yytext);
                    return T_DOUBLE_VAL;
                  }
 

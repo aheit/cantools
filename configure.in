@@ -18,16 +18,12 @@
 
 
 AC_PREREQ(2.61)
-AC_INIT(cantools, 0.4, aheit@web.de)
+AC_INIT(cantools, 0.1, aheit@web.de)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE([1.9 foreign])
 AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
-
-dnl common library version
-version_info='0:4:0'
-AC_SUBST(version_info)
 
 # Checks for programs.
  	
@@ -54,18 +50,8 @@ AC_C_CONST
 
 # Checks for libraries
 AC_CHECK_LIB([m], [floor])
-
-AC_SUBST(MATIO_LIB)
-matio=1
-AC_CHECK_HEADER(matio.h, [], [matio=0])
-AC_CHECK_LIB(matio, Mat_Create, [matio=matio], [matio=0])
-if test $matio == 0
-then
-	echo "Error! You need to install libmatio first."
-        exit -1
-else
-	MATIO_LIB=-lmatio
-fi
+AC_CHECK_LIB([m], [ceilf])
+AC_CHECK_LIB([matio], [Mat_Create])
 
 AM_WITH_DMALLOC
 

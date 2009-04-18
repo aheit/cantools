@@ -19,7 +19,6 @@
 #endif
 
 #include <stdio.h>
-#include <string.h>
 #include "busAssignment.h"
 
 extern int verbose_flag;

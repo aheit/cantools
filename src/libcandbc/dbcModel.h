@@ -122,11 +122,11 @@ typedef enum {
 
 /* attribute value union */
 typedef union {
-  sint32       int_val;
+  sint32       integer;
   double       double_val;
-  string_t     string_val;
+  string_t     string;
   string_t     enum_val;
-  uint32       hex_val;
+  uint32       hex;
 } value_union_t;
 
 /* attribute value */
@@ -182,8 +182,8 @@ typedef struct {
   uint8             signedness;
   double            scale;
   double            offset;
-  double            min;
-  double            max;
+  float             min;
+  float             max;
   signal_val_type_t signal_val_type;
   string_t          unit;
   string_list_t    *receiver_list;
@@ -208,18 +208,6 @@ typedef struct {
 
 /* message list */
 DECLARE_PLIST(message_list, message);
-
-/* relational attribute */
-typedef struct {
-  string_t           name;
-  attribute_value_t *attribute_value;
-  node_t            *node;
-  message_t         *message;
-  signal_t          *signal;
-} attribute_rel_t;
-
-/* relational attribute list */
-DECLARE_PLIST(attribute_rel_list, attribute_rel);
 
 /* attribute_object type */
 typedef enum {
@@ -271,7 +259,13 @@ typedef struct {
   } range;
 
   /* default value */
-  value_union_t default_value;
+  union {
+    sint32   integer_value;
+    double   double_value;
+    string_t string_value;
+    string_t enum_value;
+    uint32   hex_value;
+  } default_value;
 
 } attribute_definition_t;
 
@@ -324,7 +318,6 @@ typedef struct {
   valtable_list_t             *valtable_list;
   message_list_t              *message_list;
   envvar_list_t               *envvar_list;
-  attribute_rel_list_t        *attribute_rel_list;
   attribute_definition_list_t *attribute_definition_list;
   signal_group_list_t         *signal_group_list;
   network_t                   *network;

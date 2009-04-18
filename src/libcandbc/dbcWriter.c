@@ -61,14 +61,6 @@ static void comma_string_list_write(FILE *out, string_list_t *string_list)
   }
 }
 
-static void space_identifier_list_write(FILE *out, string_list_t *string_list)
-{
-  PLIST_ITER(string_list) {
-    identifier_write(out, string_list->string);
-    if(string_list->next) fputc(' ', out);
-  }
-}
-
 static void version_write(FILE *out, string_t version)
 {
   fputs("VERSION ", out);
@@ -129,9 +121,9 @@ static void node_list_write(FILE *out, node_list_t *node_list)
 
 static void val_map_entry_write(FILE *out, val_map_entry_t *val_map_entry)
 {
-  fprintf(out, "%lu \"%s\" ",
-	  val_map_entry->index,
-	  val_map_entry->value);
+  fprintf(out, "%lu ", val_map_entry->index);
+  string_write(out, val_map_entry->value);
+  fputc(' ', out);
 }
 
 static void val_map_write(FILE *out, val_map_t *val_map)
@@ -179,7 +171,9 @@ static void signal_write(FILE *out, signal_t *signal)
 {
   fprintf(out, " SG_ %s", signal->name);
   mux_info_write(out,signal);
-  fprintf(out, ": %u|%u@%u%c (%.11G,%.11G) [%.11G|%.11G] ",
+  fputc(':', out);
+  fputc(' ', out);
+  fprintf(out, " %u|%u@%u%c (%lg,%lg) [%lg|%lg] ",
 	  signal->bit_start,
 	  signal->bit_len,
 	  signal->endianess,
@@ -189,7 +183,7 @@ static void signal_write(FILE *out, signal_t *signal)
 	  signal->min,
 	  signal->max);
   string_write(out,signal->unit);
-  fputs("  ", out);
+  fputc(' ', out);
   comma_identifier_list_write(out, signal->receiver_list);
   newline(out);
 }
@@ -199,7 +193,6 @@ static void signal_list_write(FILE *out, signal_list_t *signal_list)
   PLIST_ITER(signal_list) {
     signal_write(out, signal_list->signal);
   }
-  newline(out);
 }
 
 static void message_write(FILE *out, message_t *message)
@@ -218,7 +211,6 @@ static void message_list_write(FILE *out, message_list_t *message_list)
     message_write(out, message_list->message);
   }
 }
-
 static void envvar_comment_write(FILE *out, envvar_t *envvar)
 {
   if(envvar->comment != NULL) {
@@ -233,14 +225,22 @@ static void envvar_comment_write(FILE *out, envvar_t *envvar)
 static void node_comment_write(FILE *out, node_t *node)
 {
   if(node->comment != NULL) {
-    fprintf(out, "CM_ BU_ %s \"%s\";" NEWLINE, node->name, node->comment);
+    fputs("CM_ BU_ ", out);
+    identifier_write(out, node->name);
+    fputc(' ', out);
+    string_write(out, node->comment);
+    fputs(";" NEWLINE, out);
   }
 }
 
 static void message_comment_write(FILE *out, message_t *message)
 {
   if(message->comment != NULL) {
-    fprintf(out, "CM_ BO_ %lu \"%s\";" NEWLINE, message->id, message->comment);
+    fputs("CM_ BO_ ", out);
+    identifier_write(out, message->name);
+    fputc(' ', out);
+    string_write(out, message->comment);
+    fputs(";" NEWLINE, out);
   }
 }
 
@@ -258,9 +258,9 @@ static void signal_comment_write(FILE *out, uint32 id, signal_t *signal)
 static void comment_list_write(FILE *out, dbc_t *dbc)
 {
   if(dbc->network->comment != NULL) {
-    fputs("CM_ ", out);
+    fputs("CM_: ", out);
     string_write(out,dbc->network->comment);
-    fputs(";" NEWLINE, out);
+    newline(out);
   }
 
   {
@@ -307,9 +307,9 @@ static void attribute_definition_write(
   case ot_node_message: fputs("BA_DEF_REL_ BU_BO_REL_", out); break;
   }
 
-  fputs("  ", out);
+  fputc(' ', out);
 
-  string_write(out, attribute_definition->name);
+  identifier_write(out, attribute_definition->name);
 
   switch(attribute_definition->value_type) {
   case vt_integer:
@@ -323,16 +323,13 @@ static void attribute_definition_write(
 	    attribute_definition->range.double_range.max);
     break;
   case vt_string:
-    fprintf(out," STRING ");
+    fprintf(out," STRING");
     break;
   case vt_enum:
-    fprintf(out," ENUM  ");
+    fprintf(out," ENUM ");
     comma_string_list_write(out,attribute_definition->range.enum_list);
     break;
   case vt_hex:
-    fprintf(out," HEX %ld %ld", 
-	    attribute_definition->range.hex_range.min,
-	    attribute_definition->range.hex_range.max);
     break;
   }
   fputs(";" NEWLINE, out);
@@ -346,29 +343,6 @@ static void attribute_definition_list_write(
       attribute_definition_list->attribute_definition);
   }
 }
-static void value_write(
-  FILE *out,
-  value_type_t value_type,
-  value_union_t value)
-{
-  switch(value_type) {
-  case vt_integer:
-    fprintf(out,"%ld", value.int_val);
-    break;
-  case vt_float:
-    fprintf(out,"%lg", value.double_val);
-    break;
-  case vt_string:
-    string_write(out, value.string_val);
-    break;
-  case vt_enum:
-    string_write(out, value.enum_val);
-    break;
-  case vt_hex:
-    fprintf(out,"%lu", value.hex_val);
-    break;
-  }
-}
 
 static void attribute_definition_default_write(
   FILE *out,
@@ -376,7 +350,7 @@ static void attribute_definition_default_write(
   attribute_object_class_t aoc)
 {
   switch(aoc) {
-  case aoc_object:   fputs("BA_DEF_DEF_  ", out);     break;
+  case aoc_object:   fputs("BA_DEF_DEF_ ", out);     break;
   case aoc_relation: fputs("BA_DEF_DEF_REL_ ", out); break;
   }
 
@@ -384,10 +358,21 @@ static void attribute_definition_default_write(
 
   fputc(' ', out);
 
-  value_write(out,
-	      attribute_definition->value_type,
-	      attribute_definition->default_value);
-
+  switch(attribute_definition->value_type) {
+  case vt_hex:
+  case vt_integer:
+    fprintf(out,"%ld", attribute_definition->default_value.integer_value);
+    break;
+  case vt_float:
+    fprintf(out,"%lg", attribute_definition->default_value.double_value);
+    break;
+  case vt_string:
+    string_write(out, attribute_definition->default_value.string_value);
+    break;
+  case vt_enum:
+    string_write(out, attribute_definition->default_value.enum_value);
+    break;
+  }
   fputs(";" NEWLINE, out);
 }
 
@@ -425,151 +410,7 @@ static void attribute_definition_default_list_write(
   }
 }
 
-static void attribute_value_write(FILE *out, attribute_value_t *attribute_value)
-{
-  value_write(out,
-	      attribute_value->value_type,
-	      attribute_value->value);
-}
-
-static void attribute_write(FILE *out, attribute_t *attribute, string_t target)
-{
-  fputs("BA_ ",out);
-  string_write(out, attribute->name);
-  fputc(' ', out);
-  if(target != NULL) {
-    fputs(target, out);
-    fputc(' ', out);
-  }
-  attribute_value_write(out, attribute->value);
-  fputs(";" NEWLINE, out);
-}
-
-static void attribute_list_write(
-  FILE *out,
-  attribute_list_t *attribute_list,
-  string_t target)
-{
-  PLIST_ITER(attribute_list) {
-    attribute_write(out, attribute_list->attribute, target);
-  }
-}
-
-static void node_attribute_list_write(FILE *out, node_list_t *node_list)
-{
-  PLIST_ITER(node_list) {
-    string_t target = (string_t)malloc(3+1+strlen(node_list->node->name)+1);
-
-    sprintf(target, "BU_ %s", node_list->node->name);
-    attribute_list_write(out, node_list->node->attribute_list, target);
-    string_free(target);
-  }
-}
-
-static void message_attribute_list_write(FILE *out, message_list_t *message_list)
-{
-  PLIST_ITER(message_list) {
-    string_t target = (string_t)malloc(3+1+10+1);
-
-    sprintf(target, "BO_ %lu", message_list->message->id);
-    attribute_list_write(out, message_list->message->attribute_list, target);
-    string_free(target);
-  }
-}
-
-static void signal_attribute_list_write(FILE *out, message_list_t *message_list)
-{
-  PLIST_ITER(message_list) {
-    const message_t *message = message_list->message;
-    signal_list_t *signal_list = message->signal_list;
-    PLIST_ITER(signal_list) {
-      const signal_t *signal = signal_list->signal;
-      if(signal->attribute_list != NULL) {
-	string_t target = (string_t)malloc(3+1+10+1+strlen(signal->name)+1);
-	sprintf(target, "SG_ %lu %s",
-		message->id,
-		signal->name);
-	attribute_list_write(out, signal->attribute_list, target);
-	string_free(target);
-      }
-    }
-  }
-}
-
-static void attribute_rel_write(
-  FILE *out,
-  attribute_rel_t *attribute_rel)
-{
-  fputs("BA_REL_ ", out);
-  string_write(out, attribute_rel->name);
-  fputs(" BU_SG_REL_ ", out);
-  identifier_write(out, attribute_rel->node->name);
-  fprintf(out, " SG_ %lu ", attribute_rel->message->id);
-  identifier_write(out, attribute_rel->signal->name);
-  fputs(" " , out);
-  attribute_value_write(out, attribute_rel->attribute_value);
-  fputs(";" NEWLINE, out);
-}
-
-static void attribute_rel_list_write(
-  FILE *out,
-  attribute_rel_list_t *attribute_rel_list)
-{
-  PLIST_ITER(attribute_rel_list) {
-    attribute_rel_write(out, attribute_rel_list->attribute_rel);
-  }
-}
-
-static void signal_val_map_write(FILE *out, message_list_t *message_list)
-{
-  PLIST_ITER(message_list) {
-    const message_t *message = message_list->message;
-    signal_list_t *signal_list = message->signal_list;
-    PLIST_ITER(signal_list) {
-      const signal_t *signal = signal_list->signal;
-      val_map_t *val_map = signal->val_map;
-      if(val_map != NULL) {
-	fprintf(out, "VAL_ %lu %s ", message->id, signal->name);
-	val_map_write(out, val_map);
-	fputs(";" NEWLINE, out);
-      }
-    }
-  }
-}
-
-static void message_transmitter_list_write(
-  FILE *out,
-  message_list_t *message_list)
-{
-  PLIST_ITER(message_list) {
-    const message_t *message = message_list->message;
-    if(message->transmitter_list != NULL) {
-      fprintf(out, "BO_TX_BU_ %lu : ", message->id);
-      comma_identifier_list_write(out, message->transmitter_list);
-      fputs(";" NEWLINE,out);
-    }
-  }
-}
-
-static void signal_group_write(FILE *out, signal_group_t *signal_group)
-{
-  fprintf(out, "SIG_GROUP_ %lu %s 1 : ",
-	  signal_group->id,
-	  signal_group->name);
-  space_identifier_list_write(out, signal_group->signal_name_list);
-  fputs(";" NEWLINE,out);
-}
-
-static void signal_group_list_write(
-  FILE *out,
-  signal_group_list_t *signal_group_list)
-{
-  PLIST_ITER(signal_group_list) {
-    signal_group_write(out, signal_group_list->signal_group);
-  }
-}
-
-void dbc_write(FILE *out, dbc_t *dbc)
+void dbc_write_file(FILE *out, dbc_t *dbc)
 {
   int error;
 
@@ -581,24 +422,19 @@ void dbc_write(FILE *out, dbc_t *dbc)
     message_section_write(out);
     newline(out);
     node_list_write(out, dbc->node_list);
+    newline(out);
     valtable_list_write(out, dbc->valtable_list);
     newline(out);
     message_list_write(out, dbc->message_list);
-    message_transmitter_list_write(out, dbc->message_list);
-    newline(out);
     newline(out);
     comment_list_write(out, dbc);
+    newline(out);
     attribute_definition_list_write(out, dbc->attribute_definition_list);
+    newline(out);
     attribute_definition_default_list_write(out,
       dbc->attribute_definition_list, aoc_object);
     attribute_definition_default_list_write(out,
       dbc->attribute_definition_list, aoc_relation);
-    attribute_list_write(out, dbc->network->attribute_list, NULL);
-    node_attribute_list_write(out, dbc->node_list);
-    message_attribute_list_write(out, dbc->message_list);
-    signal_attribute_list_write(out, dbc->message_list);
-    attribute_rel_list_write(out, dbc->attribute_rel_list);
-    signal_val_map_write(out, dbc->message_list);
-    signal_group_list_write(out, dbc->signal_group_list);
+    newline(out);
   }
 }
