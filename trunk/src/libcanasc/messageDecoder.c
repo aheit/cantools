@@ -145,7 +145,6 @@ void canMessage_decode(message_t      *dbcMessage,
     }
 
     {
-      char *outputSignalName;
       double physicalValue;
 
       /* perform sign extension */

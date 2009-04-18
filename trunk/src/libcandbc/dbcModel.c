@@ -43,6 +43,8 @@ void attribute_value_free(attribute_value_t *attribute_value)
     case vt_enum:
       string_free(attribute_value->value.enum_val);
       break;
+    default:
+      break;
     }
     free(attribute_value);
   }
@@ -73,6 +75,8 @@ static void attribute_definition_free(
     case vt_string:
       /* free default */
       string_free(attribute_definition->default_value.string_val);
+      break;
+    default:
       break;
     }
     free(attribute_definition);
@@ -320,18 +324,6 @@ message_t *message_dup(message_t *orig)
   } else {
     return NULL;
   }
-}
-
-/****************
- * CONSTRUCTORS *
- ****************/
-
-static char *strapp(char *dp, const char *sp)
-{
-  while(*sp != '\0') {
-    *dp++ = *sp++;
-  }
-  return dp;
 }
 
 /*

@@ -10,3 +10,5 @@ TODO LIST
 2009-01-06      don't link every binary to matio        OK
 2009-01-06      don't hardwire output file in dbccopy	OK
 2009-01-17	differences in printf/scanf impl.
+2009-04-18	correct usage of GPL (http://www.gnu.org/licenses/gpl-howto.html)
+

@@ -539,7 +539,7 @@ attribute:
       if(message != NULL) {
         attribute_append(&message->attribute_list,$2,$5);
       } else {
-        fprintf(stderr,"error: message %d not found\n", $4);
+        fprintf(stderr,"error: message %d not found\n", (int)$4);
         attribute_value_free($5);
         free($2);
       }
@@ -557,7 +557,7 @@ attribute:
       if(signal != NULL) {
         attribute_append(&signal->attribute_list,$2,$6);
       } else {
-        fprintf(stderr,"error: signal %d (%s) not found\n", $4, $5);
+        fprintf(stderr,"error: signal %d (%s) not found\n", (int)$4, $5);
         attribute_value_free($6);
         free($2);
       }
@@ -774,11 +774,11 @@ val:
           signal->val_map = $4;
         } else {
           fprintf(stderr,
-                  "error: duplicate val_map for signal %lu (%s)\n", $2, $3);
+                  "error: duplicate val_map for signal %d (%s)\n", (int)$2, $3);
           val_map_free($4);
         }
       } else {
-        fprintf(stderr,"error: signal %lu (%s) not found\n", $2, $3);
+        fprintf(stderr,"error: signal %d (%s) not found\n", (int)$2, $3);
         val_map_free($4);
       }
       free($3);
@@ -903,7 +903,7 @@ comment:
       if(message != NULL) {
 	message->comment = string_merge(message->comment, $4);
       } else {
-        fprintf(stderr,"error: message %s not found\n", $3);
+        fprintf(stderr,"error: message %s not found\n", $4);
         string_free($4);
       }
     }
@@ -913,7 +913,7 @@ comment:
       if(signal != NULL) {
 	signal->comment = string_merge(signal->comment, $5);
       } else {
-        fprintf(stderr,"error: signal %d (%s) not found\n", $3, $4);
+        fprintf(stderr,"error: signal %d (%s) not found\n", (int)$3, $4);
         string_free($5);
       }
       string_free($4);
@@ -1133,7 +1133,6 @@ valtable_list:
     | valtable valtable_list
     {
       CREATE(valtable_list_t, valtable_list);
-      CREATE(valtable_t, valtable);
       valtable_list->next     = $2;
       valtable_list->valtable = $1;
       $$ = valtable_list;
@@ -1194,7 +1193,7 @@ message_transmitters: T_BO_TX_BU T_INT_VAL T_COLON
 	string_list_free(message->transmitter_list);
 	message->transmitter_list = $4;
       } else {
-        fprintf(stderr,"error: message %d not found\n", $2);
+        fprintf(stderr,"error: message %d not found\n", (int)$2);
 	string_list_free($4);
       }
     }

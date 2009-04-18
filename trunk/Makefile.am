@@ -61,7 +61,7 @@ asctomat_SOURCES = src/asctomat/asctomat.c \
 		   src/hashtable/hashtable_itr.h \
 		   src/hashtable/hashtable_private.h
 
-asctomat_LDADD	   = libcandbc.la libcanasc.la $(MATIO_LIB)
+asctomat_LDADD	   = libcandbc.la libcanasc.la $(MATIO_LIB) @LIBOBJS@
 
 # additional include pathes necessary
 INCLUDES = -I$(top_srcdir)/src/libcandbc -I$(top_srcdir)/hashtable

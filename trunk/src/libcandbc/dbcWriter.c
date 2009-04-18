@@ -23,7 +23,7 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #include <dbcWriter.h>
 
 #define PLIST_ITER(iter) \
-  for(1;iter != NULL; iter = iter->next)
+  for(;iter != NULL; iter = iter->next)
 
 #define NEWLINE "\r\n"
 
@@ -305,6 +305,7 @@ static void attribute_definition_write(
   case ot_envvar:  fputs("BA_DEF_ EV_", out); break;
   case ot_node_signal:  fputs("BA_DEF_REL_ BU_SG_REL_", out); break;
   case ot_node_message: fputs("BA_DEF_REL_ BU_BO_REL_", out); break;
+  default: break;
   }
 
   fputs("  ", out);
@@ -376,8 +377,9 @@ static void attribute_definition_default_write(
   attribute_object_class_t aoc)
 {
   switch(aoc) {
-  case aoc_object:   fputs("BA_DEF_DEF_  ", out);     break;
+  case aoc_object:   fputs("BA_DEF_DEF_  ", out);    break;
   case aoc_relation: fputs("BA_DEF_DEF_REL_ ", out); break;
+  default: break;
   }
 
   string_write(out, attribute_definition->name);
@@ -571,8 +573,6 @@ static void signal_group_list_write(
 
 void dbc_write(FILE *out, dbc_t *dbc)
 {
-  int error;
-
   if(dbc != NULL && out != NULL) {
     version_write(out, dbc->version);
     newline(out);

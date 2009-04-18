@@ -112,8 +112,8 @@ static void signalProc_timeSeries(
   void           *cbData)
 {
   /*
-  /* realloc strategy:
-  *
+   * realloc strategy:
+   *
    * reallocate in 1kByte (128*sizeof(double)) blocks.
    *
    * Increasing realloc step size improves performance only marginally

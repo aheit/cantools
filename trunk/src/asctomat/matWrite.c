@@ -52,7 +52,7 @@ int matWrite(measurement_t *measurement, const char *outFileName)
         char         *signalName = hashtable_iterator_key(itr);
         timeSeries_t *timeSeries = hashtable_iterator_value(itr);
         double *timeValue = (double *)malloc(sizeof(double)*2*timeSeries->n);
-        int i;
+        unsigned int i;
 
         /*
          * build up a 1x2n array with time stamps in [0..n-1] and

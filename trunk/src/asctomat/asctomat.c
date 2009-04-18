@@ -71,7 +71,7 @@ int main(int argc, char **argv)
   int bus = -1;
   signalFormat_t signalFormat = signalFormat_Name;
   measurement_t *measurement;
-  int ret;
+  int ret = 1;
   sint32 timeResolution = 10000;
 
   program_name = argv[0];

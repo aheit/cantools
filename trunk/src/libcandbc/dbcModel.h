@@ -335,6 +335,7 @@ DECLARE_LIST_FREE(string_list, string);
 DECLARE_PLIST_FREE(val_map, val_map_entry);
 DECLARE_PLIST_FREE(valtable_list, valtable);
 
+void string_free(string_t string);
 void valtable_free(valtable_t *valtable);
 void attribute_value_free(attribute_value_t *attribute_value);
 void message_free(message_t *message);
