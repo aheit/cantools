@@ -1,0 +1,12 @@
+TODO LIST
+
+2008-12-28      DLC != 8				OK
+2008-12-29      timestamps relative
+2008-12-29      envvar index variable?
+2008-12-30      file headers / GNU preamble		OK
+2008-12-30      duplicate objects after *_find
+2009-01-01      implement time binning
+2009-01-01      use uint64 for decoding
+2009-01-06      don't link every binary to matio        OK
+2009-01-06      don't hardwire output file in dbccopy	OK
+2009-01-17	differences in printf/scanf impl.
