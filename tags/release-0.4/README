@@ -1,0 +1,63 @@
+General Information
+===================
+
+cantools is a library and a collection of tools for accessing
+Vector CAN database (.dbc) files. The library provides a
+C API for accessing the database tables.
+
+Several tools can be used to access the DBC files from the command line:
+
+* dbcls lists the contents of a DBC file.
+* asctomat converts a .ASC log file to a MATLAB .MAT file
+* dbccopy copies a dbcfile (to test the parser and generator)
+
+The tool 'asctomat' requires the package matio, which needs to be
+compiled and installed first (see instructions below).
+
+Installation of matio
+=====================
+Prerequisites: autotools
+
+1) download matio-1.3.3.tar.gz
+   wget 'http://downloads.sourceforge.net/matio/matio-1.3.3.tar.gz?use_mirror='
+2) unpack:
+   tar xzf matio-1.3.3.tar.gz
+3) configure:
+   cd matio-1.3.3
+   CFLAGS=-DZ_PREFIX ./configure
+4) build and install:
+   make ; make install
+
+Installation
+============
+
+download and extract cantools-*.tar.gz
+cd cantools
+libtoolize
+autoreconf -f -i
+cd ..
+./configure
+make
+make install
+
+Debugging
+=========
+Edit Makefile:
+     - uncomment the line DEFS=$(YYDEBUG)
+     - add "extern int yydebug; yydebug = 1;" to the main program
+     - recompile
+
+Profiling
+=========
+Edit Makefile:
+     - add flag "-pg" to CFLAGS
+
+Troubleshooting
+===============
+1) Error: ./libtool: line 860: X--tag=CC: command not found
+   Reason: libtool scripts from a different environment are used
+   Fix: execute "autoreconf -f -i; make"
+
+2) Error: matio.h: No such file or directory
+   Reason: matio is not installed
+   Fix: install matio (see above)

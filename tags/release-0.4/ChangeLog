@@ -1,0 +1,100 @@
+2009-02-15    <aheit@gollum>
+
+	* all: released version 0.4
+	* config: fixed parser table dependency
+
+2009-02-13    <aheit@gollum>
+
+	* asctomat: new option -t for specification of the time resolution
+	* libcanasc: fixed atof() prototype by including stdlib.h
+
+2009-02-01    <aheit@gollum>
+
+	* all: released version 0.3
+	* libcanasc: corrected signedness of work_byte variable
+
+2009-01-17    <aheit@gollum>
+
+	* libcandbc: using double data type for all floating point values
+	* libcandbc: implemented parsing and serializing of VAL_TABLE
+	* config: selective linking of libmatio
+
+2009-01-10    <aheit@gollum>
+
+	* all: released version 0.2
+	* config: check for matio added
+	* config: removed default -d flags for lex & yacc
+
+2009-01-09    <aheit@gollum>
+
+	* asctomat: fixed warning on strdup protype
+	* libcandbc: fixed include filename in dbcReader.h and dbcWriter.h
+
+2009-01-06    <aheit@gollum>
+
+	* libcandbc: renamed some structure elements to increase consistency
+	* libcandbc: changed parsing of all lists to right-recursive
+          parsing. This will give us the correct element order when forming
+	  lists using element prepending.
+
+2009-01-04    <aheit@gollum>
+
+	* all: released initial version 0.1
+	* dbccopy: testcode for dbcWriter added
+
+2009-01-02    <aheit@gollum>
+
+	* libcandbc: code for serializing DBC model added (dbcWriter)
+
+2008-12-30    <aheit@gollum>
+
+        * dbcls: show_envvars implemented
+        * dbcls: show_valtables implemented
+        * libcandbc: added parsing of value tables
+        * libcandbc: added parsing of environment variables
+
+2008-12-29    <aheit@gollum>
+
+        * libcanasc: allow DLC != 8
+        * libcanasc: created library for processing ASC files
+
+2008-12-28    <aheit@gollum>
+
+        * configure.in: added dmalloc memory debugger
+        * configure.in: added efence memory debugger
+
+2008-12-22    <aheit@gollum>
+
+        * dbcls: show_nodes implemented
+        * dbcls: show_messages implemented
+        * libcandbc: fixed some memory leaks
+
+2008-12-01    <aheit@gollum>
+
+        * dbcls: show_signals implemented.
+
+2008-11-23    <aheit@gollum>
+
+        * asctomat: bugfix: numeric mode must not skip non-digits
+        * asctomat: bugfix: loop over bus assignments was not terminated
+          after assigment has been found.
+
+2008-11-11    <aheit@gollum>
+
+        * asctomat: flexible bus assigment added
+
+2008-11-10    <aheit@gollum>
+
+        * asctomat: first implementation
+
+2008-11-08    <aheit@gollum>
+
+        * libcandbc/lexer.l: allowed identifiers to start with an underscore
+
+2008-09-25    <aheit@gollum>
+
+        * Started ChangeLog
+
+2007-12-21    <aheit@gollum>
+
+        * Started Project
