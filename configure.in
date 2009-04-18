@@ -45,6 +45,9 @@ AC_PROG_AWK
 AC_PROG_CPP
 AC_PROG_MKDIR_P
 
+# Checks for functions
+AC_REPLACE_FUNCS([strtok_r])
+
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h string.h])
@@ -82,7 +85,6 @@ if test $efence = yes; then
 AC_CHECK_LIB(efence,memalign)
 fi
 
-AC_FUNC_MALLOC
 AC_CHECK_FUNCS([strdup strtol strtoul])
 
 AC_CONFIG_FILES([Makefile])

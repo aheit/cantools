@@ -58,7 +58,7 @@ DIST_COMMON = README $(am__configure_deps) $(include_HEADERS) \
 	$(srcdir)/config.h.in $(top_srcdir)/configure AUTHORS \
 	ChangeLog TODO config.guess config.sub depcomp install-sh \
 	ltmain.sh missing src/libcandbc/lexer.c src/libcandbc/parser.c \
-	src/libcandbc/parser.h ylwrap
+	src/libcandbc/parser.h strtok_r.c ylwrap
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -112,7 +112,7 @@ am_asctomat_OBJECTS = src/asctomat/asctomat.$(OBJEXT) \
 asctomat_OBJECTS = $(am_asctomat_OBJECTS)
 am__DEPENDENCIES_1 =
 asctomat_DEPENDENCIES = libcandbc.la libcanasc.la \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) @LIBOBJS@
 am_dbccopy_OBJECTS = src/dbccopy/dbccopy.$(OBJEXT)
 dbccopy_OBJECTS = $(am_dbccopy_OBJECTS)
 dbccopy_DEPENDENCIES = libcandbc.la
@@ -317,7 +317,7 @@ asctomat_SOURCES = src/asctomat/asctomat.c \
 		   src/hashtable/hashtable_itr.h \
 		   src/hashtable/hashtable_private.h
 
-asctomat_LDADD = libcandbc.la libcanasc.la $(MATIO_LIB)
+asctomat_LDADD = libcandbc.la libcanasc.la $(MATIO_LIB) @LIBOBJS@
 
 # additional include pathes necessary
 INCLUDES = -I$(top_srcdir)/src/libcandbc -I$(top_srcdir)/hashtable
@@ -589,6 +589,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtok_r.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/asctomat/$(DEPDIR)/asctomat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/asctomat/$(DEPDIR)/busAssignment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/asctomat/$(DEPDIR)/matWrite.Po@am__quote@
@@ -948,7 +949,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -984,7 +985,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

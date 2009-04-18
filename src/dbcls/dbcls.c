@@ -99,7 +99,7 @@ static void show_attribute_list(attribute_list_t *al)
 static void show_val_map(val_map_t *vm)
 {
   for(;vm!=NULL;vm=vm->next) {
-    printf("%d=\"%s\"", vm->val_map_entry->index, vm->val_map_entry->value);
+    printf("%lu=\"%s\"", vm->val_map_entry->index, vm->val_map_entry->value);
     if(vm->next != NULL) putchar(',');
   }
 }
@@ -129,12 +129,9 @@ static void show_network(dbc_t *dbc)
   printf("network: %s\n",network_name);
 
   if(dbc->network) {
-    attribute_list_t *al;
-
     if(dbc->network->comment) {
       printf("comment: \"%s\"\n",dbc->network->comment);
     }
-
     show_attribute_list(dbc->network->attribute_list);
   }
 }
@@ -146,14 +143,13 @@ static void show_signals(dbc_t *dbc)
 
   for(ml = dbc->message_list; ml != NULL; ml = ml->next) {
     for(sl = ml->message->signal_list; sl != NULL; sl = sl->next) {
-      printf("$%X;%s;%s;\"%s\";%f;%f",
+      printf("$%lX;%s;%s;\"%s\";%f;%f",
              ml->message->id,
              ml->message->name,
              sl->signal->name,
              sl->signal->unit?sl->signal->unit:"",
              sl->signal->min,
-             sl->signal->max
-             );
+             sl->signal->max);
       if(sl->signal->val_map != NULL) {
         printf(";");
         show_val_map(sl->signal->val_map);
@@ -165,7 +161,7 @@ static void show_signals(dbc_t *dbc)
 
 static void show_message(message_t *message)
 {
-  printf("$%X;%s;%d;%s",
+  printf("$%lX;%s;%d;%s",
 	 message->id,
 	 message->name,
 	 message->len,
@@ -205,8 +201,6 @@ static void show_envvars(envvar_list_t *envvar_list)
   envvar_list_t *el;
 
   for(el = envvar_list; el != NULL; el = el->next) {
-    string_list_t *nl;
-    val_map_t     *vm;
     const char *string_from_et[] = {
       "INTEGER",
       "FLOAT",
@@ -220,7 +214,7 @@ static void show_envvars(envvar_list_t *envvar_list)
       "READWRITE",
     };
 
-    printf("\"%s\";%s;%s;%d;%d;\"%s\";%d;%d;",
+    printf("\"%s\";%s;%s;%ld;%ld;\"%s\";%ld;%ld;",
            el->envvar->name,
            string_from_et[(int)el->envvar->envtype],
            string_from_at[(int)el->envvar->access],
@@ -317,15 +311,13 @@ main(int argc, char **argv)
     case 's': signals_flag = 1;   break;
     case 't': valtables_flag = 1; break;
     case 'h': help(); exit(0);    break;
-
     case '?':
       /* getopt_long already printed an error message. */
-      fprintf(stderr, "Typ `dbcls --help' for more information\n", c);
-      abort ();
+      fprintf(stderr, "Typ `dbcls --help' for more information\n");
+      abort();
       break;
-
     default:
-      abort ();
+      abort();
       break;
     }
   }

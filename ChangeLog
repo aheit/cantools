@@ -1,3 +1,14 @@
+2009-04-18    <aheit@gollum>
+
+	* all: added GPLv3 license ('COPYING')
+	* config: provided strtok_r source for MSYS/MinGW compatibility
+	* asctomat: replaced usage of system timespec structure for
+	  MSYS/MinGW compatibility
+
+2009-02-22    <aheit@gollum>
+
+	* all: fixed compiler warnings
+
 2009-02-15    <aheit@gollum>
 
 	* all: released version 0.4
