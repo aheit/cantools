@@ -42,7 +42,7 @@ static void help(void)
 {
   fprintf(stderr,
           "Usage: %s [OPTION] -d dbcfile\n"
-          "List information about dbcfile.\n"
+          "Convert ASC log file to MAT file.\n"
           "\n"
           "Options:\n"
           "  -b, --bus <busid>          specify bus for next database\n"
@@ -60,7 +60,7 @@ static void help(void)
           "      n                      signalname\n"
           "      mn                     messagename_signalname\n"
           "      dmn                    dbcname_messagename_signalname\n",
-	program_name);
+        program_name);
 }
 
 int main(int argc, char **argv)
@@ -116,11 +116,11 @@ int main(int argc, char **argv)
       break;
     case 'd':
       if(verbose_flag) {
-	if(bus == -1) {
-	  fprintf(stderr, "Assigning DBC file %s to all busses\n", optarg);
-	} else {
-	  fprintf(stderr, "Assigning DBC file %s to bus %d\n", optarg, bus);
-	}
+        if(bus == -1) {
+          fprintf(stderr, "Assigning DBC file %s to all busses\n", optarg);
+        } else {
+          fprintf(stderr, "Assigning DBC file %s to bus %d\n", optarg, bus);
+        }
       }
       busAssignment_associate(busAssignment, bus, optarg);
       break;
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
                      |  signalFormat_Name;
       } else {
         fprintf(stderr, "error: format must be 's', 'ms', or 'dms'\n");
-	usage_error();
+        usage_error();
       }
       mat_filename = optarg;
       break;
@@ -173,18 +173,20 @@ int main(int argc, char **argv)
     /* parse ASC file */
     if(verbose_flag) {
       fprintf(stderr,
-	      "Parsing ASC file %s\n", asc_filename?asc_filename:"<stdin>");
+              "Parsing ASC file %s\n", asc_filename?asc_filename:"<stdin>");
     }
     measurement = measurement_read(busAssignment,
-				   asc_filename,
-				   signalFormat,
-				   timeResolution);
+                                   asc_filename,
+                                   signalFormat,
+                                   timeResolution);
     if(measurement != NULL) {
 
       /* write MAT file */
       if(verbose_flag) {
-	fprintf(stderr, "Writing MAT file %s\n", mat_filename);
+        fprintf(stderr, "Writing MAT file %s\n", mat_filename);
       }
+
+
       matWrite(measurement, mat_filename);
       measurement_free(measurement);
     }
