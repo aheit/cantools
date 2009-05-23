@@ -1,5 +1,9 @@
 /* config.h.in.  Generated from configure.in by autoheader.  */
 
+/* Define to 1 if you have the declaration of `strtok_r', and to 0 if you
+   don't. */
+#undef HAVE_DECL_STRTOK_R
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
@@ -85,3 +89,9 @@
 
 /* Define to empty if `const' does not conform to ANSI C. */
 #undef const
+
+
+#if !HAVE_DECL_STRTOK_R
+extern char *strtok_r (char *s, const char *delim, char **save_ptr);
+#endif
+

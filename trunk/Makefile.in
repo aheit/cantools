@@ -55,7 +55,7 @@ bin_PROGRAMS = dbccopy$(EXEEXT) dbcls$(EXEEXT) asctomat$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(include_HEADERS) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/config.h.in $(top_srcdir)/configure AUTHORS \
+	$(srcdir)/config.h.in $(top_srcdir)/configure AUTHORS COPYING \
 	ChangeLog TODO config.guess config.sub depcomp install-sh \
 	ltmain.sh missing src/libcandbc/lexer.c src/libcandbc/parser.c \
 	src/libcandbc/parser.h strtok_r.c ylwrap
