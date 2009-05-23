@@ -18,15 +18,15 @@
 
 
 AC_PREREQ(2.61)
-AC_INIT(cantools, 0.4, aheit@web.de)
+AC_INIT(cantools, 0.5, aheit@web.de)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.9 foreign])
 AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
 
 dnl common library version
-version_info='0:4:0'
+version_info='0:5:0'
 AC_SUBST(version_info)
 
 # Checks for programs.
@@ -47,6 +47,20 @@ AC_PROG_MKDIR_P
 
 # Checks for functions
 AC_REPLACE_FUNCS([strtok_r])
+AC_CHECK_DECLS([strtok_r],
+ , , [
+#include <stdio.h>
+#include <string.h>
+#ifdef HAVE_STRINGS_H
+# include <strings.h>
+#endif])
+
+AH_BOTTOM([
+#if !HAVE_DECL_STRTOK_R
+extern char *strtok_r (char *s, const char *delim, char **save_ptr);
+#endif
+])
+
 
 # Checks for header files.
 AC_HEADER_STDC
