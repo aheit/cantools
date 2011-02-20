@@ -1,5 +1,5 @@
 /*  dbcls -- list contents of a DBC file 
-    Copyright (C) 2007-2009 Andreas Heitmann
+    Copyright (C) 2007-2011 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@
 /*
  * usage:
  *
- * dbcls -d dbcfile -N  -> networks
- * dbcls -d dbcfile -n  -> nodes
- * dbcls -d dbcfile -e  -> environment
- * dbcls -d dbcfile -m  -> messages
- * dbcls -d dbcfile -s  -> signals
+ * dbcls -d dbcfile -N  > networks.txt
+ * dbcls -d dbcfile -n  > nodes.txt
+ * dbcls -d dbcfile -e  > environment.txt
+ * dbcls -d dbcfile -m  > messages.txt
+ * dbcls -d dbcfile -s  > signals.txt
  */
 
 #ifdef HAVE_CONFIG_H
@@ -45,6 +45,34 @@ static int nodes_flag;
 static int envvars_flag;
 static int valtables_flag;
 
+static char *decode_mux_type(mux_t mux_type)
+{
+  static char *text;
+
+  switch(mux_type) {
+  case m_signal:      text = "Signal"; break;
+  case m_multiplexor: text = "Multiplexor"; break;
+  case m_multiplexed: text = "Multiplexed"; break;
+  default:            text = "unknown"; break;
+  }
+
+  return text;
+}
+
+static char *decode_signal_val_type(signal_val_type_t signal_val_type)
+{
+  static char *text;
+
+  switch(signal_val_type) {
+  case svt_integer: text = "integer"; break;
+  case svt_float:   text = "float";   break;
+  case svt_double:  text = "double";  break;
+  default:          text = "unknown"; break;
+  }
+
+  return text;
+}
+
 static void show_attribute(attribute_t *a)
 {
 
@@ -55,22 +83,22 @@ static void show_attribute(attribute_t *a)
   }
   switch(a->value->value_type) {
   case vt_integer:
-    printf("%ld (INT)\n",a->value->value.int_val);
+    printf("%ld (INT)",a->value->value.int_val);
     break;
   case vt_float:
-    printf("%f (DOUBLE)\n",a->value->value.double_val);
+    printf("%f (DOUBLE)",a->value->value.double_val);
     break;
   case vt_string:
-    printf("\"%s\" (STRING)\n",a->value->value.string_val);
+    printf("\"%s\" (STRING)",a->value->value.string_val);
     break;
   case vt_enum:
-    printf("\"%s\" (ENUM)\n",a->value->value.enum_val);
+    printf("\"%s\" (ENUM)",a->value->value.enum_val);
     break;
   case vt_hex:
-    printf("0x%lx (HEX)\n",a->value->value.hex_val);
+    printf("0x%lx (HEX)",a->value->value.hex_val);
     break;
   default:
-    printf(" (UNKNOWN)\n");
+    printf(" (UNKNOWN)");
   }
 }
 
@@ -85,7 +113,7 @@ static void show_string_list(string_list_t *string_list)
 
 static void show_attribute_list(attribute_list_t *al)
 {
-  if(al != NULL && verbose_flag) {
+  if(al != NULL) {
     for(al = al;
         al != NULL;
         al = al->next) {
@@ -111,7 +139,6 @@ static void show_valtable_list(valtable_list_t *valtable_list)
       valtable_list->valtable->name,
       valtable_list->valtable->comment?valtable_list->valtable->comment:"");
     show_val_map(valtable_list->valtable->val_map);
-    printf("\n");
   }
 }
 
@@ -136,52 +163,143 @@ static void show_network(dbc_t *dbc)
   }
 }
 
-static void show_signals(dbc_t *dbc)
+static void show_message_header(void)
 {
-  message_list_t *ml;
-  signal_list_t *sl;
+  fputs("message_id;"
+	"message_name;"
+	"message_len;"
+	"message_sender;"
+	"message_comment;"
+	"message_attribute_list;"
+	"message_transmitter_list;",stdout);
+}
 
-  for(ml = dbc->message_list; ml != NULL; ml = ml->next) {
-    for(sl = ml->message->signal_list; sl != NULL; sl = sl->next) {
-      printf("$%lX;%s;%s;\"%s\";%f;%f",
-             ml->message->id,
-             ml->message->name,
-             sl->signal->name,
-             sl->signal->unit?sl->signal->unit:"",
-             sl->signal->min,
-             sl->signal->max);
-      if(sl->signal->val_map != NULL) {
-        printf(";");
-        show_val_map(sl->signal->val_map);
-      }
-      printf("\n");
-    }
+static void show_signal_header(void)
+{
+  fputs("signal_name;"
+	"signal_mux_type;"
+	"signal_mux_value;"
+	"signal_bit_start;"
+	"signal_bit_len;"
+	"signal_endianess;"
+	"signal_signedness;"
+	"signal_scale;"
+	"signal_offset;"
+	"signal_min;"
+	"signal_max;"
+	"signal_val_type;"
+	"signal_unit;"
+	"signal_receiver_list;"
+	"signal_comment;"
+	"signal_attribute_list;"
+	"signal_val_map\n",stdout);
+}
+
+static void show_signal(signal_list_t *sl)
+{
+  printf("%s;"       /* signal name */
+	 "%s;"       /* mux type */
+	 "%ld;"      /* mux value */
+	 "%d;"       /* bit start */
+	 "%d;"       /* bit len */
+	 "%d;"       /* endianess */
+	 "%d;"       /* signedness */
+	 "%f;"       /* scale */
+	 "%f;"      /* offset */
+	 "%f;"       /* min */
+	 "%f;"      /* max */
+	 "%s;"      /* signal val type */
+	 "\"%s\";"   /* unit */             
+	 ,
+	 /* Signal */
+	 sl->signal->name,
+	 decode_mux_type(sl->signal->mux_type),
+	 sl->signal->mux_value,
+	 sl->signal->bit_start,
+	 sl->signal->bit_len,
+	 sl->signal->endianess,
+	 sl->signal->signedness,
+	 sl->signal->scale,
+	 sl->signal->offset,
+	 sl->signal->min,
+	 sl->signal->max,
+	 decode_signal_val_type(sl->signal->signal_val_type),
+	 sl->signal->unit?sl->signal->unit:"");
+  show_string_list(sl->signal->receiver_list);
+  putchar(';');
+  printf("\"%s\";",sl->signal->comment?sl->signal->comment:"");
+  show_attribute_list(sl->signal->attribute_list);
+  putchar(';');
+  show_val_map(sl->signal->val_map);
+  putchar('\n');
+}
+
+static void show_string(string_t string)
+{
+  if(string) {
+    printf("\"%s\"", string);
   }
 }
 
-static void show_message(message_t *message)
+static void show_message_old(message_t *message)
 {
   printf("$%lX;%s;%d;%s",
 	 message->id,
 	 message->name,
 	 message->len,
 	 message->sender);
-  if(message->comment) {
-    printf(";\"%s\"", message->comment);
-  }
+  putchar(';');
+  show_string(message->comment);
   putchar(';');
   show_string_list(message->transmitter_list);
-  putchar('\n');
+}
+
+static void show_message(message_list_t *ml)
+{
+  printf("$%lX;"     /* message id */
+	 "%s;"       /* message name */
+	 "%d;"       /* message len */
+	 "%s"       /* sender */
+	 ,
+	 ml->message->id,
+	 ml->message->name,
+	 ml->message->len,
+	 ml->message->sender);
+  putchar(';');
+  show_string(ml->message->comment);
+  putchar(';');
+  show_attribute_list(ml->message->attribute_list);
+  putchar(';');
+  show_string_list(ml->message->transmitter_list);
 }
 
 static void show_message_list(message_list_t *message_list)
 {
   while(message_list != NULL) {
-    show_message(message_list->message);
+    show_message(message_list);
+    putchar('\n');
     message_list = message_list->next;
   }
 }
 
+
+static void show_signals(dbc_t *dbc)
+{
+  message_list_t *ml;
+  signal_list_t *sl;
+
+  show_message_header();
+  show_signal_header();
+
+  for(ml = dbc->message_list; ml != NULL; ml = ml->next) {
+    for(sl = ml->message->signal_list; sl != NULL; sl = sl->next) {
+      show_message(ml);
+      putchar(';');
+      show_signal(sl);
+      putchar('\n');
+    }
+  }
+}
 static void show_nodes(dbc_t *dbc)
 {
   node_list_t *nl;
@@ -191,7 +309,7 @@ static void show_nodes(dbc_t *dbc)
     if(nl->node->comment) {
       printf(";\"%s\"", nl->node->comment);
     }
-    puts("");
+    putchar('\n');
     show_attribute_list(nl->node->attribute_list);
   }
 }

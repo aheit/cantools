@@ -1,3 +1,14 @@
+2011-02-20    <aheit@MALFOY>
+
+	* all: updated matio to version 1.3.4
+	* all: updated autoconf toolchain
+	* dbcls: displaying full data of signal record
+	* dbcls: changed output to CSV format with header line
+
+2010-10-24    <aheit@gollum>
+
+	* added J1939 message processing (29 bit single-wire CAN)
+
 2009-04-18    <aheit@gollum>
 
 	* all: added GPLv3 license ('COPYING')
