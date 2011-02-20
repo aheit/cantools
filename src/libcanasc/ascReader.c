@@ -1,5 +1,5 @@
 /*  ascReader.c --  parse ASC files
-    Copyright (C) 2007-2009 Andreas Heitmann
+    Copyright (C) 2007-2011 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -133,7 +133,7 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
       /* get message bytes */
       for(i = 0; i < message.dlc; i++) {
         cp = strtok_r(NULL, " ", &buffer_lasts); if(cp == NULL) break;
-        message.byte_arr[i] = (uint8)strtol(cp,NULL,numbase);
+        message.byte_arr[i] = (uint8)strtoul(cp,NULL,numbase);
       }
 
       /*
@@ -156,19 +156,30 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
         int len = strlen(id_str);
         if(len == 0) break;
 
-        if(id_str[len-1] != 'h') {
-          /* assume numeric mode */
-          message.id = (uint16)strtol(id_str,NULL,numbase);
-        } else {
+        switch(id_str[len-1]) {
+	case 'h':
           /* symbolic mode with hex hint */
-          char *cp;
-	  char *id_lasts;
+          {
+            char *cp;
+	    char *id_lasts;
 
-          strtok_r(id_str,"_", &id_lasts);
-          cp = strtok_r(NULL, "h", &id_lasts);
+            strtok_r(id_str,"_", &id_lasts);
+            cp = strtok_r(NULL, "h", &id_lasts);
 
-          /* force hex mode for id string */
-          message.id = (uint16)strtol(cp,NULL,16);
+            /* force hex mode for id string */
+            message.id = (uint32)strtol(cp,NULL,16);
+          }
+          break;
+        case 'x':
+          /* J1939 extended message IDs */
+          message.id = (uint32)strtol(id_str,NULL,numbase);
+	  /* remove node's source address */
+          message.id &= ~0xFF;
+          break;
+	default:
+          /* assume numeric mode */
+          message.id = (uint32)strtol(id_str,NULL,numbase);
+	  break;
         }
       }
 
