@@ -90,7 +90,6 @@ void canMessage_decode(message_t      *dbcMessage,
     uint8  bit_len      = s->bit_len;
     uint8  start_offset = s->bit_start & 7;
     uint8  start_byte   = s->bit_start / 8;
-    uint8  end_byte     = start_byte + (7 + bit_len - start_offset - 1)/8;
     uint8  data;
     sint8  work_byte;
     uint8  shift;
@@ -98,6 +97,7 @@ void canMessage_decode(message_t      *dbcMessage,
     /* align signal into ulong32 */
     /* 0 = Big Endian, 1 = Little Endian */    
     if(s->endianess == 0) { /* big endian */
+      uint8  end_byte     = start_byte + (7 + bit_len - start_offset - 1)/8;
       uint8  end_offset   = (start_offset - bit_len + 1) & 7;
 
       /* loop over all source bytes from start_byte to end_byte */
@@ -125,6 +125,7 @@ void canMessage_decode(message_t      *dbcMessage,
       }
     } else {
       /* little endian - similar algorithm with reverse bit significance  */
+      uint8  end_byte     = start_byte + (bit_len + start_offset - 1)/8;
       uint8  end_offset   = (start_offset + bit_len - 1) & 7;
 
       for(work_byte = end_byte; work_byte >= start_byte; work_byte--) {
