@@ -64,6 +64,6 @@ Troubleshooting
    Fix: install matio  (see "Installation of matio")
 
 3) Error: configure stops with "Error! You need to install libmatio first."
-   Reason: linker did not find matio the library path
+   Reason: linker did not find matio in the library path
    Fix: install matio to /usr instead of /usr/local. Set PREFIX to
    /usr at configuration time (see "Installation of matio")

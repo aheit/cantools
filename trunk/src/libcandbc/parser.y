@@ -378,7 +378,9 @@ dbc:
 
 version: T_VERSION T_STRING_VAL { $$ = $2; };
 
-symbol_section: T_NS T_COLON symbol_list;
+symbol_section:
+      T_NS T_COLON
+    | T_NS T_COLON symbol_list;
 
 symbol_list:
       symbol
