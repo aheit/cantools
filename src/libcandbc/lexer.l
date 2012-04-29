@@ -29,7 +29,7 @@ ws              [ \t]+
 decnumber       [-+]?[0-9]+
 hexnumber       0x[0-9a-fA-F]+
 double_val      [-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?
-id              [a-zA-Z_]([_a-zA-Z0-9]*[a-zA-Z0-9])?
+id              [a-zA-Z_]([_a-zA-Z0-9]*)?
 string          \"([^"\\]|(\\.))*\"
 nl              [\n\r]
 
