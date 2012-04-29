@@ -93,7 +93,8 @@
      T_BU_EV_REL = 310,
      T_BU_BO_REL = 311,
      T_SG_MUL_VAL = 312,
-     T_DUMMY_NODE_VECTOR = 313
+     T_DUMMY_NODE_VECTOR = 313,
+     T_NAN = 314
    };
 #endif
 /* Tokens.  */
@@ -153,6 +154,7 @@
 #define T_BU_BO_REL 311
 #define T_SG_MUL_VAL 312
 #define T_DUMMY_NODE_VECTOR 313
+#define T_NAN 314
 
 
 
@@ -196,7 +198,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 200 "src/libcandbc/parser.h"
+#line 202 "src/libcandbc/parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
