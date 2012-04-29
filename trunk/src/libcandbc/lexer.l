@@ -44,9 +44,10 @@ nl              [\n\r]
 "SIG_VALTYPE_"         { return T_SIG_VALTYPE;     }
 "NS_"                  { return T_NS;              }
 "INT"                  { return T_INT;             }
-"FLOAT"                { return T_FLOAT;             }
+"FLOAT"                { return T_FLOAT;           }
+"NAN"                  { return T_NAN;             }
 "STRING"               { return T_STRING;          }
-"ENUM"                 { return T_ENUM;          }
+"ENUM"                 { return T_ENUM;            }
 "HEX"                  { return T_HEX;             }
 
 "NS_DESC_"             { return T_NS_DESC;         }

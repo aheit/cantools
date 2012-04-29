@@ -21,8 +21,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <ctype.h>
-#include <string.h>
 #include <dbcModel.h>
+#include <math.h>
 
 /*
  * Define the parameter name of the yyparse() argument
@@ -302,6 +302,7 @@ void attribute_append(
 %token T_BU_BO_REL
 %token T_SG_MUL_VAL
 %token T_DUMMY_NODE_VECTOR
+%token T_NAN
 
 %type <number>                    T_INT_VAL bit_start bit_len
                                   endianess signedness T_DUMMY_NODE_VECTOR
@@ -1082,7 +1083,8 @@ comma_string_list:
 
 /* double_val or int_val as float */
 double_val:
-      T_DOUBLE_VAL  { $$ = $1;        }
+      T_DOUBLE_VAL  { $$ = $1; }
+    | T_NAN         { $$ = NAN; }
     | T_INT_VAL     { $$ = (double)$1; }
     ;
 

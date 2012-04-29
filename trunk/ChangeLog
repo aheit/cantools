@@ -1,3 +1,7 @@
+2012-04-29    <aheit@MALFOY>
+
+	* libcandbc: allowed NAN as max value in signal specification
+
 2012-04-28    <aheit@MALFOY>
 
 	* libcandbc: allowed underscore as last character in identifier to
