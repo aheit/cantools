@@ -1,3 +1,10 @@
+2012-04-28    <aheit@MALFOY>
+
+	* libcandbc: allowed underscore as last character in identifier to
+	enable parsing of multiplexor signals (thanks, Daniel!). Going
+	forward, a more complex dbc model might be required to deal with
+	these signals.
+
 2011-09-17    <aheit@MALFOY>
 
 	* all: released version 0.7
