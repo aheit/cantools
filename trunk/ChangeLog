@@ -1,3 +1,10 @@
+2012-12-13    <aheit@MALFOY>
+
+	* all: updated matio to version 1.5.0
+	* all: updated autoconf toolchain
+	* libcanmdf: new library for parsing MDF files
+	* mdftomat: tool for MDF to MAT conversion
+
 2012-04-29    <aheit@MALFOY>
 
 	* libcandbc: allowed NAN as max value in signal specification
