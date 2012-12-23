@@ -1,19 +1,22 @@
 General Information
 ===================
 
-cantools is a set of command line tools for dealing with DBC and ASC
-files from Vector-Informatik. The tools can be used to analyze and
-convert the data to other formats. Shared libraries for parsing and
-accessing these files are also provided.
-
-Several tools can be used to access the DBC files from the command line:
+cantools is a set of command line tools for dealing with ASC, MDF, and
+DBC files from Vector-Informatik. The tools can be used to analyze and
+convert the data to other formats:
 
 * dbcls lists the contents of a DBC file.
 * asctomat converts a .ASC log file to a MATLAB .MAT file
+* mdftomat converts a .MDF log file to a MATLAB .MAT file
 * dbccopy copies a dbcfile (to test the parser and generator)
 
 The tools 'asctomat' and 'mdftomat' require the package matio, which
 needs to be compiled and installed first (see instructions below).
+
+Shared libraries for parsing and accessing these files are also
+provided:
+
+* libcandbc, libcanasc, libcanmdf: parsing of DBC, ASC, MDF files
 
 Installation of matio
 =====================
