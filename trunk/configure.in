@@ -17,8 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-AC_PREREQ(2.61)
-AC_INIT(cantools, 0.5, aheit@web.de)
+AC_PREREQ(2.69)
+AC_INIT(cantools, 0.8, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.9 foreign])
@@ -39,11 +39,13 @@ AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 AC_PROG_YACC
 AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_LEX
 AC_PROG_INSTALL
 AC_PROG_AWK
 AC_PROG_CPP
 AC_PROG_MKDIR_P
+AC_PROG_RANLIB
 
 # Checks for functions
 AC_REPLACE_FUNCS([strtok_r])
@@ -63,10 +65,21 @@ extern char *strtok_r (char *s, const char *delim, char **save_ptr);
 
 
 # Checks for header files.
-AC_HEADER_STDC
-AC_CHECK_HEADERS([ctype.h sys/types.h errno.h math.h stdlib.h string.h])
+AC_FUNC_ALLOCA
+AC_CHECK_HEADERS([fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h stdint.h stdlib.h string.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
+AC_CHECK_HEADER_STDBOOL
+AC_C_INLINE
+AC_TYPE_INT16_T
+AC_TYPE_INT32_T
+AC_TYPE_INT64_T
+AC_TYPE_OFF_T
+AC_TYPE_SIZE_T
+AC_TYPE_UINT16_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT64_T
+AC_TYPE_UINT8_T
 AC_C_CONST
 
 # Checks for libraries
@@ -75,7 +88,7 @@ AC_CHECK_LIB([m], [floor])
 AC_SUBST(MATIO_LIB)
 matio=1
 AC_CHECK_HEADER(matio.h, [], [matio=0])
-AC_CHECK_LIB(matio, Mat_Create, [matio=matio], [matio=0])
+AC_CHECK_LIB(matio, Mat_VarCreate, [matio=matio], [matio=0])
 if test $matio == 0
 then
 	echo "Error! You need to install libmatio first."
@@ -99,7 +112,11 @@ if test $efence = yes; then
 AC_CHECK_LIB(efence,memalign)
 fi
 
-AC_CHECK_FUNCS([strdup strtol strtoul])
+# Checks for library functions.
+#AC_FUNC_ERROR_AT_LINE
+AC_HEADER_ASSERT
+AC_FUNC_MMAP
+AC_CHECK_FUNCS([memset munmap strchr strdup strpbrk strspn strtol strtoul])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

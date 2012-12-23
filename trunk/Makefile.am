@@ -1,6 +1,6 @@
 # Make cantools.					-*-Makefile-*-
 
-# Copyright (C) 2007-2009 Andreas Heitmann
+# Copyright (C) 2007-2012 Andreas Heitmann
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ YACC=@YACC@
 #	
 # What to build and install
 #
-lib_LTLIBRARIES = libcandbc.la libcanasc.la
-bin_PROGRAMS	= dbccopy dbcls asctomat
+lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la
+bin_PROGRAMS	= dbccopy dbcls asctomat mdftomat
 
 #
 # dbcls
@@ -63,8 +63,18 @@ asctomat_SOURCES = src/asctomat/asctomat.c \
 
 asctomat_LDADD	   = libcandbc.la libcanasc.la $(MATIO_LIB) @LIBOBJS@
 
+#
+# mdftomat
+#
+mdftomat_SOURCES = src/mdftomat/mdftomat.c \
+                   src/mdftomat/mdftomat.h
+
+mdftomat_LDADD	   = libcanmdf.la $(MATIO_LIB) @LIBOBJS@
+
 # additional include pathes necessary
-INCLUDES = -I$(top_srcdir)/src/libcandbc -I$(top_srcdir)/hashtable
+INCLUDES = -I$(top_srcdir)/src/libcandbc \
+	   -I$(top_srcdir)/src/libcanmdf \
+	   -I$(top_srcdir)/hashtable
 
 DEFS = $(YYDEBUG)
 
@@ -81,6 +91,10 @@ include_HEADERS= src/libcandbc/dbcModel.h \
 		 src/libcandbc/dbcTypes.h \
 		 src/libcandbc/dbcReader.h \
 		 src/libcandbc/dbcWriter.h \
+		 src/libcanmdf/mdfcg.h \
+		 src/libcanmdf/mdfdg.h \
+		 src/libcanmdf/mdffile.h \
+		 src/libcanmdf/mdffilter.h \
 		 src/libcanasc/ascReader.h \
 		 src/libcanasc/messageDecoder.h
 
@@ -95,11 +109,23 @@ libcanasc_la_SOURCES= \
 	src/libcanasc/ascReader.c \
 	src/libcanasc/messageDecoder.c
 
+libcanmdf_la_SOURCES= \
+	src/libcanmdf/mdfcg.c \
+	src/libcanmdf/mdfcn.c \
+	src/libcanmdf/mdfdg.c \
+	src/libcanmdf/mdffile.c \
+	src/libcanmdf/mdffilter.c \
+	src/libcanmdf/mdfmodel.c \
+	src/libcanmdf/mdfsg.c
+
 libcandbc_la_CPPFLAGS= -I$(top_builddir)/src/libcandbc
 libcandbc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc
 libcanasc_la_LDFLAGS= -no-undefined -version-info @version_info@
+
+libcanmdf_la_CPPFLAGS= -I$(top_builddir)/src/libcanmdf
+libcanmdf_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 MAINTAINERCLEANFILES = \
 	src/libcandbc/parser.c \
