@@ -17,7 +17,7 @@
 
 # Make cantools.					-*-Makefile-*-
 
-# Copyright (C) 2007-2009 Andreas Heitmann
+# Copyright (C) 2007-2012 Andreas Heitmann
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,7 +52,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = dbccopy$(EXEEXT) dbcls$(EXEEXT) asctomat$(EXEEXT)
+bin_PROGRAMS = dbccopy$(EXEEXT) dbcls$(EXEEXT) asctomat$(EXEEXT) \
+	mdftomat$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(include_HEADERS) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
@@ -100,6 +101,18 @@ libcandbc_la_OBJECTS = $(am_libcandbc_la_OBJECTS)
 libcandbc_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcandbc_la_LDFLAGS) $(LDFLAGS) -o $@
+libcanmdf_la_LIBADD =
+am_libcanmdf_la_OBJECTS = src/libcanmdf/libcanmdf_la-mdfcg.lo \
+	src/libcanmdf/libcanmdf_la-mdfcn.lo \
+	src/libcanmdf/libcanmdf_la-mdfdg.lo \
+	src/libcanmdf/libcanmdf_la-mdffile.lo \
+	src/libcanmdf/libcanmdf_la-mdffilter.lo \
+	src/libcanmdf/libcanmdf_la-mdfmodel.lo \
+	src/libcanmdf/libcanmdf_la-mdfsg.lo
+libcanmdf_la_OBJECTS = $(am_libcanmdf_la_OBJECTS)
+libcanmdf_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libcanmdf_la_LDFLAGS) $(LDFLAGS) -o $@
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_asctomat_OBJECTS = src/asctomat/asctomat.$(OBJEXT) \
@@ -120,6 +133,9 @@ dbccopy_DEPENDENCIES = libcandbc.la
 am_dbcls_OBJECTS = src/dbcls/dbcls.$(OBJEXT)
 dbcls_OBJECTS = $(am_dbcls_OBJECTS)
 dbcls_DEPENDENCIES = libcandbc.la
+am_mdftomat_OBJECTS = src/mdftomat/mdftomat.$(OBJEXT)
+mdftomat_OBJECTS = $(am_mdftomat_OBJECTS)
+mdftomat_DEPENDENCIES = libcanmdf.la $(am__DEPENDENCIES_1) @LIBOBJS@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -140,9 +156,11 @@ YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
 LTYACCCOMPILE = $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=compile $(YACC) $(YFLAGS) $(AM_YFLAGS)
 SOURCES = $(libcanasc_la_SOURCES) $(libcandbc_la_SOURCES) \
-	$(asctomat_SOURCES) $(dbccopy_SOURCES) $(dbcls_SOURCES)
+	$(libcanmdf_la_SOURCES) $(asctomat_SOURCES) $(dbccopy_SOURCES) \
+	$(dbcls_SOURCES) $(mdftomat_SOURCES)
 DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcandbc_la_SOURCES) \
-	$(asctomat_SOURCES) $(dbccopy_SOURCES) $(dbcls_SOURCES)
+	$(libcanmdf_la_SOURCES) $(asctomat_SOURCES) $(dbccopy_SOURCES) \
+	$(dbcls_SOURCES) $(mdftomat_SOURCES)
 includeHEADERS_INSTALL = $(INSTALL_HEADER)
 HEADERS = $(include_HEADERS)
 ETAGS = etags
@@ -159,6 +177,7 @@ GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
+ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
 AR = @AR@
 AS = @AS@
@@ -171,6 +190,10 @@ CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+CXXDEPMODE = @CXXDEPMODE@
+CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = $(YYDEBUG)
 DEPDIR = @DEPDIR@
@@ -233,6 +256,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -286,7 +310,7 @@ ACLOCAL_AMFLAGS = -I m4
 #	
 # What to build and install
 #
-lib_LTLIBRARIES = libcandbc.la libcanasc.la
+lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la
 
 #
 # dbcls
@@ -322,8 +346,19 @@ asctomat_SOURCES = src/asctomat/asctomat.c \
 
 asctomat_LDADD = libcandbc.la libcanasc.la $(MATIO_LIB) @LIBOBJS@
 
+#
+# mdftomat
+#
+mdftomat_SOURCES = src/mdftomat/mdftomat.c \
+                   src/mdftomat/mdftomat.h
+
+mdftomat_LDADD = libcanmdf.la $(MATIO_LIB) @LIBOBJS@
+
 # additional include pathes necessary
-INCLUDES = -I$(top_srcdir)/src/libcandbc -I$(top_srcdir)/hashtable
+INCLUDES = -I$(top_srcdir)/src/libcandbc \
+	   -I$(top_srcdir)/src/libcanmdf \
+	   -I$(top_srcdir)/hashtable
+
 
 # YACC: generate token defines for LEX
 AM_YFLAGS = -d
@@ -336,6 +371,10 @@ include_HEADERS = src/libcandbc/dbcModel.h \
 		 src/libcandbc/dbcTypes.h \
 		 src/libcandbc/dbcReader.h \
 		 src/libcandbc/dbcWriter.h \
+		 src/libcanmdf/mdfcg.h \
+		 src/libcanmdf/mdfdg.h \
+		 src/libcanmdf/mdffile.h \
+		 src/libcanmdf/mdffilter.h \
 		 src/libcanasc/ascReader.h \
 		 src/libcanasc/messageDecoder.h
 
@@ -350,10 +389,21 @@ libcanasc_la_SOURCES = \
 	src/libcanasc/ascReader.c \
 	src/libcanasc/messageDecoder.c
 
+libcanmdf_la_SOURCES = \
+	src/libcanmdf/mdfcg.c \
+	src/libcanmdf/mdfcn.c \
+	src/libcanmdf/mdfdg.c \
+	src/libcanmdf/mdffile.c \
+	src/libcanmdf/mdffilter.c \
+	src/libcanmdf/mdfmodel.c \
+	src/libcanmdf/mdfsg.c
+
 libcandbc_la_CPPFLAGS = -I$(top_builddir)/src/libcandbc
 libcandbc_la_LDFLAGS = -no-undefined -version-info @version_info@
 libcanasc_la_CPPFLAGS = -I$(top_builddir)/src/libcanasc
 libcanasc_la_LDFLAGS = -no-undefined -version-info @version_info@
+libcanmdf_la_CPPFLAGS = -I$(top_builddir)/src/libcanmdf
+libcanmdf_la_LDFLAGS = -no-undefined -version-info @version_info@
 MAINTAINERCLEANFILES = \
 	src/libcandbc/parser.c \
 	src/libcandbc/parser.h \
@@ -480,6 +530,29 @@ src/libcandbc/libcandbc_la-lexer.lo: src/libcandbc/$(am__dirstamp) \
 	src/libcandbc/$(DEPDIR)/$(am__dirstamp)
 libcandbc.la: $(libcandbc_la_OBJECTS) $(libcandbc_la_DEPENDENCIES) 
 	$(libcandbc_la_LINK) -rpath $(libdir) $(libcandbc_la_OBJECTS) $(libcandbc_la_LIBADD) $(LIBS)
+src/libcanmdf/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanmdf
+	@: > src/libcanmdf/$(am__dirstamp)
+src/libcanmdf/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanmdf/$(DEPDIR)
+	@: > src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
+src/libcanmdf/libcanmdf_la-mdfcg.lo: src/libcanmdf/$(am__dirstamp) \
+	src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
+src/libcanmdf/libcanmdf_la-mdfcn.lo: src/libcanmdf/$(am__dirstamp) \
+	src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
+src/libcanmdf/libcanmdf_la-mdfdg.lo: src/libcanmdf/$(am__dirstamp) \
+	src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
+src/libcanmdf/libcanmdf_la-mdffile.lo: src/libcanmdf/$(am__dirstamp) \
+	src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
+src/libcanmdf/libcanmdf_la-mdffilter.lo:  \
+	src/libcanmdf/$(am__dirstamp) \
+	src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
+src/libcanmdf/libcanmdf_la-mdfmodel.lo: src/libcanmdf/$(am__dirstamp) \
+	src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
+src/libcanmdf/libcanmdf_la-mdfsg.lo: src/libcanmdf/$(am__dirstamp) \
+	src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
+libcanmdf.la: $(libcanmdf_la_OBJECTS) $(libcanmdf_la_DEPENDENCIES) 
+	$(libcanmdf_la_LINK) -rpath $(libdir) $(libcanmdf_la_OBJECTS) $(libcanmdf_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -561,6 +634,17 @@ src/dbcls/dbcls.$(OBJEXT): src/dbcls/$(am__dirstamp) \
 dbcls$(EXEEXT): $(dbcls_OBJECTS) $(dbcls_DEPENDENCIES) 
 	@rm -f dbcls$(EXEEXT)
 	$(LINK) $(dbcls_OBJECTS) $(dbcls_LDADD) $(LIBS)
+src/mdftomat/$(am__dirstamp):
+	@$(MKDIR_P) src/mdftomat
+	@: > src/mdftomat/$(am__dirstamp)
+src/mdftomat/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/mdftomat/$(DEPDIR)
+	@: > src/mdftomat/$(DEPDIR)/$(am__dirstamp)
+src/mdftomat/mdftomat.$(OBJEXT): src/mdftomat/$(am__dirstamp) \
+	src/mdftomat/$(DEPDIR)/$(am__dirstamp)
+mdftomat$(EXEEXT): $(mdftomat_OBJECTS) $(mdftomat_DEPENDENCIES) 
+	@rm -f mdftomat$(EXEEXT)
+	$(LINK) $(mdftomat_OBJECTS) $(mdftomat_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -588,6 +672,21 @@ mostlyclean-compile:
 	-rm -f src/libcandbc/libcandbc_la-lexer.lo
 	-rm -f src/libcandbc/libcandbc_la-parser.$(OBJEXT)
 	-rm -f src/libcandbc/libcandbc_la-parser.lo
+	-rm -f src/libcanmdf/libcanmdf_la-mdfcg.$(OBJEXT)
+	-rm -f src/libcanmdf/libcanmdf_la-mdfcg.lo
+	-rm -f src/libcanmdf/libcanmdf_la-mdfcn.$(OBJEXT)
+	-rm -f src/libcanmdf/libcanmdf_la-mdfcn.lo
+	-rm -f src/libcanmdf/libcanmdf_la-mdfdg.$(OBJEXT)
+	-rm -f src/libcanmdf/libcanmdf_la-mdfdg.lo
+	-rm -f src/libcanmdf/libcanmdf_la-mdffile.$(OBJEXT)
+	-rm -f src/libcanmdf/libcanmdf_la-mdffile.lo
+	-rm -f src/libcanmdf/libcanmdf_la-mdffilter.$(OBJEXT)
+	-rm -f src/libcanmdf/libcanmdf_la-mdffilter.lo
+	-rm -f src/libcanmdf/libcanmdf_la-mdfmodel.$(OBJEXT)
+	-rm -f src/libcanmdf/libcanmdf_la-mdfmodel.lo
+	-rm -f src/libcanmdf/libcanmdf_la-mdfsg.$(OBJEXT)
+	-rm -f src/libcanmdf/libcanmdf_la-mdfsg.lo
+	-rm -f src/mdftomat/mdftomat.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -610,6 +709,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcWriter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-lexer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-parser.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfcg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfcn.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfdg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffile.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffilter.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfmodel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfsg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/mdftomat/$(DEPDIR)/mdftomat.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -684,6 +791,55 @@ src/libcandbc/libcandbc_la-lexer.lo: src/libcandbc/lexer.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcandbc/libcandbc_la-lexer.lo `test -f 'src/libcandbc/lexer.c' || echo '$(srcdir)/'`src/libcandbc/lexer.c
 
+src/libcanmdf/libcanmdf_la-mdfcg.lo: src/libcanmdf/mdfcg.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanmdf/libcanmdf_la-mdfcg.lo -MD -MP -MF src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfcg.Tpo -c -o src/libcanmdf/libcanmdf_la-mdfcg.lo `test -f 'src/libcanmdf/mdfcg.c' || echo '$(srcdir)/'`src/libcanmdf/mdfcg.c
+@am__fastdepCC_TRUE@	mv -f src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfcg.Tpo src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfcg.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/libcanmdf/mdfcg.c' object='src/libcanmdf/libcanmdf_la-mdfcg.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanmdf/libcanmdf_la-mdfcg.lo `test -f 'src/libcanmdf/mdfcg.c' || echo '$(srcdir)/'`src/libcanmdf/mdfcg.c
+
+src/libcanmdf/libcanmdf_la-mdfcn.lo: src/libcanmdf/mdfcn.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanmdf/libcanmdf_la-mdfcn.lo -MD -MP -MF src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfcn.Tpo -c -o src/libcanmdf/libcanmdf_la-mdfcn.lo `test -f 'src/libcanmdf/mdfcn.c' || echo '$(srcdir)/'`src/libcanmdf/mdfcn.c
+@am__fastdepCC_TRUE@	mv -f src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfcn.Tpo src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfcn.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/libcanmdf/mdfcn.c' object='src/libcanmdf/libcanmdf_la-mdfcn.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanmdf/libcanmdf_la-mdfcn.lo `test -f 'src/libcanmdf/mdfcn.c' || echo '$(srcdir)/'`src/libcanmdf/mdfcn.c
+
+src/libcanmdf/libcanmdf_la-mdfdg.lo: src/libcanmdf/mdfdg.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanmdf/libcanmdf_la-mdfdg.lo -MD -MP -MF src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfdg.Tpo -c -o src/libcanmdf/libcanmdf_la-mdfdg.lo `test -f 'src/libcanmdf/mdfdg.c' || echo '$(srcdir)/'`src/libcanmdf/mdfdg.c
+@am__fastdepCC_TRUE@	mv -f src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfdg.Tpo src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfdg.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/libcanmdf/mdfdg.c' object='src/libcanmdf/libcanmdf_la-mdfdg.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanmdf/libcanmdf_la-mdfdg.lo `test -f 'src/libcanmdf/mdfdg.c' || echo '$(srcdir)/'`src/libcanmdf/mdfdg.c
+
+src/libcanmdf/libcanmdf_la-mdffile.lo: src/libcanmdf/mdffile.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanmdf/libcanmdf_la-mdffile.lo -MD -MP -MF src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffile.Tpo -c -o src/libcanmdf/libcanmdf_la-mdffile.lo `test -f 'src/libcanmdf/mdffile.c' || echo '$(srcdir)/'`src/libcanmdf/mdffile.c
+@am__fastdepCC_TRUE@	mv -f src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffile.Tpo src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffile.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/libcanmdf/mdffile.c' object='src/libcanmdf/libcanmdf_la-mdffile.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanmdf/libcanmdf_la-mdffile.lo `test -f 'src/libcanmdf/mdffile.c' || echo '$(srcdir)/'`src/libcanmdf/mdffile.c
+
+src/libcanmdf/libcanmdf_la-mdffilter.lo: src/libcanmdf/mdffilter.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanmdf/libcanmdf_la-mdffilter.lo -MD -MP -MF src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffilter.Tpo -c -o src/libcanmdf/libcanmdf_la-mdffilter.lo `test -f 'src/libcanmdf/mdffilter.c' || echo '$(srcdir)/'`src/libcanmdf/mdffilter.c
+@am__fastdepCC_TRUE@	mv -f src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffilter.Tpo src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffilter.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/libcanmdf/mdffilter.c' object='src/libcanmdf/libcanmdf_la-mdffilter.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanmdf/libcanmdf_la-mdffilter.lo `test -f 'src/libcanmdf/mdffilter.c' || echo '$(srcdir)/'`src/libcanmdf/mdffilter.c
+
+src/libcanmdf/libcanmdf_la-mdfmodel.lo: src/libcanmdf/mdfmodel.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanmdf/libcanmdf_la-mdfmodel.lo -MD -MP -MF src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfmodel.Tpo -c -o src/libcanmdf/libcanmdf_la-mdfmodel.lo `test -f 'src/libcanmdf/mdfmodel.c' || echo '$(srcdir)/'`src/libcanmdf/mdfmodel.c
+@am__fastdepCC_TRUE@	mv -f src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfmodel.Tpo src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfmodel.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/libcanmdf/mdfmodel.c' object='src/libcanmdf/libcanmdf_la-mdfmodel.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanmdf/libcanmdf_la-mdfmodel.lo `test -f 'src/libcanmdf/mdfmodel.c' || echo '$(srcdir)/'`src/libcanmdf/mdfmodel.c
+
+src/libcanmdf/libcanmdf_la-mdfsg.lo: src/libcanmdf/mdfsg.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanmdf/libcanmdf_la-mdfsg.lo -MD -MP -MF src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfsg.Tpo -c -o src/libcanmdf/libcanmdf_la-mdfsg.lo `test -f 'src/libcanmdf/mdfsg.c' || echo '$(srcdir)/'`src/libcanmdf/mdfsg.c
+@am__fastdepCC_TRUE@	mv -f src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfsg.Tpo src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfsg.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/libcanmdf/mdfsg.c' object='src/libcanmdf/libcanmdf_la-mdfsg.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanmdf/libcanmdf_la-mdfsg.lo `test -f 'src/libcanmdf/mdfsg.c' || echo '$(srcdir)/'`src/libcanmdf/mdfsg.c
+
 .l.c:
 	$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(LEXCOMPILE)
 
@@ -697,6 +853,7 @@ clean-libtool:
 	-rm -rf .libs _libs
 	-rm -rf src/libcanasc/.libs src/libcanasc/_libs
 	-rm -rf src/libcandbc/.libs src/libcandbc/_libs
+	-rm -rf src/libcanmdf/.libs src/libcanmdf/_libs
 
 distclean-libtool:
 	-rm -f libtool config.lt
@@ -938,6 +1095,10 @@ distclean-generic:
 	-rm -f src/libcanasc/$(am__dirstamp)
 	-rm -f src/libcandbc/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcandbc/$(am__dirstamp)
+	-rm -f src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/libcanmdf/$(am__dirstamp)
+	-rm -f src/mdftomat/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/mdftomat/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -953,7 +1114,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf $(DEPDIR) src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -1001,7 +1162,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf $(DEPDIR) src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
