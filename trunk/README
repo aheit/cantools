@@ -22,14 +22,14 @@ Installation of matio
 =====================
 Prerequisites: autotools
 
-1) download matio-1.5.0.tar.gz:
-   wget 'http://downloads.sourceforge.net/matio/matio-1.5.0.tar.gz?use_mirror='
+1) download matio-1.5.2.tar.gz:
+   wget 'http://downloads.sourceforge.net/matio/matio-1.5.2.tar.gz?use_mirror='
    or
-   curl -o matio-1.5.0.tar.gz -L 'http://downloads.sourceforge.net/matio/matio-1.5.0.tar.gz?use_mirror='
+   curl -o matio-1.5.2.tar.gz -L 'http://downloads.sourceforge.net/matio/matio-1.5.2.tar.gz?use_mirror='
 2) unpack:
-   tar xzf matio-1.5.0.tar.gz
+   tar xzf matio-1.5.2.tar.gz
 3) configure:
-   cd matio-1.5.0
+   cd matio-1.5.2
    CFLAGS=-DZ_PREFIX ./configure --prefix=/usr
 4) build and install:
    make ; make install

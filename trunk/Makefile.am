@@ -72,7 +72,7 @@ mdftomat_SOURCES = src/mdftomat/mdftomat.c \
 mdftomat_LDADD	   = libcanmdf.la $(MATIO_LIB) @LIBOBJS@
 
 # additional include pathes necessary
-INCLUDES = -I$(top_srcdir)/src/libcandbc \
+AM_CPPFLAGS= -I$(top_srcdir)/src/libcandbc \
 	   -I$(top_srcdir)/src/libcanmdf \
 	   -I$(top_srcdir)/hashtable
 
@@ -121,7 +121,8 @@ libcanmdf_la_SOURCES= \
 libcandbc_la_CPPFLAGS= -I$(top_builddir)/src/libcandbc
 libcandbc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
-libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc
+libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc \
+		       -I$(top_srcdir)/src/libcandbc
 libcanasc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanmdf_la_CPPFLAGS= -I$(top_builddir)/src/libcanmdf

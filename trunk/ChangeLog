@@ -1,102 +1,116 @@
+2013-12-15    <aheit@MALFOY>
+
+        * all: released version 0.9
+        * all: updated matio to version 1.5.2
+
+2013-04-21    <aheit@MALFOY>
+
+        * all: updated automake to version 1.13
+        * mdftomat, libcanmdf: corrected compilation errors on linux
+
+2012-12-23    <aheit@MALFOY>
+
+        * all: released version 0.8
+
 2012-12-13    <aheit@MALFOY>
 
-	* all: updated matio to version 1.5.0
-	* all: updated autoconf toolchain
-	* libcanmdf: new library for parsing MDF files
-	* mdftomat: tool for MDF to MAT conversion
+        * all: updated matio to version 1.5.0
+        * all: updated autoconf toolchain
+        * libcanmdf: new library for parsing MDF files
+        * mdftomat: tool for MDF to MAT conversion
 
 2012-04-29    <aheit@MALFOY>
 
-	* libcandbc: allowed NAN as max value in signal specification
+        * libcandbc: allowed NAN as max value in signal specification
 
 2012-04-28    <aheit@MALFOY>
 
-	* libcandbc: allowed underscore as last character in identifier to
-	enable parsing of multiplexor signals (thanks, Daniel!). Going
-	forward, a more complex dbc model might be required to deal with
-	these signals.
+        * libcandbc: allowed underscore as last character in identifier to
+        enable parsing of multiplexor signals (thanks, Daniel!). Going
+        forward, a more complex dbc model might be required to deal with
+        these signals.
 
 2011-09-17    <aheit@MALFOY>
 
-	* all: released version 0.7
-	* libcandbc: fixed DBC parser to allow for an empty symbol section
-	(thanks, Steven!)
+        * all: released version 0.7
+        * libcandbc: fixed DBC parser to allow for an empty symbol section
+        (thanks, Steven!)
 
 2011-06-18    <aheit@MALFOY>
 
-	* all: released version 0.6
-	* libcanasc: fixed bit indexing in little endian signal decoder
+        * all: released version 0.6
+        * libcanasc: fixed bit indexing in little endian signal decoder
 
 2011-02-20    <aheit@MALFOY>
 
-	* all: updated matio to version 1.3.4
-	* all: updated autoconf toolchain
-	* dbcls: displaying full data of signal record
-	* dbcls: changed output to CSV format with header line
+        * all: updated matio to version 1.3.4
+        * all: updated autoconf toolchain
+        * dbcls: displaying full data of signal record
+        * dbcls: changed output to CSV format with header line
 
 2010-10-24    <aheit@gollum>
 
-	* added J1939 message processing (29 bit single-wire CAN)
+        * added J1939 message processing (29 bit single-wire CAN)
 
 2009-04-18    <aheit@gollum>
 
-	* all: released version 0.5
-	* all: added GPLv3 license ('COPYING')
-	* config: provided strtok_r source for MSYS/MinGW compatibility
-	* asctomat: replaced usage of system timespec structure for
-	  MSYS/MinGW compatibility
+        * all: released version 0.5
+        * all: added GPLv3 license ('COPYING')
+        * config: provided strtok_r source for MSYS/MinGW compatibility
+        * asctomat: replaced usage of system timespec structure for
+          MSYS/MinGW compatibility
 
 2009-02-22    <aheit@gollum>
 
-	* all: fixed compiler warnings
+        * all: fixed compiler warnings
 
 2009-02-15    <aheit@gollum>
 
-	* all: released version 0.4
-	* config: fixed parser table dependency
+        * all: released version 0.4
+        * config: fixed parser table dependency
 
 2009-02-13    <aheit@gollum>
 
-	* asctomat: new option -t for specification of the time resolution
-	* libcanasc: fixed atof() prototype by including stdlib.h
+        * asctomat: new option -t for specification of the time resolution
+        * libcanasc: fixed atof() prototype by including stdlib.h
 
 2009-02-01    <aheit@gollum>
 
-	* all: released version 0.3
-	* libcanasc: corrected signedness of work_byte variable
+        * all: released version 0.3
+        * libcanasc: corrected signedness of work_byte variable
 
 2009-01-17    <aheit@gollum>
 
-	* libcandbc: using double data type for all floating point values
-	* libcandbc: implemented parsing and serializing of VAL_TABLE
-	* config: selective linking of libmatio
+        * libcandbc: using double data type for all floating point values
+        * libcandbc: implemented parsing and serializing of VAL_TABLE
+        * config: selective linking of libmatio
 
 2009-01-10    <aheit@gollum>
 
-	* all: released version 0.2
-	* config: check for matio added
-	* config: removed default -d flags for lex & yacc
+        * all: released version 0.2
+        * config: check for matio added
+        * config: removed default -d flags for lex & yacc
 
 2009-01-09    <aheit@gollum>
 
-	* asctomat: fixed warning on strdup protype
-	* libcandbc: fixed include filename in dbcReader.h and dbcWriter.h
+        * asctomat: fixed warning on strdup protype
+        * libcandbc: fixed include filename in dbcReader.h and dbcWriter.h
 
 2009-01-06    <aheit@gollum>
 
-	* libcandbc: renamed some structure elements to increase consistency
-	* libcandbc: changed parsing of all lists to right-recursive
+        * libcandbc: renamed some structure elements to increase consistency
+        * libcandbc: changed parsing of all lists to right-recursive
           parsing. This will give us the correct element order when forming
-	  lists using element prepending.
+          lists using element prepending.
 
 2009-01-04    <aheit@gollum>
 
-	* all: released initial version 0.1
-	* dbccopy: testcode for dbcWriter added
+        * all: released initial version 0.1
+        * dbccopy: testcode for dbcWriter added
 
 2009-01-02    <aheit@gollum>
 
-	* libcandbc: code for serializing DBC model added (dbcWriter)
+        * libcandbc: code for serializing DBC model added (dbcWriter)
 
 2008-12-30    <aheit@gollum>
 
