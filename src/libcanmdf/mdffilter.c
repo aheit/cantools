@@ -21,7 +21,7 @@
 #include <string.h>
 #include "mdffilter.h"
 
-extern char *strdup(const char *);
+// extern char *strdup(const char *);
 static int filter_test_channel(const mdf_t *const mdf,
 			       const filter_t *const filter,
 			       const cn_block_t *const cn_block);

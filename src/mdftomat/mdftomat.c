@@ -197,7 +197,7 @@ main(int argc, char **argv)
 
 
   /* check structure packing */
-  assert(offsetof(cn_block_t,link_asam_mcd_name) == 218);
+  //  assert(offsetof(cn_block_t,link_asam_mcd_name) == 218);
 
   /* input files */
   if (optind == argc - 2) {

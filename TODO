@@ -13,4 +13,4 @@ TODO LIST
 2009-04-18	correct usage of GPL (http://www.gnu.org/licenses/gpl-howto.html)
 2011-06-18	more verbose output of dbcls
 2012-04-29	Handling of multiplexor signals
-2012-04-29	symbolic message names in ASC files
+2012-04-29	handle symbolic message names in ASC files
