@@ -1,5 +1,5 @@
 /*  mdffilter -- filter and transform signal names
-    Copyright (C) 2012 Andreas Heitmann
+    Copyright (C) 2012,2013 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -97,24 +97,18 @@ filter_test_channel(const mdf_t *const mdf,
   uint32_t can_id, can_channel;
   ce_block_t *ce_block;
   char *message;
-  const char *name;
+  char *signal_name = cn_get_long_name(mdf, cn_block);
+  int test;
 
-    /* signal name */
-  name = cn_get_long_name(mdf, cn_block);
-  
   /* message info */
   ce_block = ce_block_get(mdf, cn_block->link_extensions);
-  if(ce_block != NULL && ce_block->extension_type == 19) {
-    message = ce_block->supplement.vector_can.message_name;
-    can_id = ce_block->supplement.vector_can.can_id;
-    can_channel = ce_block->supplement.vector_can.can_channel;
-  } else {
-    message = "none";
-    can_id = 0;
-    can_channel = 0;
-  }
+  ce_get_message_info(ce_block, &message, &can_id, &can_channel);
   
-  return filter_apply(filter, can_channel, message, name) != NULL;
+  test = (filter_apply(filter, can_channel, message, signal_name) != NULL);
+
+  free(message);
+  free(signal_name);
+  return test;
 }
 
 int

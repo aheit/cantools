@@ -2,7 +2,7 @@
 #define INCLUDE_MDFTOMAT_H
 
 /*  mdftomat -- convert MDF files to MAT files
-    Copyright (C) 2012 Andreas Heitmann
+    Copyright (C) 2012, 2013 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,8 +17,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
+#include <matio.h>
+
+/* callback data for MATLAB output */
+typedef struct {
+  mat_t *mat;
+  enum matio_compression compress;
+} mdftomat_t;
 
 #endif

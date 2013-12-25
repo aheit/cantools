@@ -1,5 +1,5 @@
 /*  mdfdg.c --  access MDF data groups
-    Copyright (C) 2007-2011 Andreas Heitmann
+    Copyright (C) 2012,2013 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,9 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <stdio.h>
 #include "mdfmodel.h"
@@ -24,8 +22,9 @@
 #include "mdfcg.h"
 
 void
-mdfProcessDataGroups(const mdf_t *const mdf, filter_t *filter, link_t lnk, 
-		 mdfSignalCb_t const mdfSignalCb, void *const cbData)
+mdfProcessDataGroups(const mdf_t *const mdf, const filter_t *const filter,
+		     link_t lnk, mdfSignalCb_t const mdfSignalCb,
+		     const void *const cbData)
 {
   dg_block_t *dg_block;
   dr_block_t *dr_block;
@@ -35,7 +34,7 @@ mdfProcessDataGroups(const mdf_t *const mdf, filter_t *filter, link_t lnk,
   for( dg_block = dg_block_get(mdf, lnk)                        , idg=0;
        dg_block;
        dg_block = dg_block_get(mdf, dg_block->link_next_dg_block), idg++) {
-    if(mdf->verbose_flag == 2) {
+    if(mdf->verbose_level >= 2) {
       printf("DGBLOCK %d, nCG = %hu, nRec = %hu, offset=0x%lx\n",
 	     idg,
 	     (unsigned short)dg_block->number_channel_groups,

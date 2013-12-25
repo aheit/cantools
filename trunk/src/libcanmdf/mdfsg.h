@@ -1,5 +1,5 @@
 /*  mdfsg.h -- signal callback function
-    Copyright (C) 2012 Andreas Heitmann
+    Copyright (C) 2012,2013 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,9 +17,7 @@
 #ifndef INCLUDE_MDFSG_H
 #define INCLUDE_MDFSG_H
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include "mdfmodel.h"
 #include "mdffilter.h"
@@ -34,9 +32,9 @@ typedef void (* mdfSignalCb_t)(const mdf_t *const mdf,
 			       const uint32_t can_channel,
 			       const uint32_t number_of_records,
 			       const uint16_t channel_type,
-			       const char *const message,
-			       const char *const name,
+			       const char_t *const message,
+			       const char_t *const name,
 			       const double *const timeValue,
 			       const filter_t *const filter,
-			       void *cbData);
+			       const void *const cbData);
 #endif

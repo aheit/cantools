@@ -1,5 +1,5 @@
 /*  mdfcg.h -- access MDF channel groups
-    Copyright (C) 2012 Andreas Heitmann
+    Copyright (C) 2012, 2013 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,9 +17,7 @@
 #ifndef INCLUDE_MDFCG_H
 #define INCLUDE_MDFCG_H
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include "mdfmodel.h"
 #include "mdffilter.h"
@@ -37,15 +35,15 @@ mdfProcessChannelGroupsUnsorted(const mdf_t *const mdf,
 				const uint16_t number_record_ids,
 				const uint8_t *const data_base,
 				mdfSignalCb_t const mdfSignalCb,
-				void *const cbData);
+				const void *const cbData);
 
 void
 mdfProcessChannelGroupsSorted(const mdf_t *const mdf,
-			      filter_t *filter,
+			      const filter_t *const filter,
 			      link_t link,
 			      uint16_t number_record_ids,
 			      uint8_t *data,
 			      mdfSignalCb_t const mdfSignalCb,
-			      void *const cbData);
+			      const void *const cbData);
 
 #endif

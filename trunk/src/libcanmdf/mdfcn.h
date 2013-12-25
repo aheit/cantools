@@ -1,5 +1,5 @@
 /*  mdfunsorted.h -- process unsorted MDF file
-    Copyright (C) 2012 Andreas Heitmann
+    Copyright (C) 2012, 2013 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,9 +17,7 @@
 #ifndef INCLUDE_MDFUNSORTED_H
 #define INCLUDE_MDFUNSORTED_H
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include "mdfmodel.h"
 #include "mdffilter.h"
@@ -33,16 +31,16 @@ mdfProcessChannel(const mdf_t *const mdf,
 		  const double *const time,
 		  const double *const value,
 		  mdfSignalCb_t const mdfSignalCb,
-		  void *const cbData);
+		  const void *const cbData);
 void
 mdfProcessChannelsSorted(const mdf_t *const mdf,
-			 filter_t *filter,
+			 const filter_t *const filter,
 			 link_t link,
 			 uint32_t number_of_records,
 			 uint16_t number_record_ids,
 			 uint16_t record_size,
 			 uint8_t *data_base,
 			 mdfSignalCb_t const mdfSignalCb,
-			 void *const cbData);
+			 const void *const cbData);
 
 #endif

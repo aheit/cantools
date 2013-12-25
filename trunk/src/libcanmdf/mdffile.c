@@ -1,5 +1,5 @@
 /*  mdffile.c --  handle MDF file connection
-    Copyright (C) 2007-2011 Andreas Heitmann
+    Copyright (C) 2012-2013 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,9 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,12 +26,12 @@
 #include "mdffile.h"
 
 const mdf_t *
-mdf_attach(char *filename, int verbose_flag)
+mdf_attach(char *filename, int verbose_level)
 {
   CREATE(mdf_t, mdf);
   int fd;
 
-  mdf->verbose_flag = verbose_flag;
+  mdf->verbose_level = verbose_level;
 
   /* open input file */
   mdf->fd = open(filename, O_RDONLY);

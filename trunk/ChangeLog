@@ -1,3 +1,14 @@
+2013-12-26   <aheit@MALFOY>
+
+	* asctomat: fixed Mat_VarWrite() data type to support 64 bit
+	* libcanmdf: fixed data types to support 64 bit
+	* libcanmdf: improved const qualification
+	* mdftomat: conversion of CCP/XCP variables
+	* mdftomat: new options for MAT compression and file version
+	* mdftomat: handling of empty signals
+	* mdftomat: autoconf checks for zlib and HDF5 (thanks, Sebastian)
+	* mdftomat: corrected handling of long signal and message names
+
 2013-12-15    <aheit@MALFOY>
 
         * all: released version 0.9
@@ -7,6 +18,7 @@
 
         * all: updated automake to version 1.13
         * mdftomat, libcanmdf: corrected compilation errors on linux
+	  (thanks, John)
 
 2012-12-23    <aheit@MALFOY>
 

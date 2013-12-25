@@ -1,5 +1,5 @@
 /*  mdftomat -- convert MDF files to MAT files
-    Copyright (C) 2012 Andreas Heitmann
+    Copyright (C) 2012, 2013 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,10 +14,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -33,44 +32,50 @@
 
 static void
 mat_write_signal(const mdf_t *const mdf, 
-		 const uint32_t can_channel,
-		 const uint32_t number_of_records,
-		 const uint16_t channel_type,
-		 const char *const message,
-		 const char *const name,
-		 const double *const timeValue,
-		 const filter_t *const filter,
-		 void *cbData)
+                 const uint32_t can_channel,
+                 const uint32_t number_of_records,
+                 const uint16_t channel_type,
+                 const char *const message,
+                 const char *const signal_name,
+                 const double *const timeValue,
+                 const filter_t *const filter,
+                 const void *const cbData)
 {
   char *mat_name;
   size_t dims[2];
-  mat_t *const mat = (mat_t *)cbData;
+  mdftomat_t *const mdftomat = (mdftomat_t *)cbData;
 
   dims[0] = number_of_records;
   dims[1] = 2;
 
-  if((can_channel != 0) && (channel_type == 0)) {
-    if(mdf->verbose_flag > 0) {
+  if(   ((can_channel != 0) && (channel_type == 0)) /* Vector CAN */
+     || ((can_channel == 0) && (channel_type == 0)) /* DIM */ ) {
+    if(mdf->verbose_level >= 2) {
        uint32_t ir;
        printf("ch=%lu n=%lu m=%s s=%s\n",
-	 (unsigned long)can_channel, (unsigned long)number_of_records, message, name);
+              (unsigned long)can_channel,
+              (unsigned long)number_of_records,
+              message,
+              signal_name);
+      if(mdf->verbose_level >= 3) {
        for(ir=0;ir<number_of_records;ir++) {
           printf("%g %g\n",timeValue[ir],timeValue[ir+number_of_records]);
        }
+      }
     }
-    mat_name = filter_apply(filter, can_channel, message, name);
+    mat_name = filter_apply(filter, can_channel, message, signal_name);
     if(mat_name != NULL) {
       int rv;
       matvar_t *const matvar =
-	Mat_VarCreate(mat_name, MAT_C_DOUBLE, MAT_T_DOUBLE,
-		      2, dims, (double *)timeValue, 0);
-      rv = Mat_VarWrite(mat, matvar, 0);
+        Mat_VarCreate(mat_name, MAT_C_DOUBLE, MAT_T_DOUBLE,
+                      2, dims, (double *)timeValue, 0);
+      rv = Mat_VarWrite(mdftomat->mat, matvar, mdftomat->compress);
       assert(rv == 0);
       Mat_VarFree(matvar);
       free(mat_name);
-      if(mdf->verbose_flag > 0) {
-	printf("    CNBLOCK can_ch=%lu, message=%s, name=%s\n",
-		 (unsigned long)can_channel, message, name);
+      if(mdf->verbose_level >= 2) {
+        printf("    CNBLOCK can_ch=%lu, message=%s, name=%s\n",
+                 (unsigned long)can_channel, message, signal_name);
       }
     }
   }
@@ -86,31 +91,60 @@ static void help(const char *program_name)
 {
   fprintf(stderr,
           "Usage: %s [OPTIONS] <mdffile> <matfile>\n"
-          "Convert ASC log file to MAT file.\n"
+          "Convert MDF file to MAT file.\n"
           "\n"
           "Options:\n"
           "  -f, --filter <filterfile>  filter signals\n"
           "      --verbose              verbose output\n"
           "      --brief                brief output (default)\n"
           "      --debug                output debug information\n"
+          "  -z, --compress             compression MAT file\n"
+          "      --v5                   output version 5 MAT file\n"
+          "      --v73                  output version 7.3 MAT file\n"
           "  -h, --help                 display this help and exit\n"
-	  "\n", program_name);
+          "\n", program_name);
   fprintf(stderr,
-	  "Filter file format:\n"
-	  "  // comment\n"
-	  "  // any number of:\n"
-	  "  <op> <channel> <message> <signal> [newName]\n"
-	  "\n"
-	  "  op = +   include signal\n"
+          "Filter file format:\n"
+          "  // comment\n"
+          "  // any number of:\n"
+          "  <op> <channel> <message> <signal> [newName]\n"
+          "\n"
+          "  op = +   include signal\n"
+          "       -   exclude signal\n"
+          "  channel  numerical channel number or *\n"
+          "  message  message name, wildcards allowed\n"
+          "  signal   signal name, wildcards allowed\n"
+          "  newname  optional: rename signal\n");
+}
 
-	  "  channel  numerical channel number or *\n"
-	  "  message  message name, wildcards allowed\n"
-	  "  signal   signal name, wildcards allowed\n"
-	  "  newname  optional: rename signal\n");
+/*
+ * conversion of fixed-length text buffer to string.
+ * input format: text array of up to len bytes, padded with null bytes
+ * output format: null byte terminated string
+ */
+static char *
+string_from_array(const char *input, const size_t len)
+{
+  char *const output = malloc(len+1);
+  char *const cp = memccpy(output, input, '\0', len);
+  if(cp == NULL) {
+    output[len]='\0';
+  }
+  return output;
+}
+
+#define FIELD_PRINT(desc,field) \
+{ \
+  char *const cp = \
+     string_from_array((const char *)&(field), sizeof(field));  \
+  fputs(desc,stdout); \
+  puts(cp);           \
+  free(cp);           \
 }
 
 static void
-mdfProcess(const mdf_t *const mdf, mat_t *mat, filter_t *filter)
+mdfProcess(const mdf_t *const mdf, const mdftomat_t *const mdftomat,
+           const filter_t *const filter)
 {
   id_block_t *id_block;
   hd_block_t *hd_block;
@@ -120,25 +154,31 @@ mdfProcess(const mdf_t *const mdf, mat_t *mat, filter_t *filter)
 
   hd_block = hd_block_get(mdf);
 
-  if(mdf->verbose_flag > 0) {
+  if(mdf->verbose_level >= 1) {
     const char *comment = tx_block_get_text(mdf, hd_block->link_tx_block);
     if(comment) {
       printf("File Comment =\n%s\n",comment);
     }
-    printf("Date         = %s\n",(char *)&(hd_block->recording_date));
-    printf("Time         = %s\n",(char *)&(hd_block->recording_time));
-    printf("Author       = %s\n",(char *)&(hd_block->author));
-    printf("Organization = %s\n",(char *)&(hd_block->organization));
-    printf("Project      = %s\n",(char *)&(hd_block->project));
-    printf("Measurement  = %s\n",(char *)&(hd_block->measurement_id));
-  }
+    FIELD_PRINT("Date         = ", hd_block->recording_date);
+    FIELD_PRINT("Time         = ", hd_block->recording_time);
+    FIELD_PRINT("Author       = ", hd_block->author);
+    FIELD_PRINT("Organization = ", hd_block->organization);
+    FIELD_PRINT("Project      = ", hd_block->project);
+    FIELD_PRINT("Measurement  = ", hd_block->measurement_id);
+   }
 
   /* process data groups */
   mdfProcessDataGroups(mdf, filter, hd_block->link_dg_block,
-			 mat_write_signal, (void *)mat);
+                         mat_write_signal, (const void * const)mdftomat);
 }
 
-static int verbose_flag = 0;
+static int verbose_level = 0;
+static mdftomat_t mdftomat = {
+  NULL,
+  MAT_COMPRESSION_NONE
+};
+
+static int mat_file_ver = (int)MAT_FT_DEFAULT;
 
 int
 main(int argc, char **argv)
@@ -146,19 +186,20 @@ main(int argc, char **argv)
   char *mdf_filename = NULL;
   char *mat_filename = NULL;
   const mdf_t *mdf;
-  mat_t *mat;
   filter_t *filter;
   char *filter_filename = NULL;
   char *program_name = argv[0];
 
-  fprintf(stderr, "%s (%s, %s)\n", program_name, __DATE__, __TIME__);
   /* parse arguments */
   while (1) {
     static struct option long_options[] = {
       /* These options set a flag. */
-      {"verbose", no_argument,       &verbose_flag, 1},
-      {"debug",   no_argument,       &verbose_flag, 2},
-      {"brief",   no_argument,       &verbose_flag, 0},
+      {"verbose", no_argument,       &verbose_level,  1},
+      {"debug",   no_argument,       &verbose_level,  2},
+      {"brief",   no_argument,       &verbose_level,  0},
+      {"v5",      no_argument,       &mat_file_ver,   (int)MAT_FT_MAT5},
+      {"v73",     no_argument,       &mat_file_ver,   (int)MAT_FT_MAT73},
+      {"compress",no_argument,       NULL,           'z'},
       /* These options don't set a flag.
          We distinguish them by their indices. */
       {"filter",  required_argument, 0,            (int)'f'},
@@ -169,7 +210,7 @@ main(int argc, char **argv)
     int option_index = 0;
     int c;
 
-    c = getopt_long (argc, argv, "a:b:d:f:hm:t:",
+    c = getopt_long (argc, argv, "a:b:d:f:hm:t:vz",
                      long_options, &option_index);
 
     /* Detect the end of the options. */
@@ -185,6 +226,15 @@ main(int argc, char **argv)
       help(program_name);
       exit(EXIT_SUCCESS);
       break;
+    case 'v':
+      verbose_level = 1;
+      break;
+    case 'd':
+      verbose_level = 2;
+      break;
+    case 'z':
+      mdftomat.compress = MAT_COMPRESSION_ZLIB;
+      break;
     case '?':
       /* getopt_long already printed an error message. */
       usage_error(program_name);
@@ -197,7 +247,7 @@ main(int argc, char **argv)
 
 
   /* check structure packing */
-  //  assert(offsetof(cn_block_t,link_asam_mcd_name) == 218);
+  assert(offsetof(cn_block_t,link_asam_mcd_name) == 218);
 
   /* input files */
   if (optind == argc - 2) {
@@ -209,15 +259,21 @@ main(int argc, char **argv)
     return 1;
   }
 
+  /* print banner */
+  if(verbose_level >= 1) {
+    fprintf(stderr, "%s (%s, %s, cantools " PACKAGE_VERSION ")\n",
+            program_name, __DATE__, __TIME__);
+  }
+
   /* connect to mdf file */
-  mdf = mdf_attach(mdf_filename, verbose_flag);
+  mdf = mdf_attach(mdf_filename, verbose_level);
   if(mdf == NULL) {
     return 1;
   }
 
   /* create mat file */
-  mat = Mat_Create(mat_filename, NULL);
-  if(mat == NULL) {
+  mdftomat.mat = Mat_CreateVer(mat_filename, NULL, (enum mat_ft)mat_file_ver);
+  if(mdftomat.mat == NULL) {
     fprintf(stderr,"can't write to mat file %s\n",mat_filename);
     return 1;
   }
@@ -232,7 +288,13 @@ main(int argc, char **argv)
     filter = NULL;
   }
   
-  mdfProcess(mdf,mat,filter);
+  if(verbose_level >= 1) {
+    fprintf(stderr, "converting %s to %sfile %s\n",
+            mdf_filename,
+            (mdftomat.compress == MAT_COMPRESSION_ZLIB)?"compressed ":"",
+            mat_filename);
+  }
+  mdfProcess(mdf, &mdftomat, filter);
 
   /* free filter */
   filter_free(filter);
@@ -241,7 +303,10 @@ main(int argc, char **argv)
   mdf_detach(mdf);
 
   /* close mat file */
-  Mat_Close(mat);
+  Mat_Close(mdftomat.mat);
+  if(verbose_level >= 1) {
+    fprintf(stderr, "done.\n", mdf_filename);
+  }
 
   return 0;
 }
