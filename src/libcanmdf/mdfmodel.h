@@ -1,6 +1,22 @@
 #ifndef INCLUDE_MDFMODEL_H
 #define INCLUDE_MDFMODEL_H
 
+/*  mdfmodel.h --  declarations for MDF model
+    Copyright (C) 2012,2013 Andreas Heitmann
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+
 #include <stdlib.h>
 #include <sys/mman.h> /* off_t */
 #include "mdftypes.h"
@@ -16,7 +32,7 @@ typedef struct {
   int fd;
   uint8_t *base;
   off_t size;
-  int verbose_flag;   /* verbose reporting: 0=none, 1=brief, 2=verbose */
+  int verbose_level;   /* verbose level: 0=none, 1=brief, 2=verbose */
 } mdf_t;
 
 typedef struct {
@@ -109,8 +125,8 @@ typedef struct {
     } polynomial;
     struct {
       struct {
-	real_t   int_value;
-	real_t   phys_value;
+        real_t   int_value;
+        real_t   phys_value;
       } array[1];       /* n times */
     } tabular;
     struct {
@@ -144,8 +160,8 @@ typedef struct {
     } asam_mcd2_formula;
     struct {
       struct {
-	real_t   int_value;
-	char_t   assigned_text[32];
+        real_t   int_value;
+        char_t   assigned_text[32];
       } array[1];       /* n times */
     } asam_mcd2_text_table;
     struct {
@@ -153,9 +169,9 @@ typedef struct {
       real_t   undef2;
       link_t   default_text;
       struct {
-	real_t   lower_range;
-	real_t   upper_range;
-	link_t   text;
+        real_t   lower_range;
+        real_t   upper_range;
+        link_t   text;
       } array[1];       /* n times */
     } asam_mcd2_text_range_table;
     struct {
@@ -182,8 +198,8 @@ typedef struct {
   /* 016 */ link_t   link_dependency;
   /* 020 */ link_t   link_channel_comment;
   /* 024 */ uint16_t channel_type;            /* 0=data, 1=time */
-  /* 026 */ char_t   signal_name[32];
-  /* 058 */ char_t   signal_description[128];
+  /* 026 */ char32_t signal_name;
+  /* 058 */ char128_t signal_description;
   /* 186 */ uint16_t first_bit;               /* 0..7 */
   /* 188 */ uint16_t number_bits;
   /* 190 */ uint16_t signal_data_type; /* 0=uint, 1=sint, 2,3=IEEE754, 7=str, 8=array*/
@@ -199,20 +215,24 @@ typedef struct {
 typedef struct {
   /* 000 */ char_t   block_identifier[2];
   /* 002 */ uint16_t block_size;
-  /* 004 */ uint16_t extension_type; /* 2=DIM, 19=Vector CAN */
+  /* extension type:
+   *  2 MDF_CE_TYPE_DIM      DIM (CCP/XCP)
+   * 19 MDF_CE_TYPE_VCN      Vector CAN
+   */
+  /* 004 */ uint16_t extension_type;
   union {
-    struct {
-      uint32_t can_id                        __attribute__ ((packed));
-      uint32_t can_channel                   __attribute__ ((packed));
-      char_t   message_name[36];
-      char_t   sender_name[36];
-    } vector_can;
-    struct {
+    struct { /* type 2 */
       uint16_t module_number;
       uint32_t address                       __attribute__ ((packed));
-      char_t   description[80];
-      char_t   ecu_identification[32];
+      char80_t description[80];
+      char32_t ecu_identification[32];
     } dim;
+    struct { /* type 19 */
+      uint32_t can_id                        __attribute__ ((packed));
+      uint32_t can_channel                   __attribute__ ((packed));
+      char36_t message_name[36];
+      char36_t sender_name[36];
+    } vector_can;
   } supplement;
 } ce_block_t;
 
@@ -227,6 +247,11 @@ const char *tx_block_get_text(const mdf_t *const mdf, link_t lnk);
 pr_block_t *pr_block_get(const mdf_t *const mdf, const link_t lnk);
 dr_block_t *  dr_block_get(const mdf_t *const mdf, const link_t lnk);
 cc_block_t *  cc_block_get(const mdf_t *const mdf, const link_t lnk);
-const char *cn_get_long_name(const mdf_t *const mdf, const cn_block_t *const cn_block);
+char *cn_get_long_name(const mdf_t *const mdf, const cn_block_t *const cn_block);
+char *ce_get_message_name(const ce_block_t *const ce_block);
+void ce_get_message_info(const ce_block_t *const ce_block,
+		    char **const message_name_ptr,
+		    uint32_t *const can_id,
+		    uint32_t *const can_channel);
 
 #endif

@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.9, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.10, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
@@ -26,14 +26,14 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
 
 dnl common library version
-version_info='0:9:0'
+version_info='0:10:0'
 AC_SUBST(version_info)
 
 # Checks for programs.
  	
 # Turn off shared libraries during beta-testing, since they
 # make the build process take too long.
-AC_DISABLE_SHARED
+LT_INIT([disable_shared])
 AC_PROG_LIBTOOL
 
 AC_SUBST(LIBTOOL_DEPS)
@@ -45,7 +45,6 @@ AC_PROG_INSTALL
 AC_PROG_AWK
 AC_PROG_CPP
 AC_PROG_MKDIR_P
-AC_PROG_RANLIB
 
 # Checks for functions
 AC_REPLACE_FUNCS([strtok_r])
@@ -83,7 +82,9 @@ AC_TYPE_UINT8_T
 AC_C_CONST
 
 # Checks for libraries
+AC_CHECK_LIB([hdf5], [H5Fcreate])
 AC_CHECK_LIB([m], [floor])
+AC_CHECK_LIB([z], [deflate])
 
 AC_SUBST(MATIO_LIB)
 matio=1
@@ -116,7 +117,7 @@ fi
 #AC_FUNC_ERROR_AT_LINE
 AC_HEADER_ASSERT
 AC_FUNC_MMAP
-AC_CHECK_FUNCS([memset munmap strchr strdup strpbrk strspn strtol strtoul])
+AC_CHECK_FUNCS([memset munmap strchr strdup strndup strpbrk strspn strtol strtoul])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

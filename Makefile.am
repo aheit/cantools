@@ -1,6 +1,6 @@
 # Make cantools.					-*-Makefile-*-
 
-# Copyright (C) 2007-2012 Andreas Heitmann
+# Copyright (C) 2007-2013 Andreas Heitmann
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ asctomat_SOURCES = src/asctomat/asctomat.c \
 		   src/hashtable/hashtable_itr.h \
 		   src/hashtable/hashtable_private.h
 
-asctomat_LDADD	   = libcandbc.la libcanasc.la $(MATIO_LIB) @LIBOBJS@
+asctomat_LDADD	   = libcandbc.la libcanasc.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
 
 #
 # mdftomat
@@ -69,7 +69,7 @@ asctomat_LDADD	   = libcandbc.la libcanasc.la $(MATIO_LIB) @LIBOBJS@
 mdftomat_SOURCES = src/mdftomat/mdftomat.c \
                    src/mdftomat/mdftomat.h
 
-mdftomat_LDADD	   = libcanmdf.la $(MATIO_LIB) @LIBOBJS@
+mdftomat_LDADD	   = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
 
 # additional include pathes necessary
 AM_CPPFLAGS= -I$(top_srcdir)/src/libcandbc \
@@ -118,7 +118,8 @@ libcanmdf_la_SOURCES= \
 	src/libcanmdf/mdfmodel.c \
 	src/libcanmdf/mdfsg.c
 
-libcandbc_la_CPPFLAGS= -I$(top_builddir)/src/libcandbc
+libcandbc_la_CPPFLAGS= -I$(top_builddir)/src/libcandbc \
+                       -I$(top_srcdir)/src/libcandbc
 libcandbc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc \

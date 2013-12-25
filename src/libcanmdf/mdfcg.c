@@ -1,5 +1,5 @@
 /*  mdfcg.c --  access MDF channel groups
-    Copyright (C) 2007-2011 Andreas Heitmann
+    Copyright (C) 2012, 2013 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ mdfProcessChannelGroup(const mdf_t *const mdf,
 		       const cg_block_t *const cg_block,
 		       const double *const cg_decoded,
 		       mdfSignalCb_t const mdfSignalCb,
-		       void *const cbData);
+		       const void *const cbData);
 
 /* find time channel of channel group */
 cn_block_t *
@@ -58,7 +58,7 @@ mdfProcessChannelGroup(const mdf_t *const mdf,
 		       const cg_block_t *const cg_block,
 		       const double *const cg_decoded,
 		       mdfSignalCb_t const mdfSignalCb,
-		       void *const cbData)
+		       const void *const cbData)
 {
   cn_block_t *cn_block;
   uint16_t icn;
@@ -94,7 +94,7 @@ mdfProcessChannelGroupsUnsorted(const mdf_t *const mdf,
 				const uint16_t number_record_ids,
 				const uint8_t *const data_base,
 				mdfSignalCb_t const mdfSignalCb,
-				void *const cbData)
+				const void *const cbData)
 {
   cg_block_t *cg_block;
   uint32_t nbytes = 0;
@@ -131,7 +131,7 @@ mdfProcessChannelGroupsUnsorted(const mdf_t *const mdf,
     nbytes += (number_record_ids + cg_block->record_size)
       *cg_block->number_of_records;
   }
-  if(mdf->verbose_flag == 2) {
+  if(mdf->verbose_level >= 2) {
     printf("data record has %lu bytes\n",(unsigned long)nbytes);
   }
 
@@ -152,7 +152,7 @@ mdfProcessChannelGroupsUnsorted(const mdf_t *const mdf,
       uint32_t irecord;
 
       assert(cg_decoded != NULL);
-      if(mdf->verbose_flag > 0) {
+      if(mdf->verbose_level >= 1) {
 	printf("channel group %hu\n", (unsigned short)icg);
       }
 
@@ -181,7 +181,7 @@ mdfProcessChannelGroupsUnsorted(const mdf_t *const mdf,
 	    /* extract signal */
 	    cg_decoded[index] = value;
 	   
-	    if(mdf->verbose_flag == 3) {
+	    if(mdf->verbose_level >= 3) {
 	      printf("%hu %lu %lu %hu %u %g\n",
 		     (unsigned short)icg,
 		     (unsigned long)ibytes, 
@@ -214,12 +214,12 @@ mdfProcessChannelGroupsUnsorted(const mdf_t *const mdf,
 
 void
 mdfProcessChannelGroupsSorted(const mdf_t *const mdf,
-			      filter_t *filter,
+			      const filter_t *const filter,
 			      link_t link,
 			      uint16_t number_record_ids,
 			      uint8_t *data,
 			      mdfSignalCb_t const mdfSignalCb,
-			      void *const cbData)
+			      const void *const cbData)
 {
   cg_block_t *cg_block;
   uint16_t icg;
@@ -230,7 +230,7 @@ mdfProcessChannelGroupsSorted(const mdf_t *const mdf,
        cg_block = cg_block_get(mdf, cg_block->link_next_cg_block), icg++) {
     const char *comment = tx_block_get_text(mdf, cg_block->link_comment);
 
-    if(mdf->verbose_flag == 2) {
+    if(mdf->verbose_level >= 2) {
       if(comment == NULL) comment = "(null)";
       printf("  CGBLOCK %hu, nCH=%hu, rec_id=%hu, nRec=%lu, szRec=%hu, c=%s\n",
 	     (unsigned short)icg,
