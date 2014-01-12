@@ -30,18 +30,63 @@
 #include "mdffile.h"
 #include "mdfdg.h"
 
+/*
+ * A valid variable name is a character string of letters, digits, and
+ * underscores [...] and beginning with a letter.
+ */
+char *
+sanitize_name(const char *in)
+{
+  char *out;
+  static char xtable[256];
+  static int init=0;
+  size_t n = strlen(in);
+  size_t j;
+
+  /* initialize transformation table */
+  if(!init) {
+    int i;
+    for(i=0;i<sizeof(xtable);i++) {
+      if(isupper(i) || islower(i) || isdigit(i) || (i=='_')) {
+	xtable[i] = i;
+      } else {
+	xtable[i] = '_';
+      }
+    }
+    init=1;
+  }
+
+  /* perform transformation */
+  out = malloc(n+1);
+  for(j=0;j<n;j++) {
+    out[j] = xtable[in[j]];
+  }
+
+  /* ensure name begins with letter */
+  if(!(isupper(out[0]) || islower(out[0]))) {
+    out[0] = 'X';
+  }
+
+  /* terminate name */
+  out[j] = 0;
+
+  return out;
+}
+
 static void
 mat_write_signal(const mdf_t *const mdf, 
                  const uint32_t can_channel,
                  const uint32_t number_of_records,
                  const uint16_t channel_type,
-                 const char *const message,
+                 const char *const message_name,
                  const char *const signal_name,
                  const double *const timeValue,
                  const filter_t *const filter,
                  const void *const cbData)
 {
-  char *mat_name;
+  char *filter_signal_name_in;
+  char *filter_message_name_in;
+  char *filter_name_out;
   size_t dims[2];
   mdftomat_t *const mdftomat = (mdftomat_t *)cbData;
 
@@ -55,7 +100,7 @@ mat_write_signal(const mdf_t *const mdf,
        printf("ch=%lu n=%lu m=%s s=%s\n",
               (unsigned long)can_channel,
               (unsigned long)number_of_records,
-              message,
+              message_name,
               signal_name);
       if(mdf->verbose_level >= 3) {
        for(ir=0;ir<number_of_records;ir++) {
@@ -63,20 +108,36 @@ mat_write_signal(const mdf_t *const mdf,
        }
       }
     }
-    mat_name = filter_apply(filter, can_channel, message, signal_name);
-    if(mat_name != NULL) {
+    /* sanitize variable name */
+    filter_signal_name_in = sanitize_name(signal_name);
+    filter_message_name_in = sanitize_name(message_name);
+    filter_name_out = filter_apply(filter, can_channel,
+				   filter_message_name_in,
+				   filter_signal_name_in);
+    if(mdf->verbose_level >= 2) {
+      printf("    CNBLOCK can_ch=%lu\n"
+	     "            message      = %s\n"
+	     "            signal_name  = %s\n"
+	     "            filter_input = %s\n"
+	     "            filter_output= %s\n",
+	     (unsigned long)can_channel, filter_message_name_in,
+	     signal_name, filter_signal_name_in,
+	     (filter_name_out!=NULL)?filter_name_out:"<rejected by filter>" );
+    }
+    free(filter_signal_name_in);
+    free(filter_message_name_in);
+
+    if(filter_name_out != NULL) {
+      matvar_t *matvar;
       int rv;
-      matvar_t *const matvar =
-        Mat_VarCreate(mat_name, MAT_C_DOUBLE, MAT_T_DOUBLE,
-                      2, dims, (double *)timeValue, 0);
+
+      /* write matlab variable */
+      matvar = Mat_VarCreate(filter_name_out, MAT_C_DOUBLE, MAT_T_DOUBLE,
+			     2, dims, (double *)timeValue, 0);
       rv = Mat_VarWrite(mdftomat->mat, matvar, mdftomat->compress);
       assert(rv == 0);
       Mat_VarFree(matvar);
-      free(mat_name);
-      if(mdf->verbose_level >= 2) {
-        printf("    CNBLOCK can_ch=%lu, message=%s, name=%s\n",
-                 (unsigned long)can_channel, message, signal_name);
-      }
+      free(filter_name_out);
     }
   }
 }
