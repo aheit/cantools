@@ -8,7 +8,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 35
+#define YY_FLEX_SUBMINOR_VERSION 37
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -141,15 +141,7 @@ typedef unsigned int flex_uint32_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k.
- * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
- * Ditto for the __ia64__ case accordingly.
- */
-#define YY_BUF_SIZE 32768
-#else
 #define YY_BUF_SIZE 16384
-#endif /* __ia64__ */
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -161,7 +153,12 @@ typedef unsigned int flex_uint32_t;
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
-extern int yyleng;
+#ifndef YY_TYPEDEF_YY_SIZE_T
+#define YY_TYPEDEF_YY_SIZE_T
+typedef size_t yy_size_t;
+#endif
+
+extern yy_size_t yyleng;
 
 extern FILE *yyin, *yyout;
 
@@ -200,11 +197,6 @@ extern FILE *yyin, *yyout;
 
 #define unput(c) yyunput( c, (yytext_ptr)  )
 
-#ifndef YY_TYPEDEF_YY_SIZE_T
-#define YY_TYPEDEF_YY_SIZE_T
-typedef size_t yy_size_t;
-#endif
-
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
 struct yy_buffer_state
@@ -222,7 +214,7 @@ struct yy_buffer_state
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	int yy_n_chars;
+	yy_size_t yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -292,8 +284,8 @@ static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
 
 /* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
-static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-int yyleng;
+static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */
+yy_size_t yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = (char *) 0;
@@ -321,7 +313,7 @@ static void yy_init_buffer (YY_BUFFER_STATE b,FILE *file  );
 
 YY_BUFFER_STATE yy_scan_buffer (char *base,yy_size_t size  );
 YY_BUFFER_STATE yy_scan_string (yyconst char *yy_str  );
-YY_BUFFER_STATE yy_scan_bytes (yyconst char *bytes,int len  );
+YY_BUFFER_STATE yy_scan_bytes (yyconst char *bytes,yy_size_t len  );
 
 void *yyalloc (yy_size_t  );
 void *yyrealloc (void *,yy_size_t  );
@@ -640,7 +632,7 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "lexer.l"
+#line 1 "src/libcandbc/lexer.l"
 /*  lexer.c --  lexical analyzer for DBC files
     Copyright (C) 2007-2009 Andreas Heitmann
 
@@ -656,14 +648,14 @@ char *yytext;
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#line 18 "lexer.l"
+#line 18 "src/libcandbc/lexer.l"
 
 #include <dbcModel.h>
 #include "parser.h"
 #include <stdio.h>
 #include <string.h>
 
-#line 667 "src/libcandbc/lexer.c"
+#line 659 "src/libcandbc/lexer.c"
 
 #define INITIAL 0
 
@@ -702,7 +694,7 @@ FILE *yyget_out (void );
 
 void yyset_out  (FILE * out_str  );
 
-int yyget_leng (void );
+yy_size_t yyget_leng (void );
 
 char *yyget_text (void );
 
@@ -744,12 +736,7 @@ static int input (void );
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k */
-#define YY_READ_BUF_SIZE 16384
-#else
 #define YY_READ_BUF_SIZE 8192
-#endif /* __ia64__ */
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -850,10 +837,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 36 "lexer.l"
+#line 36 "src/libcandbc/lexer.l"
 
 
-#line 857 "src/libcandbc/lexer.c"
+#line 844 "src/libcandbc/lexer.c"
 
 	if ( !(yy_init) )
 		{
@@ -927,7 +914,7 @@ yy_find_action:
 
 		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
 			{
-			int yyl;
+			yy_size_t yyl;
 			for ( yyl = 0; yyl < yyleng; ++yyl )
 				if ( yytext[yyl] == '\n' )
 					   
@@ -948,212 +935,212 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 38 "lexer.l"
+#line 38 "src/libcandbc/lexer.l"
 { return T_VERSION;         }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 39 "lexer.l"
+#line 39 "src/libcandbc/lexer.l"
 { return T_BO;              }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 40 "lexer.l"
+#line 40 "src/libcandbc/lexer.l"
 { return T_BS;              }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 41 "lexer.l"
+#line 41 "src/libcandbc/lexer.l"
 { return T_BU;              }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 42 "lexer.l"
+#line 42 "src/libcandbc/lexer.l"
 { return T_SG;              }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 43 "lexer.l"
+#line 43 "src/libcandbc/lexer.l"
 { return T_EV;              }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 44 "lexer.l"
+#line 44 "src/libcandbc/lexer.l"
 { return T_SIG_VALTYPE;     }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 45 "lexer.l"
+#line 45 "src/libcandbc/lexer.l"
 { return T_NS;              }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 46 "lexer.l"
+#line 46 "src/libcandbc/lexer.l"
 { return T_INT;             }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 47 "lexer.l"
+#line 47 "src/libcandbc/lexer.l"
 { return T_FLOAT;           }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 48 "lexer.l"
+#line 48 "src/libcandbc/lexer.l"
 { return T_NAN;             }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 49 "lexer.l"
+#line 49 "src/libcandbc/lexer.l"
 { return T_STRING;          }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 50 "lexer.l"
+#line 50 "src/libcandbc/lexer.l"
 { return T_ENUM;            }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 51 "lexer.l"
+#line 51 "src/libcandbc/lexer.l"
 { return T_HEX;             }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 53 "lexer.l"
+#line 53 "src/libcandbc/lexer.l"
 { return T_NS_DESC;         }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 54 "lexer.l"
+#line 54 "src/libcandbc/lexer.l"
 { return T_CM;              }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 55 "lexer.l"
+#line 55 "src/libcandbc/lexer.l"
 { return T_BA_DEF;          }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 56 "lexer.l"
+#line 56 "src/libcandbc/lexer.l"
 { return T_BA;              }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 57 "lexer.l"
+#line 57 "src/libcandbc/lexer.l"
 { return T_VAL;             }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 58 "lexer.l"
+#line 58 "src/libcandbc/lexer.l"
 { return T_CAT_DEF;         }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 59 "lexer.l"
+#line 59 "src/libcandbc/lexer.l"
 { return T_CAT;             }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 60 "lexer.l"
+#line 60 "src/libcandbc/lexer.l"
 { return T_FILTE;           }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 61 "lexer.l"
+#line 61 "src/libcandbc/lexer.l"
 { return T_BA_DEF_DEF;      }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 62 "lexer.l"
+#line 62 "src/libcandbc/lexer.l"
 { return T_EV_DATA;         }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 63 "lexer.l"
+#line 63 "src/libcandbc/lexer.l"
 { return T_ENVVAR_DATA;     }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 64 "lexer.l"
+#line 64 "src/libcandbc/lexer.l"
 { return T_SGTYPE;          }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 65 "lexer.l"
+#line 65 "src/libcandbc/lexer.l"
 { return T_SGTYPE_VAL;      }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 66 "lexer.l"
+#line 66 "src/libcandbc/lexer.l"
 { return T_BA_DEF_SGTYPE;   }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 67 "lexer.l"
+#line 67 "src/libcandbc/lexer.l"
 { return T_BA_SGTYPE;       }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 68 "lexer.l"
+#line 68 "src/libcandbc/lexer.l"
 { return T_SIG_TYPE_REF;    }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 69 "lexer.l"
+#line 69 "src/libcandbc/lexer.l"
 { return T_VAL_TABLE;       }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 70 "lexer.l"
+#line 70 "src/libcandbc/lexer.l"
 { return T_SIG_GROUP;       }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 71 "lexer.l"
+#line 71 "src/libcandbc/lexer.l"
 { return T_SIGTYPE_VALTYPE; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 72 "lexer.l"
+#line 72 "src/libcandbc/lexer.l"
 { return T_BO_TX_BU;        }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 73 "lexer.l"
+#line 73 "src/libcandbc/lexer.l"
 { return T_BA_DEF_REL;      }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 74 "lexer.l"
+#line 74 "src/libcandbc/lexer.l"
 { return T_BA_REL;          }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 75 "lexer.l"
+#line 75 "src/libcandbc/lexer.l"
 { return T_BA_DEF_DEF_REL;  }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 76 "lexer.l"
+#line 76 "src/libcandbc/lexer.l"
 { return T_BU_SG_REL;       }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 77 "lexer.l"
+#line 77 "src/libcandbc/lexer.l"
 { return T_BU_EV_REL;       }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 78 "lexer.l"
+#line 78 "src/libcandbc/lexer.l"
 { return T_BU_BO_REL;       }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 79 "lexer.l"
+#line 79 "src/libcandbc/lexer.l"
 { return T_SG_MUL_VAL;      }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 80 "lexer.l"
+#line 80 "src/libcandbc/lexer.l"
 {
    yylval.number = yytext[17]-'0';
    return T_DUMMY_NODE_VECTOR;
@@ -1162,17 +1149,17 @@ YY_RULE_SETUP
 case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
-#line 85 "lexer.l"
+#line 85 "src/libcandbc/lexer.l"
 ;
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 86 "lexer.l"
+#line 86 "src/libcandbc/lexer.l"
 ;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 88 "lexer.l"
+#line 88 "src/libcandbc/lexer.l"
 {
                    yylval.string = strdup(yytext);
                    return T_ID;
@@ -1181,7 +1168,7 @@ YY_RULE_SETUP
 case 46:
 /* rule 46 can match eol */
 YY_RULE_SETUP
-#line 93 "lexer.l"
+#line 93 "src/libcandbc/lexer.l"
 {
                    int len = strlen(yytext);
                    if(len>2) {
@@ -1196,7 +1183,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 105 "lexer.l"
+#line 105 "src/libcandbc/lexer.l"
 {
                    yylval.number = atoll(yytext);
                    return T_INT_VAL;
@@ -1204,7 +1191,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 110 "lexer.l"
+#line 110 "src/libcandbc/lexer.l"
 {
                    yylval.number = strtol(yytext,NULL,16);
                    return T_INT_VAL;
@@ -1212,7 +1199,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 115 "lexer.l"
+#line 115 "src/libcandbc/lexer.l"
 {
                    yylval.double_val = strtod(yytext, NULL);
                    return T_DOUBLE_VAL;
@@ -1220,74 +1207,74 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 120 "lexer.l"
+#line 120 "src/libcandbc/lexer.l"
 { return T_COLON; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 121 "lexer.l"
+#line 121 "src/libcandbc/lexer.l"
 { return T_SEMICOLON; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 122 "lexer.l"
+#line 122 "src/libcandbc/lexer.l"
 { return T_SEP; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 123 "lexer.l"
+#line 123 "src/libcandbc/lexer.l"
 { return T_COMMA; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 124 "lexer.l"
+#line 124 "src/libcandbc/lexer.l"
 { return T_AT; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 125 "lexer.l"
+#line 125 "src/libcandbc/lexer.l"
 { return T_PLUS; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 126 "lexer.l"
+#line 126 "src/libcandbc/lexer.l"
 { return T_MINUS; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 127 "lexer.l"
+#line 127 "src/libcandbc/lexer.l"
 { return T_BOX_OPEN; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 128 "lexer.l"
+#line 128 "src/libcandbc/lexer.l"
 { return T_BOX_CLOSE; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 129 "lexer.l"
+#line 129 "src/libcandbc/lexer.l"
 { return T_PAR_OPEN; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 130 "lexer.l"
+#line 130 "src/libcandbc/lexer.l"
 { return T_PAR_CLOSE; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 132 "lexer.l"
+#line 132 "src/libcandbc/lexer.l"
 { yyterminate(); }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 133 "lexer.l"
+#line 133 "src/libcandbc/lexer.l"
 { return yytext[0]; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 135 "lexer.l"
+#line 135 "src/libcandbc/lexer.l"
 ECHO;
 	YY_BREAK
-#line 1291 "src/libcandbc/lexer.c"
+#line 1278 "src/libcandbc/lexer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1471,21 +1458,21 @@ static int yy_get_next_buffer (void)
 
 	else
 		{
-			int num_to_read =
+			yy_size_t num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
 			{ /* Not enough room in the buffer - grow it. */
 
 			/* just a shorter name for the current buffer */
-			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
+			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
 
 			int yy_c_buf_p_offset =
 				(int) ((yy_c_buf_p) - b->yy_ch_buf);
 
 			if ( b->yy_is_our_buffer )
 				{
-				int new_size = b->yy_buf_size * 2;
+				yy_size_t new_size = b->yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->yy_buf_size += b->yy_buf_size / 8;
@@ -1516,7 +1503,7 @@ static int yy_get_next_buffer (void)
 
 		/* Read in more data. */
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			(yy_n_chars), (size_t) num_to_read );
+			(yy_n_chars), num_to_read );
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = (yy_n_chars);
 		}
@@ -1611,7 +1598,7 @@ static int yy_get_next_buffer (void)
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 	yy_is_jam = (yy_current_state == 261);
 
-	return yy_is_jam ? 0 : yy_current_state;
+		return yy_is_jam ? 0 : yy_current_state;
 }
 
     static void yyunput (int c, register char * yy_bp )
@@ -1626,7 +1613,7 @@ static int yy_get_next_buffer (void)
 	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
 		{ /* need to shift things up to make room */
 		/* +2 for EOB chars. */
-		register int number_to_move = (yy_n_chars) + 2;
+		register yy_size_t number_to_move = (yy_n_chars) + 2;
 		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
 					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
 		register char *source =
@@ -1679,7 +1666,7 @@ static int yy_get_next_buffer (void)
 
 		else
 			{ /* need more input */
-			int offset = (yy_c_buf_p) - (yytext_ptr);
+			yy_size_t offset = (yy_c_buf_p) - (yytext_ptr);
 			++(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer(  ) )
@@ -1844,10 +1831,6 @@ static void yy_load_buffer_state  (void)
 	yyfree((void *) b  );
 }
 
-#ifndef __cplusplus
-extern int isatty (int );
-#endif /* __cplusplus */
-    
 /* Initializes or reinitializes a buffer.
  * This function is sometimes called more than once on the same buffer,
  * such as during a yyrestart() or at EOF.
@@ -1960,7 +1943,7 @@ void yypop_buffer_state (void)
  */
 static void yyensure_buffer_stack (void)
 {
-	int num_to_alloc;
+	yy_size_t num_to_alloc;
     
 	if (!(yy_buffer_stack)) {
 
@@ -2057,12 +2040,12 @@ YY_BUFFER_STATE yy_scan_string (yyconst char * yystr )
  * 
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, int  _yybytes_len )
+YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len )
 {
 	YY_BUFFER_STATE b;
 	char *buf;
 	yy_size_t n;
-	int i;
+	yy_size_t i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = _yybytes_len + 2;
@@ -2144,7 +2127,7 @@ FILE *yyget_out  (void)
 /** Get the length of the current token.
  * 
  */
-int yyget_leng  (void)
+yy_size_t yyget_leng  (void)
 {
         return yyleng;
 }
@@ -2295,7 +2278,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 135 "lexer.l"
+#line 135 "src/libcandbc/lexer.l"
 
 
 

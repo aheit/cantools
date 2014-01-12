@@ -34,8 +34,9 @@ Prerequisites: autotools
 4) build and install:
    make ; make install
 
-Installation
-============
+Installation of cantools
+========================
+Prerequisites: autotools, matio
 
 download and extract cantools-*.tar.gz
 cd cantools
