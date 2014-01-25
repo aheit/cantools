@@ -189,6 +189,26 @@ typedef struct {
   } supplement  __attribute__ ((packed));
 } cc_block_t;
 
+typedef enum {
+  sdt_unsigned_int_default   = 0,
+  sdt_signed_int_default     = 1,
+  sdt_ieee754_float_default  = 2,
+  sdt_ieee754_double_default = 3,
+  sdt_vax_f_float    = 4,
+  sdt_vax_g_float    = 5,
+  sdt_vax_d_float    = 6,
+  sdt_string         = 7,
+  sdt_byte_array     = 8,
+  sdt_unsigned_int_big_endian   = 9,
+  sdt_signed_int_big_endian     = 10,
+  sdt_ieee754_float_big_endian  = 11,
+  sdt_ieee754_double_big_endian = 12,
+  sdt_unsigned_int_little_endian   = 13,
+  sdt_signed_int_little_endian     = 14,
+  sdt_ieee754_float_little_endian  = 15,
+  sdt_ieee754_double_little_endian = 16,
+} signal_data_type_t;
+
 typedef struct {
   /* 000 */ char_t   block_identifier[2];
   /* 002 */ uint16_t block_size;
@@ -202,7 +222,7 @@ typedef struct {
   /* 058 */ char128_t signal_description;
   /* 186 */ uint16_t first_bit;               /* 0..7 */
   /* 188 */ uint16_t number_bits;
-  /* 190 */ uint16_t signal_data_type; /* 0=uint, 1=sint, 2,3=IEEE754, 7=str, 8=array*/
+  /* 190 */ uint16_t signal_data_type;
   /* 192 */ mdf_bool_t value_range_valid;
   /* 194 */ real_t   value_min               __attribute__ ((packed));
   /* 202 */ real_t   value_max               __attribute__ ((packed));

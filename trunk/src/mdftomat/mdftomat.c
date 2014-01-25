@@ -123,6 +123,13 @@ mat_write_signal(const mdf_t *const mdf,
 	     (unsigned long)can_channel, filter_message_name_in,
 	     signal_name, filter_signal_name_in,
 	     (filter_name_out!=NULL)?filter_name_out:"<rejected by filter>" );
+      if(filter_name_out != NULL) {
+	printf("+ %d %s %s %s\n",
+	       can_channel,
+	       filter_message_name_in,
+	       filter_signal_name_in,
+	       filter_name_out );
+      }
     }
     free(filter_signal_name_in);
     free(filter_message_name_in);
@@ -348,7 +355,8 @@ main(int argc, char **argv)
   } else {
     filter = NULL;
   }
-  
+
+  /* process MDF file */
   if(verbose_level >= 1) {
     fprintf(stderr, "converting %s to %sfile %s\n",
             mdf_filename,
@@ -365,6 +373,8 @@ main(int argc, char **argv)
 
   /* close mat file */
   Mat_Close(mdftomat.mat);
+
+  /* say goodbye */
   if(verbose_level >= 1) {
     fprintf(stderr, "done.\n", mdf_filename);
   }
