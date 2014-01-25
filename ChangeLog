@@ -1,3 +1,7 @@
+2014-01-25    <aheit@MINION>
+
+	* libcanmdf: bug fixes for big endian signals
+
 2014-01-12    <aheit@MINION>
 
 	* libcanmdf: support of big endian integer signals in MDF
