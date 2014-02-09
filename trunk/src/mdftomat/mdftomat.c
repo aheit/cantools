@@ -211,29 +211,36 @@ string_from_array(const char *input, const size_t len)
 }
 
 static void
+mdfPrintHeaderInfo(const mdf_t *const mdf)
+{
+  const id_block_t *id_block = id_block_get(mdf);
+  const hd_block_t *hd_block = hd_block_get(mdf);
+  const char *comment = tx_block_get_text(mdf, hd_block->link_tx_block);
+
+  if(comment) {
+    printf("File Comment =\n%s\n",comment);
+  }
+  FIELD_PRINT("Date         = ", hd_block->recording_date);
+  FIELD_PRINT("Time         = ", hd_block->recording_time);
+  FIELD_PRINT("Author       = ", hd_block->author);
+  FIELD_PRINT("Organization = ", hd_block->organization);
+  FIELD_PRINT("Project      = ", hd_block->project);
+  FIELD_PRINT("Measurement  = ", hd_block->measurement_id);
+  printf("Byte Order   = %s\n", 
+	 (id_block->byte_order==0)?"Little Endian":"Big Endian");
+}
+
+static void
 mdfProcess(const mdf_t *const mdf, const mdftomat_t *const mdftomat,
            const filter_t *const filter)
 {
-  id_block_t *id_block;
   hd_block_t *hd_block;
-
-  id_block = id_block_get(mdf);
-  assert(id_block->byte_order == 0); /* little endian only */
 
   hd_block = hd_block_get(mdf);
 
   if(mdf->verbose_level >= 1) {
-    const char *comment = tx_block_get_text(mdf, hd_block->link_tx_block);
-    if(comment) {
-      printf("File Comment =\n%s\n",comment);
-    }
-    FIELD_PRINT("Date         = ", hd_block->recording_date);
-    FIELD_PRINT("Time         = ", hd_block->recording_time);
-    FIELD_PRINT("Author       = ", hd_block->author);
-    FIELD_PRINT("Organization = ", hd_block->organization);
-    FIELD_PRINT("Project      = ", hd_block->project);
-    FIELD_PRINT("Measurement  = ", hd_block->measurement_id);
-   }
+    mdfPrintHeaderInfo(mdf);
+  }
 
   /* process data groups */
   mdfProcessDataGroups(mdf, filter, hd_block->link_dg_block,
@@ -376,7 +383,7 @@ main(int argc, char **argv)
 
   /* say goodbye */
   if(verbose_level >= 1) {
-    fprintf(stderr, "done.\n", mdf_filename);
+    puts("done.");
   }
 
   return 0;

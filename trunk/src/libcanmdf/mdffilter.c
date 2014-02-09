@@ -146,7 +146,7 @@ mdf_filter_create(const char *filename)
   filter->first = NULL;
   next_filter_element = &(filter->first);
   fp = fopen(filename,"r");
-  if(fp) {
+  if(fp != NULL) {
     int linenr = 0;
     while(fgets(line, LINE_MAX, fp) != NULL) {
       linenr++;
@@ -242,11 +242,13 @@ OK:
 static void
 filter_element_free(filter_element_t *filter_element)
 {
-  if(filter_element->next) filter_element_free(filter_element->next);
-  if(filter_element->message) free(filter_element->message);
-  if(filter_element->signal) free(filter_element->signal);
-  if(filter_element->newname) free(filter_element->newname);
-  free(filter_element);
+  if(filter_element != NULL) {
+    if(filter_element->next) filter_element_free(filter_element->next);
+    if(filter_element->message) free(filter_element->message);
+    if(filter_element->signal) free(filter_element->signal);
+    if(filter_element->newname) free(filter_element->newname);
+    free(filter_element);
+  }
 }
 
 void

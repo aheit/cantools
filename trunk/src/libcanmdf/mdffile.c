@@ -1,5 +1,5 @@
 /*  mdffile.c --  handle MDF file connection
-    Copyright (C) 2012-2013 Andreas Heitmann
+    Copyright (C) 2012-2014 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,18 +29,18 @@ const mdf_t *
 mdf_attach(char *filename, int verbose_level)
 {
   CREATE(mdf_t, mdf);
-  int fd;
 
   mdf->verbose_level = verbose_level;
 
   /* open input file */
   mdf->fd = open(filename, O_RDONLY);
-  if(fd != -1) {
+  if(mdf->fd != -1) {
     struct stat sb;
+
     fstat(mdf->fd, &sb);
     mdf->size = sb.st_size;
     mdf->base = mmap(NULL, mdf->size, PROT_READ,
-		     MAP_PRIVATE, mdf->fd, (off_t)0);
+                     MAP_PRIVATE, mdf->fd, (off_t)0);
     if(mdf->base == MAP_FAILED) {
       fprintf(stderr, "mdf_attach(): can't mmap MDF file %s\n",filename);
       mdf = NULL;
