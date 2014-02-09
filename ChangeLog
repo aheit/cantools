@@ -1,3 +1,7 @@
+2014-01-26    <aheit@MINION>
+
+	* libcanmdf: bug fix: failure to open mdf file is not reported
+
 2014-01-25    <aheit@MINION>
 
 	* libcanmdf: bug fixes for big endian signals

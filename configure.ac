@@ -1,7 +1,7 @@
 # configuration cantools                        -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-# Copyright (C) 2007-2009 Andreas Heitmann
+# Copyright (C) 2007-2013 Andreas Heitmann
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
