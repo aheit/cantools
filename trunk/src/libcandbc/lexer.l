@@ -1,5 +1,5 @@
 /*  lexer.c --  lexical analyzer for DBC files
-    Copyright (C) 2007-2009 Andreas Heitmann
+    Copyright (C) 2007-2009,2014 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@ string          \"([^"\\]|(\\.))*\"
 nl              [\n\r]
 
 %%
+
+"//"[^\n]*       ;
 
 "VERSION"              { return T_VERSION;         }
 "BO_"                  { return T_BO;              }
