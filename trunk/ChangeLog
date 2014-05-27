@@ -1,9 +1,19 @@
+2014-05-24    <aheit@MINION>
+
+	* all: replaced asctomat binary by cantomat
+	* libcandbc: bugfix of dbcWriter output (thanks, Johannes)
+	* libcanvsb: added decoder for NEOVI binary files (vsb)
+
+2014-03-15    <aheit@MINION>
+
+	* libcandbc: ignore comment lines starting with // (patch for Joe)
+
 2014-02-09    <aheit@MINION>
 
 	* all: released version 0.10
 	* libcanmdf: bug fix: failure to open mdf file is not reported
 
-2014-01-25    <aheit@MINION>
+2014-01-25    <aheit@MINIO N>
 
 	* libcanmdf: bug fixes for big endian signals
 

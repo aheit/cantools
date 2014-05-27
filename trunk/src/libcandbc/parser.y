@@ -208,6 +208,12 @@ void attribute_append(
        && ad->value_type == vt_float) {
       av->value.double_val = (double)av->value.int_val;
       av->value_type = ad->value_type;
+    } else if(   av->value_type == vt_float
+              && ad->value_type == vt_integer) {
+      printf("%lf -> ", av->value.double_val);
+      av->value.int_val = (sint32)lrint(av->value.double_val);
+      printf("%d\n", av->value.int_val);
+      av->value_type = ad->value_type;
     } else if(   av->value_type == vt_integer
               && ad->value_type == vt_hex) {
       av->value.hex_val = (uint32)av->value.int_val;

@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <endian.h>
+#include <byteswap.h>
 #include "mdfsg.h"
 #include "mdfmodel.h"
 
@@ -229,6 +230,7 @@ mdf_signal_convert(const uint8_t *const data_int_ptr,
       converted_double = (double)data_int64;
       break;
     default:
+      converted_double = 0.0;
       fprintf(stderr,"conversion %hu not implemented\n",
 	      (unsigned short)cc_block->conversion_type);
       exit(EXIT_FAILURE);

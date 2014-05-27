@@ -97,16 +97,20 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = dbccopy$(EXEEXT) dbcls$(EXEEXT) asctomat$(EXEEXT) \
+@ENABLE_CLG_TRUE@am__append_1 = libcanclg.la
+bin_PROGRAMS = dbccopy$(EXEEXT) dbcls$(EXEEXT) cantomat$(EXEEXT) \
 	mdftomat$(EXEEXT)
+@ENABLE_CLG_TRUE@am__append_2 = libcanclg.la
+@ENABLE_CLG_TRUE@am__append_3 = -I$(top_srcdir)/src/libcanclg
+@ENABLE_CLG_TRUE@am__append_4 = src/libcanclg/clgReader.h
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/config.h.in src/libcandbc/parser.h \
 	src/libcandbc/parser.c src/libcandbc/lexer.c strtok_r.c \
-	depcomp ylwrap $(include_HEADERS) AUTHORS COPYING ChangeLog \
-	README TODO compile config.guess config.sub install-sh missing \
-	ltmain.sh
+	depcomp ylwrap $(am__include_HEADERS_DIST) AUTHORS COPYING \
+	ChangeLog README TODO compile config.guess config.sub \
+	install-sh missing ltmain.sh
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -152,8 +156,7 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libcanasc_la_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libcanasc_la_OBJECTS = src/libcanasc/libcanasc_la-ascReader.lo \
-	src/libcanasc/libcanasc_la-messageDecoder.lo
+am_libcanasc_la_OBJECTS = src/libcanasc/libcanasc_la-ascReader.lo
 libcanasc_la_OBJECTS = $(am_libcanasc_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -162,6 +165,13 @@ am__v_lt_1 =
 libcanasc_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcanasc_la_LDFLAGS) $(LDFLAGS) -o $@
+libcanclg_la_LIBADD =
+am_libcanclg_la_OBJECTS = src/libcanclg/libcanclg_la-clgReader.lo
+libcanclg_la_OBJECTS = $(am_libcanclg_la_OBJECTS)
+libcanclg_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libcanclg_la_LDFLAGS) $(LDFLAGS) -o $@
+@ENABLE_CLG_TRUE@am_libcanclg_la_rpath = -rpath $(libdir)
 libcandbc_la_LIBADD =
 am_libcandbc_la_OBJECTS = src/libcandbc/libcandbc_la-dbcModel.lo \
 	src/libcandbc/libcandbc_la-dbcReader.lo \
@@ -184,19 +194,26 @@ libcanmdf_la_OBJECTS = $(am_libcanmdf_la_OBJECTS)
 libcanmdf_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcanmdf_la_LDFLAGS) $(LDFLAGS) -o $@
+libcanvsb_la_LIBADD =
+am_libcanvsb_la_OBJECTS = src/libcanvsb/libcanvsb_la-vsbReader.lo
+libcanvsb_la_OBJECTS = $(am_libcanvsb_la_OBJECTS)
+libcanvsb_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libcanvsb_la_LDFLAGS) $(LDFLAGS) -o $@
 PROGRAMS = $(bin_PROGRAMS)
-am_asctomat_OBJECTS = src/asctomat/asctomat.$(OBJEXT) \
-	src/asctomat/busAssignment.$(OBJEXT) \
-	src/asctomat/matWrite.$(OBJEXT) \
-	src/asctomat/messageHash.$(OBJEXT) \
-	src/asctomat/measurement.$(OBJEXT) \
-	src/asctomat/signalFormat.$(OBJEXT) \
+am_cantomat_OBJECTS = src/cantomat/cantomat.$(OBJEXT) \
+	src/cantomat/messageDecoder.$(OBJEXT) \
+	src/cantomat/busAssignment.$(OBJEXT) \
+	src/cantomat/matWrite.$(OBJEXT) \
+	src/cantomat/messageHash.$(OBJEXT) \
+	src/cantomat/measurement.$(OBJEXT) \
+	src/cantomat/signalFormat.$(OBJEXT) \
 	src/hashtable/hashtable.$(OBJEXT) \
 	src/hashtable/hashtable_itr.$(OBJEXT)
-asctomat_OBJECTS = $(am_asctomat_OBJECTS)
+cantomat_OBJECTS = $(am_cantomat_OBJECTS)
 am__DEPENDENCIES_1 =
-asctomat_DEPENDENCIES = libcandbc.la libcanasc.la \
-	$(am__DEPENDENCIES_1) @LIBOBJS@
+cantomat_DEPENDENCIES = libcandbc.la libcanasc.la libcanvsb.la \
+	$(am__append_2) $(am__DEPENDENCIES_1) @LIBOBJS@
 am_dbccopy_OBJECTS = src/dbccopy/dbccopy.$(OBJEXT)
 dbccopy_OBJECTS = $(am_dbccopy_OBJECTS)
 dbccopy_DEPENDENCIES = libcandbc.la
@@ -257,17 +274,26 @@ AM_V_YACC = $(am__v_YACC_@AM_V@)
 am__v_YACC_ = $(am__v_YACC_@AM_DEFAULT_V@)
 am__v_YACC_0 = @echo "  YACC    " $@;
 am__v_YACC_1 = 
-SOURCES = $(libcanasc_la_SOURCES) $(libcandbc_la_SOURCES) \
-	$(libcanmdf_la_SOURCES) $(asctomat_SOURCES) $(dbccopy_SOURCES) \
+SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
+	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
+	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
 	$(dbcls_SOURCES) $(mdftomat_SOURCES)
-DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcandbc_la_SOURCES) \
-	$(libcanmdf_la_SOURCES) $(asctomat_SOURCES) $(dbccopy_SOURCES) \
+DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
+	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
+	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
 	$(dbcls_SOURCES) $(mdftomat_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+am__include_HEADERS_DIST = src/libcandbc/dbcModel.h \
+	src/libcandbc/dbcTypes.h src/libcandbc/dbcReader.h \
+	src/libcandbc/dbcWriter.h src/libcanmdf/mdfcg.h \
+	src/libcanmdf/mdfdg.h src/libcanmdf/mdffile.h \
+	src/libcanmdf/mdffilter.h src/libcanasc/ascReader.h \
+	src/libcanvsb/vsbReader.h src/cantomat/messageDecoder.h \
+	src/libcanclg/clgReader.h
 HEADERS = $(include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) \
 	$(LISP)config.h.in
@@ -443,7 +469,8 @@ ACLOCAL_AMFLAGS = -I m4
 #	
 # What to build and install
 #
-lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la
+lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
+	$(am__append_1)
 
 #
 # dbcls
@@ -458,26 +485,28 @@ dbccopy_SOURCES = src/dbccopy/dbccopy.c
 dbccopy_LDADD = libcandbc.la
 
 #
-# asctomat
+# cantomat
 #
-asctomat_SOURCES = src/asctomat/asctomat.c \
-		   src/asctomat/busAssignment.c \
-		   src/asctomat/matWrite.c \
-		   src/asctomat/messageHash.c \
-		   src/asctomat/measurement.c \
-		   src/asctomat/signalFormat.c \
-		   src/asctomat/measurement.h \
-		   src/asctomat/signalFormat.h \
-		   src/asctomat/busAssignment.h \
-		   src/asctomat/matWrite.h \
-		   src/asctomat/messageHash.h \
+cantomat_SOURCES = src/cantomat/cantomat.c \
+		   src/cantomat/messageDecoder.c \
+		   src/cantomat/busAssignment.c \
+		   src/cantomat/matWrite.c \
+		   src/cantomat/messageHash.c \
+		   src/cantomat/measurement.c \
+		   src/cantomat/signalFormat.c \
+		   src/cantomat/measurement.h \
+		   src/cantomat/signalFormat.h \
+		   src/cantomat/busAssignment.h \
+		   src/cantomat/matWrite.h \
+		   src/cantomat/messageHash.h \
 		   src/hashtable/hashtable.c \
 		   src/hashtable/hashtable_itr.c \
 		   src/hashtable/hashtable.h \
 		   src/hashtable/hashtable_itr.h \
 		   src/hashtable/hashtable_private.h
 
-asctomat_LDADD = libcandbc.la libcanasc.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
+cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la \
+	$(am__append_2) $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
 
 #
 # mdftomat
@@ -489,9 +518,9 @@ mdftomat_LDADD = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
 
 # additional include pathes necessary
 AM_CPPFLAGS = -I$(top_srcdir)/src/libcandbc \
-	   -I$(top_srcdir)/src/libcanmdf \
-	   -I$(top_srcdir)/hashtable
-
+	-I$(top_srcdir)/src/libcanmdf -I$(top_srcdir)/src/libcanvsb \
+	-I$(top_srcdir)/src/libcanasc -I$(top_srcdir)/hashtable \
+	$(am__append_3)
 
 # YACC: generate token defines for LEX
 AM_YFLAGS = -d
@@ -500,17 +529,12 @@ YYDEBUG = -DYYDEBUG=1
 #
 # library headers, source, etc.
 #
-include_HEADERS = src/libcandbc/dbcModel.h \
-		 src/libcandbc/dbcTypes.h \
-		 src/libcandbc/dbcReader.h \
-		 src/libcandbc/dbcWriter.h \
-		 src/libcanmdf/mdfcg.h \
-		 src/libcanmdf/mdfdg.h \
-		 src/libcanmdf/mdffile.h \
-		 src/libcanmdf/mdffilter.h \
-		 src/libcanasc/ascReader.h \
-		 src/libcanasc/messageDecoder.h
-
+include_HEADERS = src/libcandbc/dbcModel.h src/libcandbc/dbcTypes.h \
+	src/libcandbc/dbcReader.h src/libcandbc/dbcWriter.h \
+	src/libcanmdf/mdfcg.h src/libcanmdf/mdfdg.h \
+	src/libcanmdf/mdffile.h src/libcanmdf/mdffilter.h \
+	src/libcanasc/ascReader.h src/libcanvsb/vsbReader.h \
+	src/cantomat/messageDecoder.h $(am__append_4)
 libcandbc_la_SOURCES = \
 	src/libcandbc/dbcModel.c \
 	src/libcandbc/dbcReader.c \
@@ -519,8 +543,13 @@ libcandbc_la_SOURCES = \
 	src/libcandbc/lexer.l
 
 libcanasc_la_SOURCES = \
-	src/libcanasc/ascReader.c \
-	src/libcanasc/messageDecoder.c
+	src/libcanasc/ascReader.c
+
+libcanvsb_la_SOURCES = \
+	src/libcanvsb/vsbReader.c
+
+libcanclg_la_SOURCES = \
+	src/libcanclg/clgReader.c
 
 libcanmdf_la_SOURCES = \
 	src/libcanmdf/mdfcg.c \
@@ -539,6 +568,14 @@ libcanasc_la_CPPFLAGS = -I$(top_builddir)/src/libcanasc \
 		       -I$(top_srcdir)/src/libcandbc
 
 libcanasc_la_LDFLAGS = -no-undefined -version-info @version_info@
+libcanvsb_la_CPPFLAGS = -I$(top_builddir)/src/libcanvsb \
+		       -I$(top_srcdir)/src/libcandbc
+
+libcanvsb_la_LDFLAGS = -no-undefined -version-info @version_info@
+libcanclg_la_CPPFLAGS = -I$(top_builddir)/src/libcanclg \
+		       -I$(top_srcdir)/src/libcandbc
+
+libcanclg_la_LDFLAGS = -no-undefined -version-info @version_info@
 libcanmdf_la_CPPFLAGS = -I$(top_builddir)/src/libcanmdf
 libcanmdf_la_LDFLAGS = -no-undefined -version-info @version_info@
 MAINTAINERCLEANFILES = \
@@ -644,12 +681,21 @@ src/libcanasc/$(DEPDIR)/$(am__dirstamp):
 src/libcanasc/libcanasc_la-ascReader.lo:  \
 	src/libcanasc/$(am__dirstamp) \
 	src/libcanasc/$(DEPDIR)/$(am__dirstamp)
-src/libcanasc/libcanasc_la-messageDecoder.lo:  \
-	src/libcanasc/$(am__dirstamp) \
-	src/libcanasc/$(DEPDIR)/$(am__dirstamp)
 
 libcanasc.la: $(libcanasc_la_OBJECTS) $(libcanasc_la_DEPENDENCIES) $(EXTRA_libcanasc_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libcanasc_la_LINK) -rpath $(libdir) $(libcanasc_la_OBJECTS) $(libcanasc_la_LIBADD) $(LIBS)
+src/libcanclg/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanclg
+	@: > src/libcanclg/$(am__dirstamp)
+src/libcanclg/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanclg/$(DEPDIR)
+	@: > src/libcanclg/$(DEPDIR)/$(am__dirstamp)
+src/libcanclg/libcanclg_la-clgReader.lo:  \
+	src/libcanclg/$(am__dirstamp) \
+	src/libcanclg/$(DEPDIR)/$(am__dirstamp)
+
+libcanclg.la: $(libcanclg_la_OBJECTS) $(libcanclg_la_DEPENDENCIES) $(EXTRA_libcanclg_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libcanclg_la_LINK) $(am_libcanclg_la_rpath) $(libcanclg_la_OBJECTS) $(libcanclg_la_LIBADD) $(LIBS)
 src/libcandbc/$(am__dirstamp):
 	@$(MKDIR_P) src/libcandbc
 	@: > src/libcandbc/$(am__dirstamp)
@@ -698,6 +744,18 @@ src/libcanmdf/libcanmdf_la-mdfsg.lo: src/libcanmdf/$(am__dirstamp) \
 
 libcanmdf.la: $(libcanmdf_la_OBJECTS) $(libcanmdf_la_DEPENDENCIES) $(EXTRA_libcanmdf_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libcanmdf_la_LINK) -rpath $(libdir) $(libcanmdf_la_OBJECTS) $(libcanmdf_la_LIBADD) $(LIBS)
+src/libcanvsb/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanvsb
+	@: > src/libcanvsb/$(am__dirstamp)
+src/libcanvsb/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanvsb/$(DEPDIR)
+	@: > src/libcanvsb/$(DEPDIR)/$(am__dirstamp)
+src/libcanvsb/libcanvsb_la-vsbReader.lo:  \
+	src/libcanvsb/$(am__dirstamp) \
+	src/libcanvsb/$(DEPDIR)/$(am__dirstamp)
+
+libcanvsb.la: $(libcanvsb_la_OBJECTS) $(libcanvsb_la_DEPENDENCIES) $(EXTRA_libcanvsb_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libcanvsb_la_LINK) -rpath $(libdir) $(libcanvsb_la_OBJECTS) $(libcanvsb_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -747,24 +805,26 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
-src/asctomat/$(am__dirstamp):
-	@$(MKDIR_P) src/asctomat
-	@: > src/asctomat/$(am__dirstamp)
-src/asctomat/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) src/asctomat/$(DEPDIR)
-	@: > src/asctomat/$(DEPDIR)/$(am__dirstamp)
-src/asctomat/asctomat.$(OBJEXT): src/asctomat/$(am__dirstamp) \
-	src/asctomat/$(DEPDIR)/$(am__dirstamp)
-src/asctomat/busAssignment.$(OBJEXT): src/asctomat/$(am__dirstamp) \
-	src/asctomat/$(DEPDIR)/$(am__dirstamp)
-src/asctomat/matWrite.$(OBJEXT): src/asctomat/$(am__dirstamp) \
-	src/asctomat/$(DEPDIR)/$(am__dirstamp)
-src/asctomat/messageHash.$(OBJEXT): src/asctomat/$(am__dirstamp) \
-	src/asctomat/$(DEPDIR)/$(am__dirstamp)
-src/asctomat/measurement.$(OBJEXT): src/asctomat/$(am__dirstamp) \
-	src/asctomat/$(DEPDIR)/$(am__dirstamp)
-src/asctomat/signalFormat.$(OBJEXT): src/asctomat/$(am__dirstamp) \
-	src/asctomat/$(DEPDIR)/$(am__dirstamp)
+src/cantomat/$(am__dirstamp):
+	@$(MKDIR_P) src/cantomat
+	@: > src/cantomat/$(am__dirstamp)
+src/cantomat/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/cantomat/$(DEPDIR)
+	@: > src/cantomat/$(DEPDIR)/$(am__dirstamp)
+src/cantomat/cantomat.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+	src/cantomat/$(DEPDIR)/$(am__dirstamp)
+src/cantomat/messageDecoder.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+	src/cantomat/$(DEPDIR)/$(am__dirstamp)
+src/cantomat/busAssignment.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+	src/cantomat/$(DEPDIR)/$(am__dirstamp)
+src/cantomat/matWrite.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+	src/cantomat/$(DEPDIR)/$(am__dirstamp)
+src/cantomat/messageHash.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+	src/cantomat/$(DEPDIR)/$(am__dirstamp)
+src/cantomat/measurement.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+	src/cantomat/$(DEPDIR)/$(am__dirstamp)
+src/cantomat/signalFormat.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+	src/cantomat/$(DEPDIR)/$(am__dirstamp)
 src/hashtable/$(am__dirstamp):
 	@$(MKDIR_P) src/hashtable
 	@: > src/hashtable/$(am__dirstamp)
@@ -776,9 +836,9 @@ src/hashtable/hashtable.$(OBJEXT): src/hashtable/$(am__dirstamp) \
 src/hashtable/hashtable_itr.$(OBJEXT): src/hashtable/$(am__dirstamp) \
 	src/hashtable/$(DEPDIR)/$(am__dirstamp)
 
-asctomat$(EXEEXT): $(asctomat_OBJECTS) $(asctomat_DEPENDENCIES) $(EXTRA_asctomat_DEPENDENCIES) 
-	@rm -f asctomat$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(asctomat_OBJECTS) $(asctomat_LDADD) $(LIBS)
+cantomat$(EXEEXT): $(cantomat_OBJECTS) $(cantomat_DEPENDENCIES) $(EXTRA_cantomat_DEPENDENCIES) 
+	@rm -f cantomat$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(cantomat_OBJECTS) $(cantomat_LDADD) $(LIBS)
 src/dbccopy/$(am__dirstamp):
 	@$(MKDIR_P) src/dbccopy
 	@: > src/dbccopy/$(am__dirstamp)
@@ -818,34 +878,39 @@ mdftomat$(EXEEXT): $(mdftomat_OBJECTS) $(mdftomat_DEPENDENCIES) $(EXTRA_mdftomat
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f src/asctomat/*.$(OBJEXT)
+	-rm -f src/cantomat/*.$(OBJEXT)
 	-rm -f src/dbccopy/*.$(OBJEXT)
 	-rm -f src/dbcls/*.$(OBJEXT)
 	-rm -f src/hashtable/*.$(OBJEXT)
 	-rm -f src/libcanasc/*.$(OBJEXT)
 	-rm -f src/libcanasc/*.lo
+	-rm -f src/libcanclg/*.$(OBJEXT)
+	-rm -f src/libcanclg/*.lo
 	-rm -f src/libcandbc/*.$(OBJEXT)
 	-rm -f src/libcandbc/*.lo
 	-rm -f src/libcanmdf/*.$(OBJEXT)
 	-rm -f src/libcanmdf/*.lo
+	-rm -f src/libcanvsb/*.$(OBJEXT)
+	-rm -f src/libcanvsb/*.lo
 	-rm -f src/mdftomat/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtok_r.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/asctomat/$(DEPDIR)/asctomat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/asctomat/$(DEPDIR)/busAssignment.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/asctomat/$(DEPDIR)/matWrite.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/asctomat/$(DEPDIR)/measurement.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/asctomat/$(DEPDIR)/messageHash.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/asctomat/$(DEPDIR)/signalFormat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/busAssignment.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/matWrite.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/measurement.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/messageDecoder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/messageHash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/signalFormat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/dbccopy/$(DEPDIR)/dbccopy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/dbcls/$(DEPDIR)/dbcls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/hashtable/$(DEPDIR)/hashtable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/hashtable/$(DEPDIR)/hashtable_itr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanasc/$(DEPDIR)/libcanasc_la-ascReader.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/libcanasc/$(DEPDIR)/libcanasc_la-messageDecoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcReader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcWriter.Plo@am__quote@
@@ -858,6 +923,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffilter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfmodel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfsg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanvsb/$(DEPDIR)/libcanvsb_la-vsbReader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/mdftomat/$(DEPDIR)/mdftomat.Po@am__quote@
 
 .c.o:
@@ -891,12 +957,12 @@ src/libcanasc/libcanasc_la-ascReader.lo: src/libcanasc/ascReader.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanasc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanasc/libcanasc_la-ascReader.lo `test -f 'src/libcanasc/ascReader.c' || echo '$(srcdir)/'`src/libcanasc/ascReader.c
 
-src/libcanasc/libcanasc_la-messageDecoder.lo: src/libcanasc/messageDecoder.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanasc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanasc/libcanasc_la-messageDecoder.lo -MD -MP -MF src/libcanasc/$(DEPDIR)/libcanasc_la-messageDecoder.Tpo -c -o src/libcanasc/libcanasc_la-messageDecoder.lo `test -f 'src/libcanasc/messageDecoder.c' || echo '$(srcdir)/'`src/libcanasc/messageDecoder.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcanasc/$(DEPDIR)/libcanasc_la-messageDecoder.Tpo src/libcanasc/$(DEPDIR)/libcanasc_la-messageDecoder.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcanasc/messageDecoder.c' object='src/libcanasc/libcanasc_la-messageDecoder.lo' libtool=yes @AMDEPBACKSLASH@
+src/libcanclg/libcanclg_la-clgReader.lo: src/libcanclg/clgReader.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanclg_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanclg/libcanclg_la-clgReader.lo -MD -MP -MF src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Tpo -c -o src/libcanclg/libcanclg_la-clgReader.lo `test -f 'src/libcanclg/clgReader.c' || echo '$(srcdir)/'`src/libcanclg/clgReader.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Tpo src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcanclg/clgReader.c' object='src/libcanclg/libcanclg_la-clgReader.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanasc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanasc/libcanasc_la-messageDecoder.lo `test -f 'src/libcanasc/messageDecoder.c' || echo '$(srcdir)/'`src/libcanasc/messageDecoder.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanclg_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanclg/libcanclg_la-clgReader.lo `test -f 'src/libcanclg/clgReader.c' || echo '$(srcdir)/'`src/libcanclg/clgReader.c
 
 src/libcandbc/libcandbc_la-dbcModel.lo: src/libcandbc/dbcModel.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-dbcModel.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Tpo -c -o src/libcandbc/libcandbc_la-dbcModel.lo `test -f 'src/libcandbc/dbcModel.c' || echo '$(srcdir)/'`src/libcandbc/dbcModel.c
@@ -982,6 +1048,13 @@ src/libcanmdf/libcanmdf_la-mdfsg.lo: src/libcanmdf/mdfsg.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanmdf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanmdf/libcanmdf_la-mdfsg.lo `test -f 'src/libcanmdf/mdfsg.c' || echo '$(srcdir)/'`src/libcanmdf/mdfsg.c
 
+src/libcanvsb/libcanvsb_la-vsbReader.lo: src/libcanvsb/vsbReader.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanvsb_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanvsb/libcanvsb_la-vsbReader.lo -MD -MP -MF src/libcanvsb/$(DEPDIR)/libcanvsb_la-vsbReader.Tpo -c -o src/libcanvsb/libcanvsb_la-vsbReader.lo `test -f 'src/libcanvsb/vsbReader.c' || echo '$(srcdir)/'`src/libcanvsb/vsbReader.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcanvsb/$(DEPDIR)/libcanvsb_la-vsbReader.Tpo src/libcanvsb/$(DEPDIR)/libcanvsb_la-vsbReader.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcanvsb/vsbReader.c' object='src/libcanvsb/libcanvsb_la-vsbReader.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanvsb_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanvsb/libcanvsb_la-vsbReader.lo `test -f 'src/libcanvsb/vsbReader.c' || echo '$(srcdir)/'`src/libcanvsb/vsbReader.c
+
 .l.c:
 	$(AM_V_LEX)$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(LEXCOMPILE)
 
@@ -994,8 +1067,10 @@ mostlyclean-libtool:
 clean-libtool:
 	-rm -rf .libs _libs
 	-rm -rf src/libcanasc/.libs src/libcanasc/_libs
+	-rm -rf src/libcanclg/.libs src/libcanclg/_libs
 	-rm -rf src/libcandbc/.libs src/libcandbc/_libs
 	-rm -rf src/libcanmdf/.libs src/libcanmdf/_libs
+	-rm -rf src/libcanvsb/.libs src/libcanvsb/_libs
 
 distclean-libtool:
 	-rm -f libtool config.lt
@@ -1277,8 +1352,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-rm -f src/asctomat/$(DEPDIR)/$(am__dirstamp)
-	-rm -f src/asctomat/$(am__dirstamp)
+	-rm -f src/cantomat/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/cantomat/$(am__dirstamp)
 	-rm -f src/dbccopy/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/dbccopy/$(am__dirstamp)
 	-rm -f src/dbcls/$(DEPDIR)/$(am__dirstamp)
@@ -1287,10 +1362,14 @@ distclean-generic:
 	-rm -f src/hashtable/$(am__dirstamp)
 	-rm -f src/libcanasc/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcanasc/$(am__dirstamp)
+	-rm -f src/libcanclg/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/libcanclg/$(am__dirstamp)
 	-rm -f src/libcandbc/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcandbc/$(am__dirstamp)
 	-rm -f src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcanmdf/$(am__dirstamp)
+	-rm -f src/libcanvsb/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/libcanvsb/$(am__dirstamp)
 	-rm -f src/mdftomat/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/mdftomat/$(am__dirstamp)
 
@@ -1308,7 +1387,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf $(DEPDIR) src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -1332,7 +1411,8 @@ install-dvi: install-dvi-am
 install-dvi-am:
 
 install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 install-html: install-html-am
 
 install-html-am:
@@ -1356,7 +1436,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf $(DEPDIR) src/asctomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1376,7 +1456,7 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS \
 	uninstall-libLTLIBRARIES
 
-.MAKE: all install-am install-strip
+.MAKE: all install-am install-exec-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--refresh check check-am clean \
 	clean-binPROGRAMS clean-cscope clean-generic \
@@ -1388,7 +1468,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
 	install install-am install-binPROGRAMS install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am \
+	install-exec-am install-exec-hook install-html install-html-am \
 	install-includeHEADERS install-info install-info-am \
 	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
@@ -1400,6 +1480,12 @@ uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS \
 
 
 src/libcandbc/parser.h src/libcandbc/parser.c: src/libcandbc/parser.y
+
+install-exec-hook:
+	cd $(DESTDIR)$(bindir) && \
+		$(LN_S) cantomat$(EXEEXT) asctomat$(EXEEXT)
+	cd $(DESTDIR)$(bindir) && \
+		$(LN_S) cantomat$(EXEEXT) vsbtomat$(EXEEXT)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

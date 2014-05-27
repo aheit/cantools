@@ -21,21 +21,7 @@
 #include <stdio.h>
 #include <dbcTypes.h>
 #include <time.h>
-
-/* CAN message type */
-typedef struct {
-  struct {
-    time_t tv_sec;
-    uint32 tv_nsec;
-  } t; /* time stamp */
-  uint8   bus;     /* can bus */
-  uint32  id;      /* numeric CAN-ID */
-  uint8   dlc;
-  uint8   byte_arr[8];
-} canMessage_t;
-
-/* message received callback function */
-typedef void (* msgRxCb_t)(canMessage_t *message, void *cbData);
+#include "../cantomat/measurement.h"
 
 /* ascRead function */
 void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
