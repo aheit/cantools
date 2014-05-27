@@ -100,6 +100,9 @@
 /* Define to 1 if you have the `strspn' function. */
 #undef HAVE_STRSPN
 
+/* Define to 1 if you have the `strstr' function. */
+#undef HAVE_STRSTR
+
 /* Define to 1 if you have the `strtok_r' function. */
 #undef HAVE_STRTOK_R
 

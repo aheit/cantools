@@ -25,7 +25,7 @@
 #include "ascReader.h"
 
 typedef enum {
-  unset,
+  unset = 0,
   decimal = 10,
   hexadecimal = 16
 } numBase_t;
@@ -46,12 +46,18 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
   /* loop for reading input lines */
   while(1) {
     char *buffer_lasts; /* reentrancy structure for strtok on buffer */
-    fgets(buffer,sizeof(buffer)-1,fp);
-    if(feof(fp)) break;                         /* EOF... stop loop */
-    cp = strtok_r (buffer," ", &buffer_lasts);  /* get first token */
+    char *bp;
+
+    bp = fgets(buffer,sizeof(buffer),fp);
+    if(feof(fp)) break;                          /* EOF... stop loop */
+    if(bp==NULL) break;
+    if ((cp = strstr(buffer, "\n\r")) != NULL) { /* remove line CR/NL */
+      *cp = '\0';
+    }
+    cp = strtok_r (buffer," ", &buffer_lasts);   /* get first token */
     if(!strcmp(cp,"date")) {
-      ;                                         /* skip date info */
-    } else if(!strcmp(cp,"base")) {             /* parse numeric base */
+      ;                                          /* skip date info */
+    } else if(!strcmp(cp,"base")) {              /* parse numeric base */
       cp = strtok_r(NULL," ", &buffer_lasts);    /* dec/hex */
       if(!strcmp(cp,"dec")) {
         numbase = decimal;

@@ -636,6 +636,8 @@ ac_header_list=
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
+ENABLE_CLG_FALSE
+ENABLE_CLG_TRUE
 MATIO_LIB
 ALLOCA
 LIBOBJS
@@ -779,6 +781,7 @@ with_gnu_ld
 with_sysroot
 enable_libtool_lock
 with_dmalloc
+enable_clg
 enable_efence
 enable_assert
 '
@@ -1426,6 +1429,7 @@ Optional Features:
   --disable-dependency-tracking
                           speeds up one-time build
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-clg            Enable CLG file format
   --enable-efence         Use electric fence (www.perens.com)
   --disable-assert        turn off assertions
 
@@ -16948,6 +16952,17 @@ else
   RANLIB="$ac_cv_prog_RANLIB"
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ln -s works" >&5
+$as_echo_n "checking whether ln -s works... " >&6; }
+LN_S=$as_ln_s
+if test "$LN_S" = "ln -s"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no, using $LN_S" >&5
+$as_echo "no, using $LN_S" >&6; }
+fi
+
 
 # Checks for functions
 ac_fn_c_check_func "$LINENO" "strtok_r" "ac_cv_func_strtok_r"
@@ -17975,6 +17990,59 @@ fi
 
 
 
+# Check whether --enable-clg was given.
+if test "${enable_clg+set}" = set; then :
+  enableval=$enable_clg; case "$enableval" in \
+	yes)  enable_clg=yes ;; \
+	no)   enable_clg=no;; \
+	*)    enable_clg=no;; \
+esac
+else
+  enable_clg=no
+fi
+
+
+# pass option to Makefile.am
+ if test "$enable_clg" = "yes"; then
+  ENABLE_CLG_TRUE=
+  ENABLE_CLG_FALSE='#'
+else
+  ENABLE_CLG_TRUE='#'
+  ENABLE_CLG_FALSE=
+fi
+
+
+# Check for CLG library
+if test $enable_clg = yes; then
+clg_available=1
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for src/libcanclg/clgReader.h" >&5
+$as_echo_n "checking for src/libcanclg/clgReader.h... " >&6; }
+if ${ac_cv_file_src_libcanclg_clgReader_h+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "src/libcanclg/clgReader.h"; then
+  ac_cv_file_src_libcanclg_clgReader_h=yes
+else
+  ac_cv_file_src_libcanclg_clgReader_h=no
+fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_file_src_libcanclg_clgReader_h" >&5
+$as_echo "$ac_cv_file_src_libcanclg_clgReader_h" >&6; }
+if test "x$ac_cv_file_src_libcanclg_clgReader_h" = xyes; then :
+
+else
+  clg_available=0
+fi
+
+if test $clg_available == 0
+then
+	echo "Error! CLG source not installed."
+        exit -1
+fi
+fi
+
 # Check whether --enable-efence was given.
 if test "${enable_efence+set}" = set; then :
   enableval=$enable_efence; case "$enableval" in \
@@ -18261,7 +18329,7 @@ $as_echo "#define HAVE_MMAP 1" >>confdefs.h
 fi
 rm -f conftest.mmap conftest.txt
 
-for ac_func in memset munmap strchr strdup strndup strpbrk strspn strtol strtoul
+for ac_func in memset munmap strchr strdup strndup strpbrk strspn strstr strtol strtoul
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
@@ -18272,7 +18340,6 @@ _ACEOF
 
 fi
 done
-
 
 ac_config_files="$ac_config_files Makefile"
 
@@ -18418,6 +18485,10 @@ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
+if test -z "${ENABLE_CLG_TRUE}" && test -z "${ENABLE_CLG_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_CLG\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 
 : "${CONFIG_STATUS=./config.status}"
 ac_write_fail=0

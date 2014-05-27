@@ -46,6 +46,7 @@ AC_PROG_AWK
 AC_PROG_CPP
 AC_PROG_MKDIR_P
 AC_PROG_RANLIB
+AC_PROG_LN_S
 
 # Checks for functions
 AC_REPLACE_FUNCS([strtok_r])
@@ -104,6 +105,28 @@ fi
 
 AM_WITH_DMALLOC
 
+AC_ARG_ENABLE(clg,
+[  --enable-clg            Enable CLG file format],
+[case "$enableval" in \
+	yes)  enable_clg=yes ;; \
+	no)   enable_clg=no;; \
+	*)    enable_clg=no;; \
+esac], [enable_clg=no])
+
+# pass option to Makefile.am
+AM_CONDITIONAL([ENABLE_CLG], [test "$enable_clg" = "yes"])
+
+# Check for CLG library
+if test $enable_clg = yes; then
+clg_available=1
+AC_CHECK_FILE([src/libcanclg/clgReader.h], [], [clg_available=0])
+if test $clg_available == 0
+then
+	echo "Error! CLG source not installed."
+        exit -1
+fi
+fi
+
 AC_ARG_ENABLE(efence,
 [  --enable-efence         Use electric fence (www.perens.com)],
 [case "$enableval" in \
@@ -121,7 +144,6 @@ fi
 #AC_FUNC_ERROR_AT_LINE
 AC_HEADER_ASSERT
 AC_FUNC_MMAP
-AC_CHECK_FUNCS([memset munmap strchr strdup strndup strpbrk strspn strtol strtoul])
-
+AC_CHECK_FUNCS([memset munmap strchr strdup strndup strpbrk strspn strstr strtol strtoul])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
