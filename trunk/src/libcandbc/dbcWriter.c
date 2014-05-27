@@ -162,24 +162,22 @@ static void mux_info_write(FILE *out, signal_t *signal)
 {
   switch(signal->mux_type) {
   case m_multiplexor:
-    fputc('M', out);
+    fprintf(out, " M");
     break;
   case m_multiplexed:
-    fputc('m', out);
-    fprintf(out,"%lu",signal->mux_value);
+    fprintf(out," m%lu",signal->mux_value);
     break;
   case m_signal:
   default:
     break;
   }
-  fputc(' ', out);
 }
 
 static void signal_write(FILE *out, signal_t *signal)
 {
   fprintf(out, " SG_ %s", signal->name);
   mux_info_write(out,signal);
-  fprintf(out, ": %u|%u@%u%c (%.11G,%.11G) [%.11G|%.11G] ",
+  fprintf(out, " : %u|%u@%u%c (%.11G,%.11G) [%.11G|%.11G] ",
 	  signal->bit_start,
 	  signal->bit_len,
 	  signal->endianess,
