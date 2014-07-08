@@ -1,3 +1,8 @@
+2014-07-06    <aheit@MINION>
+
+	* libcanmdf: bug fix: decoding of signed integer signals when
+	host endianess differs from log file
+
 2014-05-24    <aheit@MINION>
 
 	* all: replaced asctomat binary by cantomat
@@ -13,7 +18,7 @@
 	* all: released version 0.10
 	* libcanmdf: bug fix: failure to open mdf file is not reported
 
-2014-01-25    <aheit@MINIO N>
+2014-01-25    <aheit@MINION>
 
 	* libcanmdf: bug fixes for big endian signals
 
