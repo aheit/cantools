@@ -26,8 +26,8 @@
 #include "measurement.h"
 #include "busAssignment.h"
 #include "matWrite.h"
-#include "ascreader.h"
-#include "vsbreader.h"
+#include "ascReader.h"
+#include "vsbReader.h"
 
 #ifdef HAVE_CLGREADER_H
 #include "clgreader.h"
