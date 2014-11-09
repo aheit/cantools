@@ -1,3 +1,7 @@
+2014-11-09    <aheit@MINION>
+
+	* libcanasc: removed obsolete files messageDecoder.[ch]
+
 2014-11-02    <aheit@MINION>
 
 	* all: header files updated to make them C++ compatible (patch by
