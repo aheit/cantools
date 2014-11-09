@@ -19,7 +19,15 @@
 
 #include "mdfmodel.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 const mdf_t *mdf_attach(char *filename, int verbose_flag);
 void mdf_detach(const mdf_t *const mdf);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

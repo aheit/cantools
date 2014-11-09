@@ -23,6 +23,10 @@
 #include "mdffilter.h"
 #include "mdfsg.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* find time channel of channel group */
 cn_block_t *
 find_time_channel(mdf_t *mdf, cg_block_t *cg_block);
@@ -45,5 +49,10 @@ mdfProcessChannelGroupsSorted(const mdf_t *const mdf,
 			      uint8_t *data,
 			      mdfSignalCb_t const mdfSignalCb,
 			      const void *const cbData);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

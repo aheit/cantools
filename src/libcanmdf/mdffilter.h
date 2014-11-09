@@ -40,6 +40,10 @@ typedef struct {
   filter_element_t *first;
 } filter_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char *
 filter_apply(const filter_t *filter, const uint32_t channel,
 	     const char *message, const char *signal);
@@ -51,5 +55,9 @@ extern filter_t *
 mdf_filter_create(const char *filename);
 extern void
 filter_free(filter_t *filter);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

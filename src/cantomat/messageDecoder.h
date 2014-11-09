@@ -4,6 +4,10 @@
 #include "dbcModel.h"
 #include "measurement.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* signal procesing callback function */
 typedef void (* signalProcCb_t)(const signal_t     *s,
 				double              dtime,
@@ -16,5 +20,9 @@ void canMessage_decode(message_t      *dbcMessage,
 		       sint32          timeResolution,
 		       signalProcCb_t  signalProcCb,
 		       void           *cbData);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

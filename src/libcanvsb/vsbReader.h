@@ -74,7 +74,15 @@ typedef struct
   uint32_t HardwareTime2;
 } icsSpyMsgTime;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* vsbRead function */
 void vsbReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
