@@ -8,7 +8,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 37
+#define YY_FLEX_SUBMINOR_VERSION 39
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -178,6 +178,13 @@ extern FILE *yyin, *yyout;
                 int yyl;\
                 for ( yyl = n; yyl < yyleng; ++yyl )\
                     if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
                         --yylineno;\
             }while(0)
     
@@ -657,7 +664,7 @@ char *yytext;
 #include <stdio.h>
 #include <string.h>
 
-#line 661 "src/libcandbc/lexer.c"
+#line 668 "src/libcandbc/lexer.c"
 
 #define INITIAL 0
 
@@ -839,11 +846,6 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 36 "src/libcandbc/lexer.l"
-
-
-#line 846 "src/libcandbc/lexer.c"
-
 	if ( !(yy_init) )
 		{
 		(yy_init) = 1;
@@ -870,6 +872,12 @@ YY_DECL
 		yy_load_buffer_state( );
 		}
 
+	{
+#line 36 "src/libcandbc/lexer.l"
+
+
+#line 880 "src/libcandbc/lexer.c"
+
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
 		yy_cp = (yy_c_buf_p);
@@ -886,7 +894,7 @@ YY_DECL
 yy_match:
 		do
 			{
-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
+			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)] ;
 			if ( yy_accept[yy_current_state] )
 				{
 				(yy_last_accepting_state) = yy_current_state;
@@ -1281,7 +1289,7 @@ YY_RULE_SETUP
 #line 137 "src/libcandbc/lexer.l"
 ECHO;
 	YY_BREAK
-#line 1285 "src/libcandbc/lexer.c"
+#line 1293 "src/libcandbc/lexer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1410,6 +1418,7 @@ ECHO;
 			"fatal flex scanner internal error--no action found" );
 	} /* end of action switch */
 		} /* end of scanning one token */
+	} /* end of user's declarations */
 } /* end of yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer

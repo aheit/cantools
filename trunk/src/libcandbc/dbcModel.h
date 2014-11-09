@@ -335,6 +335,10 @@ DECLARE_LIST_FREE(string_list, string);
 DECLARE_PLIST_FREE(val_map, val_map_entry);
 DECLARE_PLIST_FREE(valtable_list, valtable);
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void string_free(string_t string);
 void valtable_free(valtable_t *valtable);
 void attribute_value_free(attribute_value_t *attribute_value);
@@ -343,5 +347,10 @@ void dbc_free(dbc_t *dbc);
 message_t *message_dup(message_t *orig);
 char *string_merge(char *in, char *app);
 dbc_t *dbc_read_file(char *filename);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

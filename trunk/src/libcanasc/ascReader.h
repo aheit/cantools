@@ -23,7 +23,16 @@
 #include <time.h>
 #include "../cantomat/measurement.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* ascRead function */
 void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

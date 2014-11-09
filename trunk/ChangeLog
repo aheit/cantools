@@ -1,3 +1,8 @@
+2014-11-02    <aheit@MINION>
+
+	* all: header files updated to make them C++ compatible (patch by
+	Christian)
+
 2014-07-06    <aheit@MINION>
 
 	* libcanmdf: bug fix: decoding of signed integer signals when
