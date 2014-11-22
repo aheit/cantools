@@ -1,19 +1,19 @@
-/* A Bison parser, made by GNU Bison 2.7.1.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison interface for Yacc-like parsers in C
-   
-      Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
-   
+
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -26,13 +26,13 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-   
+
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
 #ifndef YY_YY_SRC_LIBCANDBC_PARSER_H_INCLUDED
 # define YY_YY_SRC_LIBCANDBC_PARSER_H_INCLUDED
-/* Enabling traces.  */
+/* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
 #endif
@@ -40,70 +40,69 @@
 extern int yydebug;
 #endif
 
-/* Tokens.  */
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     T_COLON = 258,
-     T_SEMICOLON = 259,
-     T_SEP = 260,
-     T_AT = 261,
-     T_PLUS = 262,
-     T_MINUS = 263,
-     T_BOX_OPEN = 264,
-     T_BOX_CLOSE = 265,
-     T_PAR_OPEN = 266,
-     T_PAR_CLOSE = 267,
-     T_COMMA = 268,
-     T_ID = 269,
-     T_STRING_VAL = 270,
-     T_INT_VAL = 271,
-     T_DOUBLE_VAL = 272,
-     T_VERSION = 273,
-     T_INT = 274,
-     T_FLOAT = 275,
-     T_STRING = 276,
-     T_ENUM = 277,
-     T_HEX = 278,
-     T_BO = 279,
-     T_BS = 280,
-     T_BU = 281,
-     T_SG = 282,
-     T_EV = 283,
-     T_NS = 284,
-     T_NS_DESC = 285,
-     T_CM = 286,
-     T_BA_DEF = 287,
-     T_BA = 288,
-     T_VAL = 289,
-     T_CAT_DEF = 290,
-     T_CAT = 291,
-     T_FILTE = 292,
-     T_BA_DEF_DEF = 293,
-     T_EV_DATA = 294,
-     T_ENVVAR_DATA = 295,
-     T_SGTYPE = 296,
-     T_SGTYPE_VAL = 297,
-     T_BA_DEF_SGTYPE = 298,
-     T_BA_SGTYPE = 299,
-     T_SIG_TYPE_REF = 300,
-     T_VAL_TABLE = 301,
-     T_SIG_GROUP = 302,
-     T_SIG_VALTYPE = 303,
-     T_SIGTYPE_VALTYPE = 304,
-     T_BO_TX_BU = 305,
-     T_BA_DEF_REL = 306,
-     T_BA_REL = 307,
-     T_BA_DEF_DEF_REL = 308,
-     T_BU_SG_REL = 309,
-     T_BU_EV_REL = 310,
-     T_BU_BO_REL = 311,
-     T_SG_MUL_VAL = 312,
-     T_DUMMY_NODE_VECTOR = 313,
-     T_NAN = 314
-   };
+  enum yytokentype
+  {
+    T_COLON = 258,
+    T_SEMICOLON = 259,
+    T_SEP = 260,
+    T_AT = 261,
+    T_PLUS = 262,
+    T_MINUS = 263,
+    T_BOX_OPEN = 264,
+    T_BOX_CLOSE = 265,
+    T_PAR_OPEN = 266,
+    T_PAR_CLOSE = 267,
+    T_COMMA = 268,
+    T_ID = 269,
+    T_STRING_VAL = 270,
+    T_INT_VAL = 271,
+    T_DOUBLE_VAL = 272,
+    T_VERSION = 273,
+    T_INT = 274,
+    T_FLOAT = 275,
+    T_STRING = 276,
+    T_ENUM = 277,
+    T_HEX = 278,
+    T_BO = 279,
+    T_BS = 280,
+    T_BU = 281,
+    T_SG = 282,
+    T_EV = 283,
+    T_NS = 284,
+    T_NS_DESC = 285,
+    T_CM = 286,
+    T_BA_DEF = 287,
+    T_BA = 288,
+    T_VAL = 289,
+    T_CAT_DEF = 290,
+    T_CAT = 291,
+    T_FILTE = 292,
+    T_BA_DEF_DEF = 293,
+    T_EV_DATA = 294,
+    T_ENVVAR_DATA = 295,
+    T_SGTYPE = 296,
+    T_SGTYPE_VAL = 297,
+    T_BA_DEF_SGTYPE = 298,
+    T_BA_SGTYPE = 299,
+    T_SIG_TYPE_REF = 300,
+    T_VAL_TABLE = 301,
+    T_SIG_GROUP = 302,
+    T_SIG_VALTYPE = 303,
+    T_SIGTYPE_VALTYPE = 304,
+    T_BO_TX_BU = 305,
+    T_BA_DEF_REL = 306,
+    T_BA_REL = 307,
+    T_BA_DEF_DEF_REL = 308,
+    T_BU_SG_REL = 309,
+    T_BU_EV_REL = 310,
+    T_BU_BO_REL = 311,
+    T_SG_MUL_VAL = 312,
+    T_DUMMY_NODE_VECTOR = 313,
+    T_NAN = 314
+  };
 #endif
 /* Tokens.  */
 #define T_COLON 258
@@ -164,13 +163,12 @@ extern int yydebug;
 #define T_DUMMY_NODE_VECTOR 313
 #define T_NAN 314
 
-
-
+/* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
+typedef union YYSTYPE YYSTYPE;
+union YYSTYPE
 {
-/* Line 2053 of yacc.c  */
-#line 37 "src/libcandbc/parser.y"
+#line 37 "src/libcandbc/parser.y" /* yacc.c:1909  */
 
   number_t                     number;
   double                       double_val;
@@ -201,29 +199,15 @@ typedef union YYSTYPE
   valtable_list_t             *valtable_list;
   valtable_t                  *valtable;
 
-
-/* Line 2053 of yacc.c  */
-#line 207 "src/libcandbc/parser.h"
-} YYSTYPE;
+#line 203 "src/libcandbc/parser.h" /* yacc.c:1909  */
+};
 # define YYSTYPE_IS_TRIVIAL 1
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+
 extern YYSTYPE yylval;
 
-#ifdef YYPARSE_PARAM
-#if defined __STDC__ || defined __cplusplus
-int yyparse (void *YYPARSE_PARAM);
-#else
-int yyparse ();
-#endif
-#else /* ! YYPARSE_PARAM */
-#if defined __STDC__ || defined __cplusplus
-int yyparse (void);
-#else
-int yyparse ();
-#endif
-#endif /* ! YYPARSE_PARAM */
+int yyparse (void* dbcptr);
 
 #endif /* !YY_YY_SRC_LIBCANDBC_PARSER_H_INCLUDED  */

@@ -1,3 +1,8 @@
+2014-11-22    <aheit@MINION>
+
+	* libcandbc: replaced YYPARSE_PARAM by %parse_param to support
+          bison 3.0 (patch by Christian)
+
 2014-11-09    <aheit@MINION>
 
 	* libcanasc: removed obsolete files messageDecoder.[ch]
@@ -5,12 +10,12 @@
 2014-11-02    <aheit@MINION>
 
 	* all: header files updated to make them C++ compatible (patch by
-	Christian)
+	  Christian)
 
 2014-07-06    <aheit@MINION>
 
 	* libcanmdf: bug fix: decoding of signed integer signals when
-	host endianess differs from log file
+	  host endianess differs from log file
 
 2014-05-24    <aheit@MINION>
 

@@ -24,15 +24,15 @@
 #include <dbcModel.h>
 #include <math.h>
 
-/*
- * Define the parameter name of the yyparse() argument
- */
-#define YYPARSE_PARAM dbcptr
-
 /* Tell Bison how much stack space is needed. */
 #define YYMAXDEPTH 20000
 
 %}
+
+/*
+ * Define the parameter name of the yyparse() argument
+ */
+%parse-param {void* dbcptr}
 
 %union {
   number_t                     number;
@@ -71,7 +71,7 @@ extern char *yytext;
 extern int   yylineno;
 
 void
-yyerror (char* msg)
+yyerror (void* dbcptr, char* msg)
 {
   fprintf(stderr,"Error in line %d '%s', symbol '%s'\n",
           yylineno, msg, yytext);
