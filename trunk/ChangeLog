@@ -1,3 +1,9 @@
+2015-04-19    <aheit@EUCLID>
+
+	* libcanmdf: bug fix: 64 bit signals incorrectly decoded as zero
+	* libcanmdf: added conversion types 11 and 65535
+	* libcanmdf: bug fix: incorrect decoding of files with version < 3.00
+
 2014-11-22    <aheit@MINION>
 
 	* libcandbc: replaced YYPARSE_PARAM by %parse_param to support

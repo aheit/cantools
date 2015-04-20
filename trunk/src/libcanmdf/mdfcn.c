@@ -1,5 +1,5 @@
 /*  mdfcn.c -- process channel block
-    Copyright (C) 2012, 2013 Andreas Heitmann
+    Copyright (C) 2012-2015 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -93,6 +93,7 @@ mdfProcessChannelsSorted(const mdf_t *const mdf,
   double *targetArray;
   size_t dims[2];
   sint32_t i_channel_type;
+  uint16_t version_number = id_block_get(mdf)->version_number;
 
   dims[0] = number_of_records;
   dims[1] = 2;
@@ -131,9 +132,13 @@ mdfProcessChannelsSorted(const mdf_t *const mdf,
         first_record_id = *data++;
       }
       for(ir=0; ir<number_of_records; ir++) {
-        const uint32_t offset = cn_block->additional_byte_offset
-                              + cn_block->first_bit/8;
-        const uint8_t *const data_int_ptr = &data[offset];
+        const uint8_t *data_int_ptr;
+        uint32_t offset = cn_block->first_bit/8;
+
+        if(version_number >= 300) {
+          offset += cn_block->additional_byte_offset;
+        }
+        data_int_ptr = &data[offset];
 
         /* convert and store value */
         *targetArray = mdf_signal_convert(data_int_ptr, mdf, cn_block);
