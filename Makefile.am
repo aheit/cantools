@@ -38,13 +38,13 @@ bin_PROGRAMS	= dbccopy dbcls cantomat mdftomat
 # dbcls
 #
 dbcls_SOURCES = src/dbcls/dbcls.c
-dbcls_LDADD   = libcandbc.la
+dbcls_LDADD   = libcandbc.la -lm
 
 #
 # dbccopy
 #
 dbccopy_SOURCES = src/dbccopy/dbccopy.c
-dbccopy_LDADD	= libcandbc.la
+dbccopy_LDADD	= libcandbc.la -lm
 
 #
 # cantomat
@@ -71,7 +71,7 @@ cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la
 if ENABLE_CLG
 cantomat_LDADD += libcanclg.la
 endif
-cantomat_LDADD +=  $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
+cantomat_LDADD +=  $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@ -lm
 
 #
 # mdftomat
@@ -124,6 +124,8 @@ libcandbc_la_SOURCES= \
 	src/libcandbc/dbcWriter.c \
 	src/libcandbc/parser.y \
 	src/libcandbc/lexer.l
+
+libcandbc_la_LIBADD= -lm
 
 libcanasc_la_SOURCES= \
 	src/libcanasc/ascReader.c
