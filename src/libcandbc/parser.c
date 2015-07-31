@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.2"
+#define YYBISON_VERSION "3.0.4"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -232,7 +232,7 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
+
 union YYSTYPE
 {
 #line 37 "src/libcandbc/parser.y" /* yacc.c:355  */
@@ -268,6 +268,8 @@ union YYSTYPE
 
 #line 270 "src/libcandbc/parser.c" /* yacc.c:355  */
 };
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -466,7 +468,7 @@ void attribute_append(
 }
 
 
-#line 470 "src/libcandbc/parser.c" /* yacc.c:358  */
+#line 472 "src/libcandbc/parser.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1765,37 +1767,37 @@ yyreduce:
         current_dbc->network->comment = NULL;
         current_dbc->network->attribute_list = NULL;
       }
-#line 1769 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1771 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 3:
 #line 361 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { current_dbc->node_list = (yyvsp[0].node_list); }
-#line 1775 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1777 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 363 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { current_dbc->valtable_list = (yyvsp[0].valtable_list); }
-#line 1781 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1783 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 5:
 #line 365 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { current_dbc->message_list = (yyvsp[0].message_list); }
-#line 1787 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1789 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 368 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { current_dbc->envvar_list  = (yyvsp[0].envvar_list); }
-#line 1793 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1795 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 372 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { current_dbc->attribute_definition_list = (yyvsp[0].attribute_definition_list); }
-#line 1799 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1801 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 8:
@@ -1805,13 +1807,13 @@ yyreduce:
         current_dbc->signal_group_list  = (yyvsp[0].signal_group_list);
 	current_dbc->attribute_rel_list = (yyvsp[-3].attribute_rel_list);
       }
-#line 1809 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1811 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 9:
 #line 386 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 1815 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1817 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 42:
@@ -1819,7 +1821,7 @@ yyreduce:
     {
       (yyval.envvar_list) = NULL;
     }
-#line 1823 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1825 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 43:
@@ -1830,7 +1832,7 @@ yyreduce:
       list->next   = (yyvsp[0].envvar_list);
       (yyval.envvar_list) = list;
     }
-#line 1834 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1836 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 44:
@@ -1851,7 +1853,7 @@ yyreduce:
       envvar->comment = NULL;
       (yyval.envvar) = envvar;
     }
-#line 1855 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1857 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 47:
@@ -1859,7 +1861,7 @@ yyreduce:
     {
         free((yyvsp[-3].string));
       }
-#line 1863 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1865 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 48:
@@ -1870,7 +1872,7 @@ yyreduce:
       av->value.int_val = (yyvsp[0].number);
       (yyval.attribute_value) = av;
     }
-#line 1874 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1876 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 49:
@@ -1881,7 +1883,7 @@ yyreduce:
       av->value.string_val = (yyvsp[0].string);
       (yyval.attribute_value) = av;
     }
-#line 1885 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1887 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 50:
@@ -1892,7 +1894,7 @@ yyreduce:
       av->value.double_val = (yyvsp[0].double_val);
       (yyval.attribute_value) = av;
     }
-#line 1896 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1898 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 53:
@@ -1906,7 +1908,7 @@ yyreduce:
         attribute_value_free((yyvsp[-1].attribute_value));
       }
     }
-#line 1910 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1912 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 54:
@@ -1921,7 +1923,7 @@ yyreduce:
       }
       free((yyvsp[-2].string));
     }
-#line 1925 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1927 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 55:
@@ -1936,7 +1938,7 @@ yyreduce:
         free((yyvsp[-4].string));
       }
     }
-#line 1940 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1942 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 56:
@@ -1953,7 +1955,7 @@ yyreduce:
       }
       free((yyvsp[-2].string));
     }
-#line 1957 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1959 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 57:
@@ -1961,7 +1963,7 @@ yyreduce:
     {
       (yyval.attribute_rel_list) = NULL;
     }
-#line 1965 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1967 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 58:
@@ -1972,7 +1974,7 @@ yyreduce:
       list->next          = (yyvsp[0].attribute_rel_list);
       (yyval.attribute_rel_list) = list;
     }
-#line 1976 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 1978 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 59:
@@ -2000,7 +2002,7 @@ yyreduce:
       free((yyvsp[-5].string));
       free((yyvsp[-2].signal_name));
     }
-#line 2004 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2006 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 62:
@@ -2018,7 +2020,7 @@ yyreduce:
         }
       }
     }
-#line 2022 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2024 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 63:
@@ -2030,7 +2032,7 @@ yyreduce:
         ad->default_value.double_val = (yyvsp[-1].double_val);
       }
     }
-#line 2034 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2036 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 64:
@@ -2054,19 +2056,19 @@ yyreduce:
       }
       free((yyvsp[-2].string));
     }
-#line 2058 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2060 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 65:
 #line 681 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.attribute_object_class) = aoc_object; }
-#line 2064 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2066 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 66:
 #line 682 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.attribute_object_class) = aoc_relation; }
-#line 2070 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2072 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 67:
@@ -2074,7 +2076,7 @@ yyreduce:
     {
       (yyval.attribute_definition_list) = NULL;
     }
-#line 2078 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2080 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 68:
@@ -2085,7 +2087,7 @@ yyreduce:
       list->next                 = (yyvsp[0].attribute_definition_list);
       (yyval.attribute_definition_list) = list;
     }
-#line 2089 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2091 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 69:
@@ -2100,7 +2102,7 @@ yyreduce:
       ad->default_value.int_val = 0;
       (yyval.attribute_definition) = ad;
     }
-#line 2104 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2106 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 70:
@@ -2115,7 +2117,7 @@ yyreduce:
       ad->default_value.double_val = 0;
       (yyval.attribute_definition) = ad;
     }
-#line 2119 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2121 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 71:
@@ -2128,7 +2130,7 @@ yyreduce:
       ad->default_value.string_val = NULL;
       (yyval.attribute_definition) = ad;
     }
-#line 2132 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2134 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 72:
@@ -2142,7 +2144,7 @@ yyreduce:
       ad->default_value.enum_val = NULL;
       (yyval.attribute_definition) = ad;
     }
-#line 2146 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2148 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 73:
@@ -2157,49 +2159,49 @@ yyreduce:
       ad->default_value.hex_val = 0;
       (yyval.attribute_definition) = ad;
     }
-#line 2161 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2163 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 74:
 #line 757 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.object_type) = ot_network; }
-#line 2167 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2169 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 75:
 #line 758 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.object_type) = ot_node; }
-#line 2173 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2175 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 76:
 #line 759 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.object_type) = ot_message; }
-#line 2179 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2181 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 77:
 #line 760 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.object_type) = ot_signal; }
-#line 2185 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2187 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 78:
 #line 761 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.object_type) = ot_envvar; }
-#line 2191 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2193 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 79:
 #line 763 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.object_type) = ot_node_signal; }
-#line 2197 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2199 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 80:
 #line 765 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.object_type) = ot_node_message; }
-#line 2203 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2205 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 83:
@@ -2221,7 +2223,7 @@ yyreduce:
       }
       free((yyvsp[-2].signal_name));
     }
-#line 2225 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2227 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 84:
@@ -2243,7 +2245,7 @@ yyreduce:
       }
       free((yyvsp[-2].string));
     }
-#line 2247 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2249 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 85:
@@ -2251,7 +2253,7 @@ yyreduce:
     {
       (yyval.val_map) = NULL;
     }
-#line 2255 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2257 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 86:
@@ -2262,7 +2264,7 @@ yyreduce:
       val_map->next          = (yyvsp[0].val_map);
       (yyval.val_map) = val_map;
     }
-#line 2266 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2268 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 87:
@@ -2273,7 +2275,7 @@ yyreduce:
       val_map_entry->value = (yyvsp[0].string);
       (yyval.val_map_entry) = val_map_entry;
     }
-#line 2277 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2279 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 90:
@@ -2288,7 +2290,7 @@ yyreduce:
         }
       }
     }
-#line 2292 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2294 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 93:
@@ -2301,7 +2303,7 @@ yyreduce:
 	string_free((yyvsp[-1].string));
       }
     }
-#line 2305 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2307 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 94:
@@ -2316,7 +2318,7 @@ yyreduce:
       }
       string_free((yyvsp[-2].string));
     }
-#line 2320 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2322 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 95:
@@ -2331,7 +2333,7 @@ yyreduce:
       }
       string_free((yyvsp[-2].string));
     }
-#line 2335 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2337 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 96:
@@ -2345,7 +2347,7 @@ yyreduce:
         string_free((yyvsp[-1].string));
       }
     }
-#line 2349 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2351 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 97:
@@ -2360,7 +2362,7 @@ yyreduce:
       }
       string_free((yyvsp[-2].string));
     }
-#line 2364 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2366 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 98:
@@ -2368,7 +2370,7 @@ yyreduce:
     {
       (yyval.message_list) = NULL;
     }
-#line 2372 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2374 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 99:
@@ -2379,7 +2381,7 @@ yyreduce:
       list->next    = (yyvsp[0].message_list);
       (yyval.message_list) = list;
     }
-#line 2383 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2385 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 100:
@@ -2396,7 +2398,7 @@ yyreduce:
       m->transmitter_list = NULL;
       (yyval.message) = m;
     }
-#line 2400 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2402 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 101:
@@ -2404,7 +2406,7 @@ yyreduce:
     {
       (yyval.signal_list) = NULL;
     }
-#line 2408 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2410 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 102:
@@ -2415,7 +2417,7 @@ yyreduce:
       list->next   = (yyvsp[0].signal_list);
       (yyval.signal_list) = list;
     }
-#line 2419 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2421 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 103:
@@ -2441,7 +2443,7 @@ yyreduce:
       signal->val_map         = NULL;
       (yyval.signal) = signal;
     }
-#line 2445 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2447 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 104:
@@ -2450,7 +2452,7 @@ yyreduce:
       (yyval.mux_info).mux_type = m_signal;
       (yyval.mux_info).mux_value = 0;
     }
-#line 2454 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2456 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 105:
@@ -2471,19 +2473,19 @@ yyreduce:
       }
       free((yyvsp[0].string));
     }
-#line 2475 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2477 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 106:
 #line 1036 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.signal_name) = (string_t)(yyvsp[0].string); }
-#line 2481 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2483 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 107:
 #line 1037 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.signal_name_list) = (string_list_t *)(yyvsp[0].string_list); }
-#line 2487 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2489 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 108:
@@ -2494,7 +2496,7 @@ yyreduce:
       list->next   = NULL;
       (yyval.string_list) = list;
     }
-#line 2498 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2500 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 109:
@@ -2505,7 +2507,7 @@ yyreduce:
       list->next   = (yyvsp[0].string_list);
       (yyval.string_list) = list;
     }
-#line 2509 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2511 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 110:
@@ -2516,7 +2518,7 @@ yyreduce:
       list->next   = NULL;
       (yyval.string_list) = list;
     }
-#line 2520 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2522 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 111:
@@ -2527,7 +2529,7 @@ yyreduce:
       list->next   = (yyvsp[0].string_list);
       (yyval.string_list) = list;
     }
-#line 2531 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2533 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 112:
@@ -2538,7 +2540,7 @@ yyreduce:
       list->next   = NULL;
       (yyval.string_list) = list;
     }
-#line 2542 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2544 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 113:
@@ -2549,79 +2551,79 @@ yyreduce:
       list->next   = (yyvsp[0].string_list);
       (yyval.string_list) = list;
     }
-#line 2553 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2555 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 114:
 #line 1092 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.double_val) = (yyvsp[0].double_val); }
-#line 2559 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2561 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 115:
 #line 1093 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.double_val) = NAN; }
-#line 2565 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2567 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 116:
 #line 1094 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.double_val) = (double)(yyvsp[0].number); }
-#line 2571 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2573 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 117:
 #line 1097 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.number) = (yyvsp[0].number); }
-#line 2577 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2579 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 118:
 #line 1098 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.number) = (yyvsp[0].number); }
-#line 2583 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2585 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 119:
 #line 1100 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.double_val) = (yyvsp[0].double_val); }
-#line 2589 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2591 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 120:
 #line 1101 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.double_val) = (yyvsp[0].double_val); }
-#line 2595 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2597 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 121:
 #line 1102 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.double_val) = (yyvsp[0].double_val); }
-#line 2601 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2603 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 122:
 #line 1103 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.double_val) = (yyvsp[0].double_val); }
-#line 2607 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2609 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 123:
 #line 1105 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.number) = (yyvsp[0].number); }
-#line 2613 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2615 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 124:
 #line 1108 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.number) = 0; }
-#line 2619 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2621 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 125:
 #line 1109 "src/libcandbc/parser.y" /* yacc.c:1646  */
     { (yyval.number) = 1; }
-#line 2625 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2627 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 126:
@@ -2629,7 +2631,7 @@ yyreduce:
     {
       (yyval.node_list) = NULL;
     }
-#line 2633 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2635 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 127:
@@ -2644,7 +2646,7 @@ yyreduce:
       list->next = (yyvsp[0].node_list);
       (yyval.node_list) = list;
     }
-#line 2648 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2650 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 128:
@@ -2652,7 +2654,7 @@ yyreduce:
     {
       (yyval.node_list) = (yyvsp[0].node_list);
     }
-#line 2656 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2658 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 129:
@@ -2660,7 +2662,7 @@ yyreduce:
     {
       (yyval.valtable_list) = NULL;
     }
-#line 2664 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2666 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 130:
@@ -2671,7 +2673,7 @@ yyreduce:
       valtable_list->valtable = (yyvsp[-1].valtable);
       (yyval.valtable_list) = valtable_list;
     }
-#line 2675 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2677 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 131:
@@ -2683,7 +2685,7 @@ yyreduce:
       valtable->val_map = (yyvsp[-1].val_map);
       (yyval.valtable) = valtable;
     }
-#line 2687 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2689 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 133:
@@ -2696,7 +2698,7 @@ yyreduce:
       sg->signal_name_list = (yyvsp[-1].signal_name_list);
       (yyval.signal_group) = sg;
     }
-#line 2700 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2702 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 134:
@@ -2704,7 +2706,7 @@ yyreduce:
     {
       (yyval.signal_group_list) = NULL;
     }
-#line 2708 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2710 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 135:
@@ -2715,7 +2717,7 @@ yyreduce:
       list->next         = (yyvsp[0].signal_group_list);
       (yyval.signal_group_list) = list;
     }
-#line 2719 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2721 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
   case 136:
@@ -2731,11 +2733,11 @@ yyreduce:
 	string_list_free((yyvsp[-1].string_list));
       }
     }
-#line 2735 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2737 "src/libcandbc/parser.c" /* yacc.c:1646  */
     break;
 
 
-#line 2739 "src/libcandbc/parser.c" /* yacc.c:1646  */
+#line 2741 "src/libcandbc/parser.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

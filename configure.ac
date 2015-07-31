@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.10, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.11, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
@@ -45,7 +45,7 @@ AC_PROG_INSTALL
 AC_PROG_AWK
 AC_PROG_CPP
 AC_PROG_MKDIR_P
-AC_PROG_RANLIB
+LT_INIT
 AC_PROG_LN_S
 
 # Checks for functions
@@ -87,17 +87,17 @@ AC_C_CONST
 AC_C_BIGENDIAN
 
 # Checks for libraries
-AC_CHECK_LIB([hdf5], [H5Fcreate])
-AC_CHECK_LIB([m], [floor])
+AC_CHECK_LIB([hdf5], [H5Fcreate], AC_SUBST([HDF5_LIB], [-lhdf5]), ,-lz)
+AC_CHECK_LIB([m], [floor], AC_SUBST([Z_LIB], [-lz]))
 AC_CHECK_LIB([z], [deflate])
 
 AC_SUBST(MATIO_LIB)
 matio=1
 AC_CHECK_HEADER(matio.h, [], [matio=0])
-AC_CHECK_LIB(matio, Mat_VarCreate, [matio=matio], [matio=0])
+AC_CHECK_LIB(matio, Mat_VarCreate, [matio=matio], [matio=0], -lhdf5 -lz)
 if test $matio == 0
 then
-	echo "Error! You need to install libmatio first."
+	echo "Error! You need to install libmatio, hdf5, and first."
         exit -1
 else
 	MATIO_LIB=-lmatio

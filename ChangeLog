@@ -1,3 +1,7 @@
+2015-05-09    <aheit@EUCLID>
+
+	* all: released version 0.11
+
 2015-04-19    <aheit@EUCLID>
 
 	* libcanmdf: bug fix: 64 bit signals incorrectly decoded as zero
