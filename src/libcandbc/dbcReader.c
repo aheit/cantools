@@ -36,6 +36,17 @@ dbc_t *dbc_read_file(char *filename)
 
   CREATE(dbc_t, dbc);
   if(dbc != NULL) {
+    dbc->filename = NULL;
+    dbc->version = NULL;
+    dbc->node_list = NULL;
+    dbc->valtable_list = NULL;
+    dbc->message_list = NULL;
+    dbc->envvar_list = NULL;
+    dbc->attribute_rel_list = NULL;
+    dbc->attribute_definition_list = NULL;
+    dbc->signal_group_list = NULL;
+    dbc->network = NULL;
+
     current_yacc_file = filename;
 
     if(filename != NULL) {

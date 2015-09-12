@@ -34,5 +34,4 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
 }
 #endif
 
-
 #endif

@@ -1,3 +1,8 @@
+2015-09-12    <aheit@EUCLID>
+
+	* libcandbc: bug fix: crash when dbc file cannot be opened
+          (thanks, Chris)
+
 2015-05-09    <aheit@EUCLID>
 
 	* all: released version 0.11

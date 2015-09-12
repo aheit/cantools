@@ -1,5 +1,5 @@
 /*  mdfsg.c --  access MDF signal groups
-    Copyright (C) 2012-2014 Andreas Heitmann
+    Copyright (C) 2012-2015 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -99,8 +99,11 @@ mdf_signal_convert(const uint8_t *const data_int_ptr,
       }
     } else {
       assert(bit_offset + number_bits <= 64);
-      data_int64 = ((*(uint64_t *)data_int_ptr) >> bit_offset)
-        & (((uint64_t)1<<number_bits)-(uint64_t)1);
+      data_int64 = (*(uint64_t *)data_int_ptr) >> bit_offset;
+
+      if(number_bits < 64) {
+        data_int64 &= ((uint64_t)1<<number_bits)-(uint64_t)1;
+      }
       if(swap) {
         /*
         printf("UI %16llx (%d,%d,%d,%d,%d)\t",*(uint64_t *)data_int_ptr,
@@ -231,7 +234,13 @@ mdf_signal_convert(const uint8_t *const data_int_ptr,
         assert(1);
       }
       break;
+    case 11: /* text table lookup. use raw value for now */
+      converted_double = (double)data_int64;
+      break;
     case 12:
+      converted_double = (double)data_int64;
+      break;
+    case 65535: /* 65535 = 1:1 conversion formula (Int = Phys) */
       converted_double = (double)data_int64;
       break;
     default:
