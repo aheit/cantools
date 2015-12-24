@@ -17,6 +17,8 @@
 
 ## Process this file with automake to produce Makefile.in
 
+SUBDIRS = . tests
+
 AUTOMAKE_OPTIONS= foreign subdir-objects
 ACLOCAL_AMFLAGS= -I m4
 
@@ -32,7 +34,7 @@ if ENABLE_CLG
 lib_LTLIBRARIES += libcanclg.la
 endif
 
-bin_PROGRAMS	= dbccopy dbcls cantomat mdftomat
+bin_PROGRAMS	= dbccopy dbcls cantomat mdftomat matdump
 
 #
 # dbcls
@@ -80,6 +82,14 @@ mdftomat_SOURCES = src/mdftomat/mdftomat.c \
                    src/mdftomat/mdftomat.h
 
 mdftomat_LDADD	   = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
+
+#
+# matdump
+#
+matdump_SOURCES = src/matdump/matdump.c \
+                   src/matdump/matdump.h
+
+matdump_LDADD	   = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
 
 # additional include pathes necessary
 AM_CPPFLAGS = -I$(top_srcdir)/src/libcandbc \

@@ -99,7 +99,7 @@ build_triplet = @build@
 host_triplet = @host@
 @ENABLE_CLG_TRUE@am__append_1 = libcanclg.la
 bin_PROGRAMS = dbccopy$(EXEEXT) dbcls$(EXEEXT) cantomat$(EXEEXT) \
-	mdftomat$(EXEEXT)
+	mdftomat$(EXEEXT) matdump$(EXEEXT)
 @ENABLE_CLG_TRUE@am__append_2 = libcanclg.la
 @ENABLE_CLG_TRUE@am__append_3 = -I$(top_srcdir)/src/libcanclg
 @ENABLE_CLG_TRUE@am__append_4 = src/libcanclg/clgReader.h
@@ -221,6 +221,10 @@ dbccopy_DEPENDENCIES = libcandbc.la
 am_dbcls_OBJECTS = src/dbcls/dbcls.$(OBJEXT)
 dbcls_OBJECTS = $(am_dbcls_OBJECTS)
 dbcls_DEPENDENCIES = libcandbc.la
+am_matdump_OBJECTS = src/matdump/matdump.$(OBJEXT)
+matdump_OBJECTS = $(am_matdump_OBJECTS)
+matdump_DEPENDENCIES = libcanmdf.la $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) @LIBOBJS@
 am_mdftomat_OBJECTS = src/mdftomat/mdftomat.$(OBJEXT)
 mdftomat_OBJECTS = $(am_mdftomat_OBJECTS)
 mdftomat_DEPENDENCIES = libcanmdf.la $(am__DEPENDENCIES_1) \
@@ -279,11 +283,19 @@ am__v_YACC_1 =
 SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
 	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
 	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
-	$(dbcls_SOURCES) $(mdftomat_SOURCES)
+	$(dbcls_SOURCES) $(matdump_SOURCES) $(mdftomat_SOURCES)
 DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
 	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
 	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
-	$(dbcls_SOURCES) $(mdftomat_SOURCES)
+	$(dbcls_SOURCES) $(matdump_SOURCES) $(mdftomat_SOURCES)
+RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
+	ctags-recursive dvi-recursive html-recursive info-recursive \
+	install-data-recursive install-dvi-recursive \
+	install-exec-recursive install-html-recursive \
+	install-info-recursive install-pdf-recursive \
+	install-ps-recursive install-recursive installcheck-recursive \
+	installdirs-recursive pdf-recursive ps-recursive \
+	tags-recursive uninstall-recursive
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -297,6 +309,14 @@ am__include_HEADERS_DIST = src/libcandbc/dbcModel.h \
 	src/libcanvsb/vsbReader.h src/cantomat/messageDecoder.h \
 	src/libcanclg/clgReader.h
 HEADERS = $(include_HEADERS)
+RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
+  distclean-recursive maintainer-clean-recursive
+am__recursive_targets = \
+  $(RECURSIVE_TARGETS) \
+  $(RECURSIVE_CLEAN_TARGETS) \
+  $(am__extra_recursive_targets)
+AM_RECURSIVE_TARGETS = $(am__recursive_targets:-recursive=) TAGS CTAGS \
+	cscope distdir dist dist-all distcheck
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) \
 	$(LISP)config.h.in
 # Read a list of newline-separated strings from the standard input,
@@ -318,7 +338,7 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
-AM_RECURSIVE_TARGETS = cscope
+DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -329,6 +349,31 @@ am__remove_distdir = \
       || { sleep 5 && rm -rf "$(distdir)"; }; \
   else :; fi
 am__post_remove_distdir = $(am__remove_distdir)
+am__relativize = \
+  dir0=`pwd`; \
+  sed_first='s,^\([^/]*\)/.*$$,\1,'; \
+  sed_rest='s,^[^/]*/*,,'; \
+  sed_last='s,^.*/\([^/]*\)$$,\1,'; \
+  sed_butlast='s,/*[^/]*$$,,'; \
+  while test -n "$$dir1"; do \
+    first=`echo "$$dir1" | sed -e "$$sed_first"`; \
+    if test "$$first" != "."; then \
+      if test "$$first" = ".."; then \
+        dir2=`echo "$$dir0" | sed -e "$$sed_last"`/"$$dir2"; \
+        dir0=`echo "$$dir0" | sed -e "$$sed_butlast"`; \
+      else \
+        first2=`echo "$$dir2" | sed -e "$$sed_first"`; \
+        if test "$$first2" = "$$first"; then \
+          dir2=`echo "$$dir2" | sed -e "$$sed_rest"`; \
+        else \
+          dir2="../$$dir2"; \
+        fi; \
+        dir0="$$dir0"/"$$first"; \
+      fi; \
+    fi; \
+    dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
+  done; \
+  reldir="$$dir2"
 DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 DIST_TARGETS = dist-gzip
@@ -349,6 +394,8 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CHECK_CFLAGS = @CHECK_CFLAGS@
+CHECK_LIBS = @CHECK_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -405,6 +452,9 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -468,6 +518,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 version_info = @version_info@
+SUBDIRS = . tests
 AUTOMAKE_OPTIONS = foreign subdir-objects
 ACLOCAL_AMFLAGS = -I m4
 
@@ -521,6 +572,14 @@ mdftomat_SOURCES = src/mdftomat/mdftomat.c \
                    src/mdftomat/mdftomat.h
 
 mdftomat_LDADD = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
+
+#
+# matdump
+#
+matdump_SOURCES = src/matdump/matdump.c \
+                   src/matdump/matdump.h
+
+matdump_LDADD = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
 
 # additional include pathes necessary
 AM_CPPFLAGS = -I$(top_srcdir)/src/libcandbc \
@@ -591,7 +650,7 @@ MAINTAINERCLEANFILES = \
 	src/libcandbc/lexer.c
 
 all: config.h
-	$(MAKE) $(AM_MAKEFLAGS) all-am
+	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .c .l .lo .o .obj .y
@@ -870,6 +929,18 @@ src/dbcls/dbcls.$(OBJEXT): src/dbcls/$(am__dirstamp) \
 dbcls$(EXEEXT): $(dbcls_OBJECTS) $(dbcls_DEPENDENCIES) $(EXTRA_dbcls_DEPENDENCIES) 
 	@rm -f dbcls$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(dbcls_OBJECTS) $(dbcls_LDADD) $(LIBS)
+src/matdump/$(am__dirstamp):
+	@$(MKDIR_P) src/matdump
+	@: > src/matdump/$(am__dirstamp)
+src/matdump/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/matdump/$(DEPDIR)
+	@: > src/matdump/$(DEPDIR)/$(am__dirstamp)
+src/matdump/matdump.$(OBJEXT): src/matdump/$(am__dirstamp) \
+	src/matdump/$(DEPDIR)/$(am__dirstamp)
+
+matdump$(EXEEXT): $(matdump_OBJECTS) $(matdump_DEPENDENCIES) $(EXTRA_matdump_DEPENDENCIES) 
+	@rm -f matdump$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(matdump_OBJECTS) $(matdump_LDADD) $(LIBS)
 src/mdftomat/$(am__dirstamp):
 	@$(MKDIR_P) src/mdftomat
 	@: > src/mdftomat/$(am__dirstamp)
@@ -899,6 +970,7 @@ mostlyclean-compile:
 	-rm -f src/libcanmdf/*.lo
 	-rm -f src/libcanvsb/*.$(OBJEXT)
 	-rm -f src/libcanvsb/*.lo
+	-rm -f src/matdump/*.$(OBJEXT)
 	-rm -f src/mdftomat/*.$(OBJEXT)
 
 distclean-compile:
@@ -931,6 +1003,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfmodel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfsg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanvsb/$(DEPDIR)/libcanvsb_la-vsbReader.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/matdump/$(DEPDIR)/matdump.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/mdftomat/$(DEPDIR)/mdftomat.Po@am__quote@
 
 .c.o:
@@ -1103,14 +1176,61 @@ uninstall-includeHEADERS:
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(includedir)'; $(am__uninstall_files_from_dir)
 
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run 'make' without going through this Makefile.
+# To change the values of 'make' variables: instead of editing Makefiles,
+# (1) if the variable is set in 'config.status', edit 'config.status'
+#     (which will cause the Makefiles to be regenerated when you run 'make');
+# (2) otherwise, pass the desired values on the 'make' command line.
+$(am__recursive_targets):
+	@fail=; \
+	if $(am__make_keepgoing); then \
+	  failcom='fail=yes'; \
+	else \
+	  failcom='exit 1'; \
+	fi; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	case "$@" in \
+	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+	  *) list='$(SUBDIRS)' ;; \
+	esac; \
+	for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
-tags: tags-am
+tags: tags-recursive
 TAGS: tags
 
 tags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
 	set x; \
 	here=`pwd`; \
+	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
+	  include_option=--etags-include; \
+	  empty_fix=.; \
+	else \
+	  include_option=--include; \
+	  empty_fix=; \
+	fi; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test ! -f $$subdir/TAGS || \
+	      set "$$@" "$$include_option=$$here/$$subdir/TAGS"; \
+	  fi; \
+	done; \
 	$(am__define_uniq_tagged_files); \
 	shift; \
 	if test -z "$(ETAGS_ARGS)$$*$$unique"; then :; else \
@@ -1123,7 +1243,7 @@ tags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
 	      $$unique; \
 	  fi; \
 	fi
-ctags: ctags-am
+ctags: ctags-recursive
 
 CTAGS: ctags
 ctags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
@@ -1142,7 +1262,7 @@ cscope: cscope.files
 clean-cscope:
 	-rm -f cscope.files
 cscope.files: clean-cscope cscopelist
-cscopelist: cscopelist-am
+cscopelist: cscopelist-recursive
 
 cscopelist-am: $(am__tagged_files)
 	list='$(am__tagged_files)'; \
@@ -1192,6 +1312,31 @@ distdir: $(DISTFILES)
 	    test -f "$(distdir)/$$file" \
 	    || cp -p $$d/$$file "$(distdir)/$$file" \
 	    || exit 1; \
+	  fi; \
+	done
+	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    $(am__make_dryrun) \
+	      || test -d "$(distdir)/$$subdir" \
+	      || $(MKDIR_P) "$(distdir)/$$subdir" \
+	      || exit 1; \
+	    dir1=$$subdir; dir2="$(distdir)/$$subdir"; \
+	    $(am__relativize); \
+	    new_distdir=$$reldir; \
+	    dir1=$$subdir; dir2="$(top_distdir)"; \
+	    $(am__relativize); \
+	    new_top_distdir=$$reldir; \
+	    echo " (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir="$$new_top_distdir" distdir="$$new_distdir" \\"; \
+	    echo "     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)"; \
+	    ($(am__cd) $$subdir && \
+	      $(MAKE) $(AM_MAKEFLAGS) \
+	        top_distdir="$$new_top_distdir" \
+	        distdir="$$new_distdir" \
+		am__remove_distdir=: \
+		am__skip_length_check=: \
+		am__skip_mode_fix=: \
+	        distdir) \
+	      || exit 1; \
 	  fi; \
 	done
 	-test -n "$(am__skip_mode_fix)" \
@@ -1326,23 +1471,24 @@ distcleancheck: distclean
 	       $(distcleancheck_listfiles) ; \
 	       exit 1; } >&2
 check-am: all-am
-check: check-am
+check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(HEADERS) config.h
 install-binPROGRAMS: install-libLTLIBRARIES
 
-installdirs:
+installdirs: installdirs-recursive
+installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
-install-exec: install-exec-am
-install-data: install-data-am
-uninstall: uninstall-am
+install: install-recursive
+install-exec: install-exec-recursive
+install-data: install-data-recursive
+uninstall: uninstall-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-am
+installcheck: installcheck-recursive
 install-strip:
 	if test -z '$(STRIP)'; then \
 	  $(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
@@ -1378,6 +1524,8 @@ distclean-generic:
 	-rm -f src/libcanmdf/$(am__dirstamp)
 	-rm -f src/libcanvsb/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcanvsb/$(am__dirstamp)
+	-rm -f src/matdump/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/matdump/$(am__dirstamp)
 	-rm -f src/mdftomat/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/mdftomat/$(am__dirstamp)
 
@@ -1388,99 +1536,100 @@ maintainer-clean-generic:
 	-rm -f src/libcandbc/parser.c
 	-rm -f src/libcandbc/parser.h
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
-clean: clean-am
+clean: clean-recursive
 
 clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 	clean-libtool mostlyclean-am
 
-distclean: distclean-am
+distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
 
-dvi: dvi-am
+dvi: dvi-recursive
 
 dvi-am:
 
-html: html-am
+html: html-recursive
 
 html-am:
 
-info: info-am
+info: info-recursive
 
 info-am:
 
 install-data-am: install-includeHEADERS
 
-install-dvi: install-dvi-am
+install-dvi: install-dvi-recursive
 
 install-dvi-am:
 
 install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
-install-html: install-html-am
+install-html: install-html-recursive
 
 install-html-am:
 
-install-info: install-info-am
+install-info: install-info-recursive
 
 install-info-am:
 
 install-man:
 
-install-pdf: install-pdf-am
+install-pdf: install-pdf-recursive
 
 install-pdf-am:
 
-install-ps: install-ps-am
+install-ps: install-ps-recursive
 
 install-ps-am:
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-am
+maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-am
+mostlyclean: mostlyclean-recursive
 
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool
 
-pdf: pdf-am
+pdf: pdf-recursive
 
 pdf-am:
 
-ps: ps-am
+ps: ps-recursive
 
 ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS \
 	uninstall-libLTLIBRARIES
 
-.MAKE: all install-am install-exec-am install-strip
+.MAKE: $(am__recursive_targets) all install-am install-exec-am \
+	install-strip
 
-.PHONY: CTAGS GTAGS TAGS all all-am am--refresh check check-am clean \
-	clean-binPROGRAMS clean-cscope clean-generic \
-	clean-libLTLIBRARIES clean-libtool cscope cscopelist-am ctags \
-	ctags-am dist dist-all dist-bzip2 dist-gzip dist-lzip \
-	dist-shar dist-tarZ dist-xz dist-zip distcheck distclean \
-	distclean-compile distclean-generic distclean-hdr \
-	distclean-libtool distclean-tags distcleancheck distdir \
-	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-binPROGRAMS install-data \
+.PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
+	am--refresh check check-am clean clean-binPROGRAMS \
+	clean-cscope clean-generic clean-libLTLIBRARIES clean-libtool \
+	cscope cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
+	dist-gzip dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
+	distcheck distclean distclean-compile distclean-generic \
+	distclean-hdr distclean-libtool distclean-tags distcleancheck \
+	distdir distuninstallcheck dvi dvi-am html html-am info \
+	info-am install install-am install-binPROGRAMS install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
 	install-exec-am install-exec-hook install-html install-html-am \
 	install-includeHEADERS install-info install-info-am \
 	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	installcheck-am installdirs installdirs-am maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \

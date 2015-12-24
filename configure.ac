@@ -18,15 +18,15 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.11, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.13, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADERS([config.h])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
 
 dnl common library version
-version_info='0:10:0'
+version_info='0:13:0'
 AC_SUBST(version_info)
 
 # Checks for programs.
@@ -140,10 +140,16 @@ if test $efence = yes; then
 AC_CHECK_LIB(efence,memalign)
 fi
 
+#
+# Configure check for unit testing
+#
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.0])
+ 
 # Checks for library functions.
 #AC_FUNC_ERROR_AT_LINE
 AC_HEADER_ASSERT
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([memset munmap strchr strdup strndup strpbrk strspn strstr strtol strtoul])
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile tests/Makefile])
 AC_OUTPUT
+

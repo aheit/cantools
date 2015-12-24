@@ -1,3 +1,20 @@
+2015-12-23    <aheit@EUCLID>
+
+	* all: released version 0.13
+	* libcanmdf: bug fix: signals incorrectly decoded when host
+	  endianess different from signal endianess (thanks, Andreas!).
+	  Redesign of signal decoder function.
+	* tests: introduction of unit tests.
+
+2015-10-24    <aheit@EUCLID>
+
+	* libcandbc: added function signal_valtype_write (suggested by
+	  Michael)
+
+2015-09-12    <aheit@EUCLID>
+
+	* all: released version 0.12
+
 2015-09-12    <aheit@EUCLID>
 
 	* libcandbc: bug fix: crash when dbc file cannot be opened

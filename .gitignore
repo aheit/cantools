@@ -16,3 +16,4 @@ depcomp
 *.lo
 *.dirstamp
 stamp-h1
+*.stackdump

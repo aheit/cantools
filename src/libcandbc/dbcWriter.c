@@ -1,5 +1,5 @@
 /*  dbcWriter.c --  function for serializing the DBC model to a file
-    Copyright (C) 2007-2009 Andreas Heitmann
+    Copyright (C) 2007-2009,2015 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -525,9 +525,11 @@ static void signal_val_map_write(FILE *out, message_list_t *message_list)
   PLIST_ITER(message_list) {
     const message_t *message = message_list->message;
     signal_list_t *signal_list = message->signal_list;
+    
     PLIST_ITER(signal_list) {
       const signal_t *signal = signal_list->signal;
       val_map_t *val_map = signal->val_map;
+      
       if(val_map != NULL) {
 	fprintf(out, "VAL_ %lu %s ", message->id, signal->name);
 	val_map_write(out, val_map);
@@ -543,6 +545,7 @@ static void message_transmitter_list_write(
 {
   PLIST_ITER(message_list) {
     const message_t *message = message_list->message;
+    
     if(message->transmitter_list != NULL) {
       fprintf(out, "BO_TX_BU_ %lu : ", message->id);
       comma_identifier_list_write(out, message->transmitter_list);
@@ -569,9 +572,27 @@ static void signal_group_list_write(
   }
 }
 
+static void signal_valtype_write(FILE *out, message_list_t *message_list)
+{
+  PLIST_ITER(message_list) {
+    const message_t *message = message_list->message;
+    signal_list_t *signal_list = message->signal_list;
+    
+    PLIST_ITER(signal_list) {
+      const signal_t *signal = signal_list->signal;
+      
+      if(signal->signal_val_type == svt_float) {
+	fprintf(out, "SIG_VALTYPE_ %lu %s : 1;", message->id, signal->name);
+      } else if(signal->signal_val_type == svt_double ) {
+	fprintf(out, "SIG_VALTYPE_ %lu %s : 2;", message->id, signal->name);
+      }
+    }
+  }
+}
+
 void dbc_write(FILE *out, dbc_t *dbc)
 {
-  if(dbc != NULL && out != NULL) {
+  if((dbc != NULL) && (out != NULL)) {
     version_write(out, dbc->version);
     newline(out);
     symbol_write(out);
@@ -598,5 +619,6 @@ void dbc_write(FILE *out, dbc_t *dbc)
     attribute_rel_list_write(out, dbc->attribute_rel_list);
     signal_val_map_write(out, dbc->message_list);
     signal_group_list_write(out, dbc->signal_group_list);
+    signal_valtype_write(out, dbc->message_list);
   }
 }
