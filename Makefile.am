@@ -89,7 +89,7 @@ mdftomat_LDADD	   = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
 matdump_SOURCES = src/matdump/matdump.c \
                    src/matdump/matdump.h
 
-matdump_LDADD	   = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
+matdump_LDADD	   = $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
 
 # additional include pathes necessary
 AM_CPPFLAGS = -I$(top_srcdir)/src/libcandbc \

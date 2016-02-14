@@ -1,5 +1,5 @@
 /*  mdfcn.c -- process channel block
-    Copyright (C) 2012-2015 Andreas Heitmann
+    Copyright (C) 2012-2016 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -94,9 +94,15 @@ mdfProcessChannelsSorted(const mdf_t *const mdf,
   size_t dims[2];
   sint32_t i_channel_type;
   uint16_t version_number = id_block_get(mdf)->version_number;
+  uint16_t id_block_standard_flags = id_block_get(mdf)->standard_flags;
 
   dims[0] = number_of_records;
   dims[1] = 2;
+
+  if(id_block_standard_flags &
+     id_block_standard_flags_update_of_record_counters_required) {
+    number_of_records = 0;
+  }
 
   if(number_of_records > 0) {
     timeValue = (double *)malloc(sizeof(double)*2*number_of_records);
@@ -104,67 +110,74 @@ mdfProcessChannelsSorted(const mdf_t *const mdf,
     timeValue = NULL;
   }
 
-  for(i_channel_type = 1; i_channel_type >=0; i_channel_type --) {
-    for( cn_block = cn_block_get(mdf, link)                        , icn=0;
-         cn_block;
-         cn_block = cn_block_get(mdf, cn_block->link_next_cn_block), icn++) {
-      uint8_t *data;
-      ce_block_t *ce_block;
-      char* message;
-      char *signal_name = cn_get_long_name(mdf, cn_block);
+  /*
+   * skip channels with 0 number of records
+   */
+  if(number_of_records > 0) {
+    for(i_channel_type = 1; i_channel_type >=0; i_channel_type --) {
+      for( cn_block = cn_block_get(mdf, link)                        , icn=0;
+           cn_block;
+           cn_block = cn_block_get(mdf, cn_block->link_next_cn_block), icn++) {
+        uint8_t *data;
+        ce_block_t *ce_block;
+        char* message;
+        char *signal_name = cn_get_long_name(mdf, cn_block);
 
-      /* check channel type */
-      if(cn_block->channel_type != (uint32_t)i_channel_type) continue;
+        /* check channel type */
+        if(cn_block->channel_type != (uint32_t)i_channel_type) continue;
 
-      /* target array */
-      targetArray = (i_channel_type == 1)
-        ?&timeValue[0]
-        :&timeValue[number_of_records];
+        /* target array */
+        targetArray = (i_channel_type == 1)
+          ?&timeValue[0]
+          :&timeValue[number_of_records];
 
-      /* message info */
-      ce_block = ce_block_get(mdf, cn_block->link_extensions);
-      ce_get_message_info(ce_block, &message, &can_id, &can_channel);
+        /* message info */
+        ce_block = ce_block_get(mdf, cn_block->link_extensions);
+        ce_get_message_info(ce_block, &message, &can_id, &can_channel);
 
-      /* loop over records */
-      data = data_base;
+        /* loop over records */
+        data = data_base;
 
-      if(number_record_ids >= 1) {
-        first_record_id = *data++;
-      }
-      for(ir=0; ir<number_of_records; ir++) {
-        const uint8_t *data_int_ptr;
-        uint32_t offset = cn_block->first_bit/8;
-
-        if(version_number >= 300) {
-          offset += cn_block->additional_byte_offset;
+        if(number_record_ids >= 1) {
+          first_record_id = *data++;
         }
-        data_int_ptr = &data[offset];
+        for(ir=0; ir<number_of_records; ir++) {
+          const uint8_t *data_int_ptr;
+          uint32_t offset = cn_block->first_bit/8;
 
-        /* convert and store value */
-        *targetArray = mdf_signal_convert(data_int_ptr, mdf, cn_block);
-        targetArray++;
+          if(version_number >= 300) {
+            offset += cn_block->additional_byte_offset;
+          }
+          data_int_ptr = &data[offset];
 
-        /* next data record */
-        data += record_size;
-      } /* for all records */
+          /* convert and store value */
+          *targetArray = mdf_signal_convert(data_int_ptr, mdf, cn_block);
+          targetArray++;
 
-      if(number_record_ids == 2) {
-        second_record_id = *data++;
-      }
+          /* next data record */
+          data += record_size;
+        } /* for all records */
+
+        if(number_record_ids == 2) {
+          second_record_id = *data++;
+        }
       
-      /* Time series data for signal prepared. Invoke callback function */
-      mdfSignalCb(mdf, can_channel,
-                  number_of_records, 
-                  cn_block->channel_type,
-                  message,
-                  signal_name,
-                  timeValue,
-                  filter,
-                  cbData);
+        /* Time series data for signal prepared. Invoke callback function */
+        mdfSignalCb(mdf, can_channel,
+                    number_of_records, 
+                    cn_block->channel_type,
+                    message,
+                    signal_name,
+                    timeValue,
+                    filter,
+                    cbData);
 
-      free(message);
-      free(signal_name);
+        free(message);
+        free(signal_name);
+      }
     }
   }
-  free(timeValue);
+  if(timeValue != NULL) {
+    free(timeValue);
+  }
 }

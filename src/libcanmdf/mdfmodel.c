@@ -95,9 +95,15 @@ cc_block_get(const mdf_t *const mdf, const link_t lnk)
 char *
 cn_get_long_name(const mdf_t *const mdf, const cn_block_t *const cn_block)
 {
-  const char *asam_name = tx_block_get_text(mdf, cn_block->link_asam_mcd_name);
+  uint16_t version_number = id_block_get(mdf)->version_number;
+  const char *asam_name;
   char *name;
 
+  if(version_number >= 212) {
+    asam_name = tx_block_get_text(mdf, cn_block->link_asam_mcd_name);
+  } else {
+    asam_name = NULL;
+  }
   if(asam_name != NULL) {
     name = strdup(asam_name);
   } else {

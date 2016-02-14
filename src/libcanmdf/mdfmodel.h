@@ -42,10 +42,18 @@ typedef struct {
   uint16_t byte_order;            /* 0 = little endian */
   uint16_t floating_point_format; /* 0 = IEEE754 */
   uint16_t version_number;
-  uint16_t reserved1;
-  char_t   reserved2[2];
-  char_t   reserved3[30];
+  /* valid since version 3.30: */
+  uint16_t code_page_number;
+  char_t   reserved1[2];
+  char_t   reserved2[26];
+  uint16_t standard_flags;
+  uint16_t custom_flags;
 } id_block_t;
+
+typedef enum {
+  id_block_standard_flags_update_of_record_counters_required = 1,
+  id_block_standard_flags_update_of_reduces_samples_counters_required = 2,
+} id_block_standard_flags_t;
 
 typedef struct {
   char_t   block_identifier[2];
@@ -97,6 +105,7 @@ typedef struct {
   /* 018 */ uint16_t number_channels;
   /* 020 */ uint16_t record_size;
   /* 022 */ uint32_t number_of_records      __attribute__ ((packed));
+  /* valid since version 3.30: */
   /* 026 */ link_t   sample_reduction_block __attribute__ ((packed));
 } cg_block_t;
 
@@ -227,8 +236,11 @@ typedef struct {
   /* 194 */ real_t   value_min               __attribute__ ((packed));
   /* 202 */ real_t   value_max               __attribute__ ((packed));
   /* 210 */ real_t   sample_rate             __attribute__ ((packed));
+  /* valid since version 2.12: */
   /* 218 */ link_t   link_asam_mcd_name      __attribute__ ((packed));
+  /* valid since version 3.00: */
   /* 222 */ link_t   link_display_identifier __attribute__ ((packed));
+  /* valid since version 3.00: */
   /* 226 */ uint16_t additional_byte_offset;
 } cn_block_t;
 

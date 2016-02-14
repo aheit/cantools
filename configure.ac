@@ -1,7 +1,7 @@
 # configuration cantools                        -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-# Copyright (C) 2007-2013 Andreas Heitmann
+# Copyright (C) 2007-2016 Andreas Heitmann
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.13, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.14, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -26,7 +26,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
 
 dnl common library version
-version_info='0:13:0'
+version_info='0:14:0'
 AC_SUBST(version_info)
 
 # Checks for programs.

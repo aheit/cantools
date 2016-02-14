@@ -17,3 +17,4 @@ depcomp
 *.dirstamp
 stamp-h1
 *.stackdump
+*.trs

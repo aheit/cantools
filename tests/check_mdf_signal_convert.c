@@ -41,7 +41,7 @@ int main(void)
 /* test, if payload is extracted correctly */
 
 /*
- * machine endianess: implicit (need to test on both types of machines
+ * machine endianess: implicit (need to test on both types of machines)
  * conversion type: linear (other types out of scope)
  * byte_order: L/B (byte order of input type)
  * first_bit: 0..7
