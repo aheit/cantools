@@ -122,8 +122,8 @@ ce_get_message_name(const ce_block_t *const ce_block)
     switch(ce_block->extension_type) {
     case 19:
       message     = strndup(
-	(const char *)ce_block->supplement.vector_can.message_name,
-	sizeof(ce_block->supplement.vector_can.message_name));
+        (const char *)ce_block->supplement.vector_can.message_name,
+        sizeof(ce_block->supplement.vector_can.message_name));
       break;
     case 2:
       message     = strndup(
@@ -142,9 +142,9 @@ ce_get_message_name(const ce_block_t *const ce_block)
 
 void
 ce_get_message_info(const ce_block_t *const ce_block,
-		    char **const message_name_ptr,
-		    uint32_t *const can_id_ptr,
-		    uint32_t *const can_channel_ptr)
+                    char **const message_name_ptr,
+                    uint32_t *const can_id_ptr,
+                    uint32_t *const can_channel_ptr)
 {
   if(ce_block != NULL) {
     switch(ce_block->extension_type) {

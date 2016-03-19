@@ -30,10 +30,6 @@ YACC=@YACC@
 #
 lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la
 
-if ENABLE_CLG
-lib_LTLIBRARIES += libcanclg.la
-endif
-
 bin_PROGRAMS	= dbccopy dbcls cantomat mdftomat matdump
 
 #
@@ -70,9 +66,6 @@ cantomat_SOURCES = src/cantomat/cantomat.c \
 		   src/hashtable/hashtable_private.h
 
 cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la
-if ENABLE_CLG
-cantomat_LDADD += libcanclg.la
-endif
 cantomat_LDADD +=  $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@ -lm
 
 #
@@ -98,10 +91,6 @@ AM_CPPFLAGS = -I$(top_srcdir)/src/libcandbc \
 	   -I$(top_srcdir)/src/libcanasc \
 	   -I$(top_srcdir)/hashtable
 
-if ENABLE_CLG
-AM_CPPFLAGS += -I$(top_srcdir)/src/libcanclg
-endif
-
 DEFS = $(YYDEBUG)
 
 # YACC: generate token defines for LEX
@@ -124,9 +113,6 @@ include_HEADERS= src/libcandbc/dbcModel.h \
 		 src/libcanasc/ascReader.h \
 		 src/libcanvsb/vsbReader.h \
 		 src/cantomat/messageDecoder.h
-if ENABLE_CLG
-include_HEADERS += src/libcanclg/clgReader.h
-endif
 
 libcandbc_la_SOURCES= \
 	src/libcandbc/dbcModel.c \
@@ -142,9 +128,6 @@ libcanasc_la_SOURCES= \
 
 libcanvsb_la_SOURCES= \
 	src/libcanvsb/vsbReader.c
-
-libcanclg_la_SOURCES= \
-	src/libcanclg/clgReader.c
 
 libcanmdf_la_SOURCES= \
 	src/libcanmdf/mdfcg.c \
@@ -166,10 +149,6 @@ libcanasc_la_LDFLAGS= -no-undefined -version-info @version_info@
 libcanvsb_la_CPPFLAGS= -I$(top_builddir)/src/libcanvsb \
 		       -I$(top_srcdir)/src/libcandbc
 libcanvsb_la_LDFLAGS= -no-undefined -version-info @version_info@
-
-libcanclg_la_CPPFLAGS= -I$(top_builddir)/src/libcanclg \
-		       -I$(top_srcdir)/src/libcandbc
-libcanclg_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanmdf_la_CPPFLAGS= -I$(top_builddir)/src/libcanmdf
 libcanmdf_la_LDFLAGS= -no-undefined -version-info @version_info@

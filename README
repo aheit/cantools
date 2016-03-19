@@ -32,11 +32,11 @@ Prerequisites: zlib-devel, bison, flex, make, gcc
 matio can be built with libhdf5, here is how to:
 
 1) download:
-   wget 'http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.14.tar.bz2'
+   wget 'http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.16.tar.bz2'
 2) unpack:
-   tar tjf hdf5-1.8.14.tar.bz2
+   tar xjf hdf5-1.8.16.tar.bz2
 3) build:
-   cd hdf5-1.8.14
+   cd hdf5-1.8.16
    ./configure --with-zlib=/usr/include,/lib --prefix=/usr
    CFLAGS=-std=c99 make
    CFLAGS=-std=c99 make check

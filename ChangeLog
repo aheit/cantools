@@ -1,3 +1,17 @@
+2016-03-19    <aheit@EUCLID>
+
+	* all: release version 0.15
+	* libcanmdf: support for 1-bit signed integers added
+	* hashtable: resolved conflicting definitions of key/value accessors
+
+2016-02-14    <aheit@EUCLID>
+
+	* all: release version 0.14
+	* libcanmdf: bug fix: missing sign extension for negative values
+	* libcanmdf: bug fix: handling of signals with zero records
+	* libcanmdf: bug fix: handling of asam name for mdf version < 2.12
+	* libcanmdf: added rational and parametric conversion types
+
 2015-12-23    <aheit@EUCLID>
 
 	* all: released version 0.13

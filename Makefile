@@ -97,20 +97,16 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = x86_64-unknown-cygwin
 host_triplet = x86_64-unknown-cygwin
-#am__append_1 = libcanclg.la
 bin_PROGRAMS = dbccopy$(EXEEXT) dbcls$(EXEEXT) cantomat$(EXEEXT) \
 	mdftomat$(EXEEXT) matdump$(EXEEXT)
-#am__append_2 = libcanclg.la
-#am__append_3 = -I$(top_srcdir)/src/libcanclg
-#am__append_4 = src/libcanclg/clgReader.h
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/config.h.in src/libcandbc/parser.h \
 	src/libcandbc/parser.c src/libcandbc/lexer.c strtok_r.c \
-	depcomp ylwrap $(am__include_HEADERS_DIST) AUTHORS COPYING \
-	ChangeLog README TODO compile config.guess config.sub \
-	install-sh missing ltmain.sh
+	depcomp ylwrap $(include_HEADERS) AUTHORS COPYING ChangeLog \
+	README TODO compile config.guess config.sub install-sh missing \
+	ltmain.sh
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -165,13 +161,6 @@ am__v_lt_1 =
 libcanasc_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcanasc_la_LDFLAGS) $(LDFLAGS) -o $@
-libcanclg_la_LIBADD =
-am_libcanclg_la_OBJECTS = src/libcanclg/libcanclg_la-clgReader.lo
-libcanclg_la_OBJECTS = $(am_libcanclg_la_OBJECTS)
-libcanclg_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libcanclg_la_LDFLAGS) $(LDFLAGS) -o $@
-#am_libcanclg_la_rpath = -rpath $(libdir)
 libcandbc_la_DEPENDENCIES =
 am_libcandbc_la_OBJECTS = src/libcandbc/libcandbc_la-dbcModel.lo \
 	src/libcandbc/libcandbc_la-dbcReader.lo \
@@ -213,7 +202,7 @@ am_cantomat_OBJECTS = src/cantomat/cantomat.$(OBJEXT) \
 cantomat_OBJECTS = $(am_cantomat_OBJECTS)
 am__DEPENDENCIES_1 =
 cantomat_DEPENDENCIES = libcandbc.la libcanasc.la libcanvsb.la \
-	$(am__append_2) $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) 
 am_dbccopy_OBJECTS = src/dbccopy/dbccopy.$(OBJEXT)
 dbccopy_OBJECTS = $(am_dbccopy_OBJECTS)
@@ -280,14 +269,14 @@ AM_V_YACC = $(am__v_YACC_$(V))
 am__v_YACC_ = $(am__v_YACC_$(AM_DEFAULT_VERBOSITY))
 am__v_YACC_0 = @echo "  YACC    " $@;
 am__v_YACC_1 = 
-SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
-	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
-	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
-	$(dbcls_SOURCES) $(matdump_SOURCES) $(mdftomat_SOURCES)
-DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
-	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
-	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
-	$(dbcls_SOURCES) $(matdump_SOURCES) $(mdftomat_SOURCES)
+SOURCES = $(libcanasc_la_SOURCES) $(libcandbc_la_SOURCES) \
+	$(libcanmdf_la_SOURCES) $(libcanvsb_la_SOURCES) \
+	$(cantomat_SOURCES) $(dbccopy_SOURCES) $(dbcls_SOURCES) \
+	$(matdump_SOURCES) $(mdftomat_SOURCES)
+DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcandbc_la_SOURCES) \
+	$(libcanmdf_la_SOURCES) $(libcanvsb_la_SOURCES) \
+	$(cantomat_SOURCES) $(dbccopy_SOURCES) $(dbcls_SOURCES) \
+	$(matdump_SOURCES) $(mdftomat_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -301,13 +290,6 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-am__include_HEADERS_DIST = src/libcandbc/dbcModel.h \
-	src/libcandbc/dbcTypes.h src/libcandbc/dbcReader.h \
-	src/libcandbc/dbcWriter.h src/libcanmdf/mdfcg.h \
-	src/libcanmdf/mdfdg.h src/libcanmdf/mdffile.h \
-	src/libcanmdf/mdffilter.h src/libcanasc/ascReader.h \
-	src/libcanvsb/vsbReader.h src/cantomat/messageDecoder.h \
-	src/libcanclg/clgReader.h
 HEADERS = $(include_HEADERS)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
@@ -381,15 +363,15 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing aclocal-1.14
+ACLOCAL = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing aclocal-1.14
 ALLOCA = 
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
 AS = as
-AUTOCONF = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing autoconf
-AUTOHEADER = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing autoheader
-AUTOMAKE = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing automake-1.14
+AUTOCONF = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing autoconf
+AUTOHEADER = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing autoheader
+AUTOMAKE = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing automake-1.14
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -434,7 +416,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing makeinfo
+MAKEINFO = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing makeinfo
 MANIFEST_TOOL = :
 MATIO_LIB = -lmatio
 MKDIR_P = /usr/bin/mkdir -p
@@ -447,10 +429,10 @@ OTOOL64 =
 PACKAGE = cantools
 PACKAGE_BUGREPORT = andreas.heitmann@gmail.com
 PACKAGE_NAME = cantools
-PACKAGE_STRING = cantools 0.14
+PACKAGE_STRING = cantools 0.15
 PACKAGE_TARNAME = cantools
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.14
+PACKAGE_VERSION = 0.15
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
@@ -460,14 +442,14 @@ SED = /usr/bin/sed
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = strip
-VERSION = 0.14
+VERSION = 0.15
 YACC = bison -y
 YFLAGS = 
 Z_LIB = -lz
-abs_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
-abs_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
-abs_top_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
-abs_top_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
+abs_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
+abs_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
+abs_top_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
+abs_top_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -497,7 +479,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/install-sh
+install_sh = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -517,7 +499,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-version_info = 0:14:0
+version_info = 0:15:0
 SUBDIRS = . tests
 AUTOMAKE_OPTIONS = foreign subdir-objects
 ACLOCAL_AMFLAGS = -I m4
@@ -525,8 +507,7 @@ ACLOCAL_AMFLAGS = -I m4
 #	
 # What to build and install
 #
-lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
-	$(am__append_1)
+lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la
 
 #
 # dbcls
@@ -561,9 +542,8 @@ cantomat_SOURCES = src/cantomat/cantomat.c \
 		   src/hashtable/hashtable_itr.h \
 		   src/hashtable/hashtable_private.h
 
-cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la \
-	$(am__append_2) $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB)  \
-	-lm
+cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la $(MATIO_LIB) \
+	$(Z_LIB) $(HDF5_LIB)  -lm
 
 #
 # mdftomat
@@ -583,9 +563,11 @@ matdump_LDADD = $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB)
 
 # additional include pathes necessary
 AM_CPPFLAGS = -I$(top_srcdir)/src/libcandbc \
-	-I$(top_srcdir)/src/libcanmdf -I$(top_srcdir)/src/libcanvsb \
-	-I$(top_srcdir)/src/libcanasc -I$(top_srcdir)/hashtable \
-	$(am__append_3)
+	   -I$(top_srcdir)/src/libcanmdf \
+	   -I$(top_srcdir)/src/libcanvsb \
+	   -I$(top_srcdir)/src/libcanasc \
+	   -I$(top_srcdir)/hashtable
+
 
 # YACC: generate token defines for LEX
 AM_YFLAGS = -d
@@ -594,12 +576,18 @@ YYDEBUG = -DYYDEBUG=1
 #
 # library headers, source, etc.
 #
-include_HEADERS = src/libcandbc/dbcModel.h src/libcandbc/dbcTypes.h \
-	src/libcandbc/dbcReader.h src/libcandbc/dbcWriter.h \
-	src/libcanmdf/mdfcg.h src/libcanmdf/mdfdg.h \
-	src/libcanmdf/mdffile.h src/libcanmdf/mdffilter.h \
-	src/libcanasc/ascReader.h src/libcanvsb/vsbReader.h \
-	src/cantomat/messageDecoder.h $(am__append_4)
+include_HEADERS = src/libcandbc/dbcModel.h \
+		 src/libcandbc/dbcTypes.h \
+		 src/libcandbc/dbcReader.h \
+		 src/libcandbc/dbcWriter.h \
+		 src/libcanmdf/mdfcg.h \
+		 src/libcanmdf/mdfdg.h \
+		 src/libcanmdf/mdffile.h \
+		 src/libcanmdf/mdffilter.h \
+		 src/libcanasc/ascReader.h \
+		 src/libcanvsb/vsbReader.h \
+		 src/cantomat/messageDecoder.h
+
 libcandbc_la_SOURCES = \
 	src/libcandbc/dbcModel.c \
 	src/libcandbc/dbcReader.c \
@@ -614,9 +602,6 @@ libcanasc_la_SOURCES = \
 libcanvsb_la_SOURCES = \
 	src/libcanvsb/vsbReader.c
 
-libcanclg_la_SOURCES = \
-	src/libcanclg/clgReader.c
-
 libcanmdf_la_SOURCES = \
 	src/libcanmdf/mdfcg.c \
 	src/libcanmdf/mdfcn.c \
@@ -629,21 +614,17 @@ libcanmdf_la_SOURCES = \
 libcandbc_la_CPPFLAGS = -I$(top_builddir)/src/libcandbc \
                        -I$(top_srcdir)/src/libcandbc
 
-libcandbc_la_LDFLAGS = -no-undefined -version-info 0:14:0
+libcandbc_la_LDFLAGS = -no-undefined -version-info 0:15:0
 libcanasc_la_CPPFLAGS = -I$(top_builddir)/src/libcanasc \
 		       -I$(top_srcdir)/src/libcandbc
 
-libcanasc_la_LDFLAGS = -no-undefined -version-info 0:14:0
+libcanasc_la_LDFLAGS = -no-undefined -version-info 0:15:0
 libcanvsb_la_CPPFLAGS = -I$(top_builddir)/src/libcanvsb \
 		       -I$(top_srcdir)/src/libcandbc
 
-libcanvsb_la_LDFLAGS = -no-undefined -version-info 0:14:0
-libcanclg_la_CPPFLAGS = -I$(top_builddir)/src/libcanclg \
-		       -I$(top_srcdir)/src/libcandbc
-
-libcanclg_la_LDFLAGS = -no-undefined -version-info 0:14:0
+libcanvsb_la_LDFLAGS = -no-undefined -version-info 0:15:0
 libcanmdf_la_CPPFLAGS = -I$(top_builddir)/src/libcanmdf
-libcanmdf_la_LDFLAGS = -no-undefined -version-info 0:14:0
+libcanmdf_la_LDFLAGS = -no-undefined -version-info 0:15:0
 MAINTAINERCLEANFILES = \
 	src/libcandbc/parser.c \
 	src/libcandbc/parser.h \
@@ -750,18 +731,6 @@ src/libcanasc/libcanasc_la-ascReader.lo:  \
 
 libcanasc.la: $(libcanasc_la_OBJECTS) $(libcanasc_la_DEPENDENCIES) $(EXTRA_libcanasc_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libcanasc_la_LINK) -rpath $(libdir) $(libcanasc_la_OBJECTS) $(libcanasc_la_LIBADD) $(LIBS)
-src/libcanclg/$(am__dirstamp):
-	@$(MKDIR_P) src/libcanclg
-	@: > src/libcanclg/$(am__dirstamp)
-src/libcanclg/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) src/libcanclg/$(DEPDIR)
-	@: > src/libcanclg/$(DEPDIR)/$(am__dirstamp)
-src/libcanclg/libcanclg_la-clgReader.lo:  \
-	src/libcanclg/$(am__dirstamp) \
-	src/libcanclg/$(DEPDIR)/$(am__dirstamp)
-
-libcanclg.la: $(libcanclg_la_OBJECTS) $(libcanclg_la_DEPENDENCIES) $(EXTRA_libcanclg_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(libcanclg_la_LINK) $(am_libcanclg_la_rpath) $(libcanclg_la_OBJECTS) $(libcanclg_la_LIBADD) $(LIBS)
 src/libcandbc/$(am__dirstamp):
 	@$(MKDIR_P) src/libcandbc
 	@: > src/libcandbc/$(am__dirstamp)
@@ -962,8 +931,6 @@ mostlyclean-compile:
 	-rm -f src/hashtable/*.$(OBJEXT)
 	-rm -f src/libcanasc/*.$(OBJEXT)
 	-rm -f src/libcanasc/*.lo
-	-rm -f src/libcanclg/*.$(OBJEXT)
-	-rm -f src/libcanclg/*.lo
 	-rm -f src/libcandbc/*.$(OBJEXT)
 	-rm -f src/libcandbc/*.lo
 	-rm -f src/libcanmdf/*.$(OBJEXT)
@@ -989,7 +956,6 @@ include src/dbcls/$(DEPDIR)/dbcls.Po
 include src/hashtable/$(DEPDIR)/hashtable.Po
 include src/hashtable/$(DEPDIR)/hashtable_itr.Po
 include src/libcanasc/$(DEPDIR)/libcanasc_la-ascReader.Plo
-include src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Plo
 include src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Plo
 include src/libcandbc/$(DEPDIR)/libcandbc_la-dbcReader.Plo
 include src/libcandbc/$(DEPDIR)/libcandbc_la-dbcWriter.Plo
@@ -1036,13 +1002,6 @@ src/libcanasc/libcanasc_la-ascReader.lo: src/libcanasc/ascReader.c
 #	$(AM_V_CC)source='src/libcanasc/ascReader.c' object='src/libcanasc/libcanasc_la-ascReader.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanasc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanasc/libcanasc_la-ascReader.lo `test -f 'src/libcanasc/ascReader.c' || echo '$(srcdir)/'`src/libcanasc/ascReader.c
-
-src/libcanclg/libcanclg_la-clgReader.lo: src/libcanclg/clgReader.c
-	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanclg_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanclg/libcanclg_la-clgReader.lo -MD -MP -MF src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Tpo -c -o src/libcanclg/libcanclg_la-clgReader.lo `test -f 'src/libcanclg/clgReader.c' || echo '$(srcdir)/'`src/libcanclg/clgReader.c
-	$(AM_V_at)$(am__mv) src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Tpo src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Plo
-#	$(AM_V_CC)source='src/libcanclg/clgReader.c' object='src/libcanclg/libcanclg_la-clgReader.lo' libtool=yes \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanclg_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanclg/libcanclg_la-clgReader.lo `test -f 'src/libcanclg/clgReader.c' || echo '$(srcdir)/'`src/libcanclg/clgReader.c
 
 src/libcandbc/libcandbc_la-dbcModel.lo: src/libcandbc/dbcModel.c
 	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-dbcModel.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Tpo -c -o src/libcandbc/libcandbc_la-dbcModel.lo `test -f 'src/libcandbc/dbcModel.c' || echo '$(srcdir)/'`src/libcandbc/dbcModel.c
@@ -1147,7 +1106,6 @@ mostlyclean-libtool:
 clean-libtool:
 	-rm -rf .libs _libs
 	-rm -rf src/libcanasc/.libs src/libcanasc/_libs
-	-rm -rf src/libcanclg/.libs src/libcanclg/_libs
 	-rm -rf src/libcandbc/.libs src/libcandbc/_libs
 	-rm -rf src/libcanmdf/.libs src/libcanmdf/_libs
 	-rm -rf src/libcanvsb/.libs src/libcanvsb/_libs
@@ -1516,8 +1474,6 @@ distclean-generic:
 	-rm -f src/hashtable/$(am__dirstamp)
 	-rm -f src/libcanasc/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcanasc/$(am__dirstamp)
-	-rm -f src/libcanclg/$(DEPDIR)/$(am__dirstamp)
-	-rm -f src/libcanclg/$(am__dirstamp)
 	-rm -f src/libcandbc/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcandbc/$(am__dirstamp)
 	-rm -f src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
@@ -1543,7 +1499,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -1592,7 +1548,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
