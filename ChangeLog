@@ -1,3 +1,16 @@
+2016-08-03  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+	* all: release version 0.16
+	* cantomat: removed unused include, added missing includes to
+          Makefile.am to fix .tar.gz distribution
+	* libcanmdf: support platforms without arithmetic right shift (fix)
+	* libcanmdf: support 1-bit signed integer signals (yes, they are
+          allowed in MDF)
+
+2016-03-20  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+	* libcanmdf: support for platforms without arithmetic right shift
+
 2016-03-19    <aheit@EUCLID>
 
 	* all: release version 0.15

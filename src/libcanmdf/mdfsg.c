@@ -135,7 +135,23 @@ mdf_signal_convert(const uint8_t *const data_int_ptr,
       if(cn_is_signed_int) {
         /* 64 bit sign extension */
         data_int64 <<= 64-number_bits;
+
+	/*
+	 * per ISO/IEC 9899:1999, section 6.5.7, the result of a right
+	 * shift operation with negative first operand is
+	 * implementation dependent. check with autoconf, if we can
+	 * use arithmetic right shift or if we need to emulate it.
+	 */
+#ifdef AX_C_ARITHMETIC_RSHIFT
         data_int64 >>= 64-number_bits;
+#else
+        data_int64 = (int64_t) (
+          /* do a logical shift right */
+         (((uint64_t)data_int64) >> (64-number_bits))
+          /* add the leading 1-bits */
+          |
+          ((-(data_int64 & (1ULL<<63)) >> (64-number_bits))));
+#endif
       } else {
         data_int64 &= ((1ULL<<number_bits)-1ULL);
       }

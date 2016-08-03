@@ -10,7 +10,6 @@
 #include "../hashtable/hashtable.h"
 #include "busAssignment.h"
 #include "signalFormat.h"
-#include "fileFormat.h"
 
 /* CAN message type */
 typedef struct {

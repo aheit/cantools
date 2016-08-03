@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.15, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.16, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -26,7 +26,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
 
 dnl common library version
-version_info='0:15:0'
+version_info='0:16:0'
 AC_SUBST(version_info)
 
 # Checks for programs.
@@ -85,6 +85,22 @@ AC_TYPE_UINT64_T
 AC_C_CONST
 	
 AC_C_BIGENDIAN
+
+# check availability of arithmetic right shift
+AC_DEFUN([AX_C_ARITHMETIC_RSHIFT], [
+  AC_CACHE_CHECK([whether right shift operation is arithmetic],
+                 [ax_cv_c_arithmetic_rshift],
+                 [AC_COMPILE_IFELSE([
+ 		 AC_LANG_SOURCE([[int dummy[((-1 >> 1) < 0) ? 1 : -1];]])
+			     ],
+                                    [ax_cv_c_arithmetic_rshift=yes],
+                                    [ax_cv_c_arithmetic_rshift=no])])
+  if test "x$ax_cv_c_arithmetic_rshift" = xyes; then
+    AC_DEFINE([HAVE_ARITHMETIC_RSHIFT], [1],
+              [Define to 1 if the right shift operation is arithmetic.])
+  fi
+])
+AX_C_ARITHMETIC_RSHIFT
 
 # Checks for libraries
 AC_CHECK_LIB([hdf5], [H5Fcreate], AC_SUBST([HDF5_LIB], [-lhdf5]), ,-lz)
