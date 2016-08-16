@@ -19,6 +19,9 @@
    */
 #define HAVE_ALLOCA_H 1
 
+/* Define to 1 if the right shift operation is arithmetic. */
+#define HAVE_ARITHMETIC_RSHIFT 1
+
 /* Define to 1 if you have the declaration of `strtok_r', and to 0 if you
    don't. */
 #define HAVE_DECL_STRTOK_R 1
@@ -138,7 +141,7 @@
 #define PACKAGE_NAME "cantools"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "cantools 0.15"
+#define PACKAGE_STRING "cantools 0.17"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "cantools"
@@ -147,7 +150,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.15"
+#define PACKAGE_VERSION "0.17"
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
@@ -161,7 +164,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.15"
+#define VERSION "0.17"
 
 /* Define if using the dmalloc debugging malloc package */
 /* #undef WITH_DMALLOC */

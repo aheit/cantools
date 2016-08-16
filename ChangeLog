@@ -1,115 +1,126 @@
+2016-08-16  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+        * all: released version 0.17
+	* all: bugfixes to support build under x86_64-w64-mingw32, see
+          below for details:
+        * libcanmdf: removed unnecessary include of endian.h
+        * hashtable: key/value functions declared static to limit
+          visibility
+        * configure: workaround for missing LINE_MAX define on some
+          systems
+
 2016-08-03  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
-	* all: release version 0.16
-	* cantomat: removed unused include, added missing includes to
+        * all: released version 0.16
+        * cantomat: removed unused include, added missing includes to
           Makefile.am to fix .tar.gz distribution
-	* libcanmdf: support platforms without arithmetic right shift (fix)
-	* libcanmdf: support 1-bit signed integer signals (yes, they are
+        * libcanmdf: support platforms without arithmetic right shift (fix)
+        * libcanmdf: support 1-bit signed integer signals (yes, they are
           allowed in MDF)
 
 2016-03-20  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
-	* libcanmdf: support for platforms without arithmetic right shift
+        * libcanmdf: support for platforms without arithmetic right shift
 
 2016-03-19    <aheit@EUCLID>
 
-	* all: release version 0.15
-	* libcanmdf: support for 1-bit signed integers added
-	* hashtable: resolved conflicting definitions of key/value accessors
+        * all: release version 0.15
+        * libcanmdf: support for 1-bit signed integers added
+        * hashtable: resolved conflicting definitions of key/value accessors
 
 2016-02-14    <aheit@EUCLID>
 
-	* all: release version 0.14
-	* libcanmdf: bug fix: missing sign extension for negative values
-	* libcanmdf: bug fix: handling of signals with zero records
-	* libcanmdf: bug fix: handling of asam name for mdf version < 2.12
-	* libcanmdf: added rational and parametric conversion types
+        * all: release version 0.14
+        * libcanmdf: bug fix: missing sign extension for negative values
+        * libcanmdf: bug fix: handling of signals with zero records
+        * libcanmdf: bug fix: handling of asam name for mdf version < 2.12
+        * libcanmdf: added rational and parametric conversion types
 
 2015-12-23    <aheit@EUCLID>
 
-	* all: released version 0.13
-	* libcanmdf: bug fix: signals incorrectly decoded when host
-	  endianess different from signal endianess (thanks, Andreas!).
-	  Redesign of signal decoder function.
-	* tests: introduction of unit tests.
+        * all: released version 0.13
+        * libcanmdf: bug fix: signals incorrectly decoded when host
+          endianess different from signal endianess (thanks, Andreas!).
+          Redesign of signal decoder function.
+        * tests: introduction of unit tests.
 
 2015-10-24    <aheit@EUCLID>
 
-	* libcandbc: added function signal_valtype_write (suggested by
-	  Michael)
+        * libcandbc: added function signal_valtype_write (suggested by
+          Michael)
 
 2015-09-12    <aheit@EUCLID>
 
-	* all: released version 0.12
+        * all: released version 0.12
 
 2015-09-12    <aheit@EUCLID>
 
-	* libcandbc: bug fix: crash when dbc file cannot be opened
+        * libcandbc: bug fix: crash when dbc file cannot be opened
           (thanks, Chris)
 
 2015-05-09    <aheit@EUCLID>
 
-	* all: released version 0.11
+        * all: released version 0.11
 
 2015-04-19    <aheit@EUCLID>
 
-	* libcanmdf: bug fix: 64 bit signals incorrectly decoded as zero
-	* libcanmdf: added conversion types 11 and 65535
-	* libcanmdf: bug fix: incorrect decoding of files with version < 3.00
+        * libcanmdf: bug fix: 64 bit signals incorrectly decoded as zero
+        * libcanmdf: added conversion types 11 and 65535
+        * libcanmdf: bug fix: incorrect decoding of files with version < 3.00
 
 2014-11-22    <aheit@MINION>
 
-	* libcandbc: replaced YYPARSE_PARAM by %parse_param to support
+        * libcandbc: replaced YYPARSE_PARAM by %parse_param to support
           bison 3.0 (patch by Christian)
 
 2014-11-09    <aheit@MINION>
 
-	* libcanasc: removed obsolete files messageDecoder.[ch]
+        * libcanasc: removed obsolete files messageDecoder.[ch]
 
 2014-11-02    <aheit@MINION>
 
-	* all: header files updated to make them C++ compatible (patch by
-	  Christian)
+        * all: header files updated to make them C++ compatible (patch by
+          Christian)
 
 2014-07-06    <aheit@MINION>
 
-	* libcanmdf: bug fix: decoding of signed integer signals when
-	  host endianess differs from log file
+        * libcanmdf: bug fix: decoding of signed integer signals when
+          host endianess differs from log file
 
 2014-05-24    <aheit@MINION>
 
-	* all: replaced asctomat binary by cantomat
-	* libcandbc: bugfix of dbcWriter output (thanks, Johannes)
-	* libcanvsb: added decoder for NEOVI binary files (vsb)
+        * all: replaced asctomat binary by cantomat
+        * libcandbc: bugfix of dbcWriter output (thanks, Johannes)
+        * libcanvsb: added decoder for NEOVI binary files (vsb)
 
 2014-03-15    <aheit@MINION>
 
-	* libcandbc: ignore comment lines starting with // (patch for Joe)
+        * libcandbc: ignore comment lines starting with // (patch for Joe)
 
 2014-02-09    <aheit@MINION>
 
-	* all: released version 0.10
-	* libcanmdf: bug fix: failure to open mdf file is not reported
+        * all: released version 0.10
+        * libcanmdf: bug fix: failure to open mdf file is not reported
 
 2014-01-25    <aheit@MINION>
 
-	* libcanmdf: bug fixes for big endian signals
+        * libcanmdf: bug fixes for big endian signals
 
 2014-01-12    <aheit@MINION>
 
-	* libcanmdf: support of big endian integer signals in MDF
-	* mdftomat: transformation of signal names to valid MATLAB names
+        * libcanmdf: support of big endian integer signals in MDF
+        * mdftomat: transformation of signal names to valid MATLAB names
 
 2013-12-26   <aheit@MALFOY>
 
-	* asctomat: fixed Mat_VarWrite() data type to support 64 bit
-	* libcanmdf: fixed data types to support 64 bit
-	* libcanmdf: improved const qualification
-	* mdftomat: conversion of CCP/XCP variables
-	* mdftomat: new options for MAT compression and file version
-	* mdftomat: handling of empty signals
-	* mdftomat: autoconf checks for zlib and HDF5 (thanks, Sebastian)
-	* mdftomat: corrected handling of long signal and message names
+        * asctomat: fixed Mat_VarWrite() data type to support 64 bit
+        * libcanmdf: fixed data types to support 64 bit
+        * libcanmdf: improved const qualification
+        * mdftomat: conversion of CCP/XCP variables
+        * mdftomat: new options for MAT compression and file version
+        * mdftomat: handling of empty signals
+        * mdftomat: autoconf checks for zlib and HDF5 (thanks, Sebastian)
+        * mdftomat: corrected handling of long signal and message names
 
 2013-12-15    <aheit@MALFOY>
 
@@ -120,7 +131,7 @@
 
         * all: updated automake to version 1.13
         * mdftomat, libcanmdf: corrected compilation errors on linux
-	  (thanks, John)
+          (thanks, John)
 
 2012-12-23    <aheit@MALFOY>
 

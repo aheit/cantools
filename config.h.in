@@ -18,6 +18,9 @@
    */
 #undef HAVE_ALLOCA_H
 
+/* Define to 1 if the right shift operation is arithmetic. */
+#undef HAVE_ARITHMETIC_RSHIFT
+
 /* Define to 1 if you have the declaration of `strtok_r', and to 0 if you
    don't. */
 #undef HAVE_DECL_STRTOK_R

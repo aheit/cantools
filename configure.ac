@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.16, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.17, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -26,7 +26,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
 
 dnl common library version
-version_info='0:16:0'
+version_info='0:17:0'
 AC_SUBST(version_info)
 
 # Checks for programs.
@@ -64,6 +64,19 @@ extern char *strtok_r (char *s, const char *delim, char **save_ptr);
 #endif
 ])
 
+# workaround for missing LINE_MAX definition
+AC_MSG_CHECKING(if LINE_MAX is defined)
+AC_EGREP_CPP(yes,
+[#include <limits.h>
+#ifdef LINE_MAX
+yes
+#endif
+], line_max_defined=yes, line_max_defined=no)
+AC_MSG_RESULT($line_max_defined)
+
+if test "$line_max_defined" = "no"; then
+   CFLAGS="$CFLAGS -DLINE_MAX=2048"
+fi
 
 # Checks for header files.
 AC_FUNC_ALLOCA

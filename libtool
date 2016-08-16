@@ -1,5 +1,5 @@
 #! /bin/sh
-# Generated automatically by config.status (cantools) 0.15
+# Generated automatically by config.status (cantools) 0.17
 # Libtool was configured on host EUCLID:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
@@ -295,7 +295,7 @@ finish_eval=""
 hardcode_into_libs=no
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/usr/lib/gcc/x86_64-pc-cygwin/5.3.0 /usr/x86_64-pc-cygwin/lib /usr/lib /lib /usr/lib/w32api  /usr/lib/w32api"
+sys_lib_search_path_spec="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0 /usr/x86_64-pc-cygwin/lib /usr/lib /lib  /usr/lib/w32api"
 
 # Detected run-time system search path for libraries.
 sys_lib_dlsearch_path_spec="/lib /usr/lib"
@@ -11815,17 +11815,17 @@ file_list_spec=""
 hardcode_action=immediate
 
 # The directories searched by this compiler when creating a shared library.
-compiler_lib_search_dirs="/usr/lib/gcc/x86_64-pc-cygwin/5.3.0 /usr/lib/gcc/x86_64-pc-cygwin/5.3.0/../../../../x86_64-pc-cygwin/lib/../lib /usr/lib/../lib /lib/../lib /usr/lib/gcc/x86_64-pc-cygwin/5.3.0/../../../../x86_64-pc-cygwin/lib /usr/lib/w32api"
+compiler_lib_search_dirs="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0 /usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../../../x86_64-pc-cygwin/lib/../lib /usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../../../lib /lib/../lib /usr/lib/../lib /usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../../../x86_64-pc-cygwin/lib /usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../.."
 
 # Dependencies to place before and after the objects being linked to
 # create a shared library.
-predep_objects="/usr/lib/gcc/x86_64-pc-cygwin/5.3.0/crtbeginS.o"
-postdep_objects="/usr/lib/gcc/x86_64-pc-cygwin/5.3.0/crtend.o"
+predep_objects="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/crtbeginS.o"
+postdep_objects="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/crtend.o"
 predeps=""
 postdeps="-lstdc++ -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc"
 
 # The library search path used internally by the compiler when linking
 # a shared library.
-compiler_lib_search_path="-L/usr/lib/gcc/x86_64-pc-cygwin/5.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/5.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/../lib -L/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/5.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/w32api"
+compiler_lib_search_path="-L/usr/lib/gcc/x86_64-pc-cygwin/5.4.0 -L/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../.."
 
 # ### END LIBTOOL TAG CONFIG: CXX

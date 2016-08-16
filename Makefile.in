@@ -16,7 +16,7 @@
 
 # Make cantools.					-*-Makefile-*-
 
-# Copyright (C) 2007-2014 Andreas Heitmann
+# Copyright (C) 2007-2016 Andreas Heitmann
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -586,7 +586,9 @@ include_HEADERS = src/libcandbc/dbcModel.h \
 		 src/libcanmdf/mdffilter.h \
 		 src/libcanasc/ascReader.h \
 		 src/libcanvsb/vsbReader.h \
-		 src/cantomat/messageDecoder.h
+		 src/cantomat/messageDecoder.h \
+		 src/libcanmdf/mdfcn.h \
+		 src/libcanmdf/mdftypes.h
 
 libcandbc_la_SOURCES = \
 	src/libcandbc/dbcModel.c \
