@@ -1,7 +1,17 @@
+2016-08-23  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+        * all: released version 0.18
+        * all: more bugfixes for mingw: see below for details:
+        * Makefile.am: added missing @DEFS@ macro
+        * libcanmdf: added check and replacement for missing strndup()
+          declaration/definition on some systems
+	* libcanmdf: removed dependency on byteswap.h (not available on
+	  all systems)
+
 2016-08-16  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
         * all: released version 0.17
-	* all: bugfixes to support build under x86_64-w64-mingw32, see
+        * all: bugfixes to support build under x86_64-w64-mingw32, see
           below for details:
         * libcanmdf: removed unnecessary include of endian.h
         * hashtable: key/value functions declared static to limit

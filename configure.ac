@@ -18,15 +18,15 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.17, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.18, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
 
 dnl common library version
-version_info='0:17:0'
+version_info='0:18:0'
 AC_SUBST(version_info)
 
 # Checks for programs.
@@ -47,6 +47,7 @@ AC_PROG_CPP
 AC_PROG_MKDIR_P
 LT_INIT
 AC_PROG_LN_S
+AC_PROG_RANLIB
 
 # Checks for functions
 AC_REPLACE_FUNCS([strtok_r])
@@ -61,6 +62,23 @@ AC_CHECK_DECLS([strtok_r],
 AH_BOTTOM([
 #if !HAVE_DECL_STRTOK_R
 extern char *strtok_r (char *s, const char *delim, char **save_ptr);
+#endif
+])
+
+AC_REPLACE_FUNCS([strndup])
+AC_CHECK_DECLS([strndup],,,[#include <string.h>])
+if test $ac_cv_have_decl_strndup = no; then
+    HAVE_DECL_STRNDUP=0
+fi
+if test $ac_cv_func_strndup = yes; then
+    HAVE_STRNDUP=1
+else
+    HAVE_STRNDUP=0
+fi
+AH_BOTTOM([
+#if !HAVE_DECL_STRNDUP
+#include <stddef.h>
+extern char *strndup (const char *s, size_t n);
 #endif
 ])
 
@@ -80,7 +98,12 @@ fi
 
 # Checks for header files.
 AC_FUNC_ALLOCA
-AC_CHECK_HEADERS([fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h stdint.h stdlib.h string.h unistd.h endian.h])
+#AC_FUNC_MALLOC
+#AC_FUNC_REALLOC
+#AC_FUNC_STRNLEN
+#AC_FUNC_STRTOD
+AC_CHECK_HEADERS([fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h \
+                  stdint.h stdlib.h string.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -96,7 +119,6 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_C_CONST
-	
 AC_C_BIGENDIAN
 
 # check availability of arithmetic right shift
@@ -126,7 +148,7 @@ AC_CHECK_HEADER(matio.h, [], [matio=0])
 AC_CHECK_LIB(matio, Mat_VarCreate, [matio=matio], [matio=0], -lhdf5 -lz)
 if test $matio == 0
 then
-	echo "Error! You need to install libmatio, hdf5, and first."
+	echo "Error! You need to install libmatio first."
         exit -1
 else
 	MATIO_LIB=-lmatio

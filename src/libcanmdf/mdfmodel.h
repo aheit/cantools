@@ -2,7 +2,7 @@
 #define INCLUDE_MDFMODEL_H
 
 /*  mdfmodel.h --  declarations for MDF model
-    Copyright (C) 2012,2013 Andreas Heitmann
+    Copyright (C) 2012-2016 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 
 #define CREATE(type,obj) type *(obj) = (type *)malloc(sizeof(type))
 
+#pragma pack(1)
 /* mdf */
 typedef struct {
   int fd;
@@ -104,17 +105,17 @@ typedef struct {
   /* 016 */ uint16_t record_id;
   /* 018 */ uint16_t number_channels;
   /* 020 */ uint16_t record_size;
-  /* 022 */ uint32_t number_of_records      __attribute__ ((packed));
+  /* 022 */ uint32_t number_of_records;
   /* valid since version 3.30: */
-  /* 026 */ link_t   sample_reduction_block __attribute__ ((packed));
+  /* 026 */ link_t   sample_reduction_block;
 } cg_block_t;
 
 typedef struct {
   /* 000 */ char_t   block_identifier[2];
   /* 002 */ uint16_t block_size;
   /* 004 */ mdf_bool_t value_range_valid;
-  /* 006 */ real_t   value_min               __attribute__ ((packed));
-  /* 014 */ real_t   value_max               __attribute__ ((packed));
+  /* 006 */ real_t   value_min;
+  /* 014 */ real_t   value_max;
   /* 022 */ char_t   physical_unit[20];
   /* 042 */ uint16_t conversion_type;
   /* 044 */ uint16_t size_information;
@@ -195,7 +196,7 @@ typedef struct {
       uint32_t   ms;
       uint16_t   days;
     } time;
-  } supplement  __attribute__ ((packed));
+  } supplement;
 } cc_block_t;
 
 typedef enum {
@@ -233,13 +234,13 @@ typedef struct {
   /* 188 */ uint16_t number_bits;
   /* 190 */ uint16_t signal_data_type;
   /* 192 */ mdf_bool_t value_range_valid;
-  /* 194 */ real_t   value_min               __attribute__ ((packed));
-  /* 202 */ real_t   value_max               __attribute__ ((packed));
-  /* 210 */ real_t   sample_rate             __attribute__ ((packed));
+  /* 194 */ real_t   value_min;
+  /* 202 */ real_t   value_max;
+  /* 210 */ real_t   sample_rate;
   /* valid since version 2.12: */
-  /* 218 */ link_t   link_asam_mcd_name      __attribute__ ((packed));
+  /* 218 */ link_t   link_asam_mcd_name;
   /* valid since version 3.00: */
-  /* 222 */ link_t   link_display_identifier __attribute__ ((packed));
+  /* 222 */ link_t   link_display_identifier;
   /* valid since version 3.00: */
   /* 226 */ uint16_t additional_byte_offset;
 } cn_block_t;
@@ -255,18 +256,19 @@ typedef struct {
   union {
     struct { /* type 2 */
       uint16_t module_number;
-      uint32_t address                       __attribute__ ((packed));
+      uint32_t address;
       char80_t description[80];
       char32_t ecu_identification[32];
     } dim;
     struct { /* type 19 */
-      uint32_t can_id                        __attribute__ ((packed));
-      uint32_t can_channel                   __attribute__ ((packed));
+      uint32_t can_id;
+      uint32_t can_channel;
       char36_t message_name[36];
       char36_t sender_name[36];
     } vector_can;
   } supplement;
 } ce_block_t;
+#pragma pack()
 
 id_block_t *id_block_get(const mdf_t *const mdf);
 hd_block_t *hd_block_get(const mdf_t *const mdf);

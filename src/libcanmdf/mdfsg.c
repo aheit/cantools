@@ -20,7 +20,7 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include <byteswap.h>
+#include "mdfswap.h"
 #include "mdfsg.h"
 #include "mdfmodel.h"
 
@@ -163,7 +163,7 @@ mdf_signal_convert(const uint8_t *const data_int_ptr,
       uint32_t data_u32 = *(uint32_t *)data_int_ptr;
 
       if(swap) {
-         data_u32 = bswap_32(*(uint32_t *)&data_u32);
+         data_u32 = mdf_bswap_32(*(uint32_t *)&data_u32);
       }
       data_ieee754 = *(float *)&data_u32;
     }
@@ -175,7 +175,7 @@ mdf_signal_convert(const uint8_t *const data_int_ptr,
       uint64_t data_u64 = *(uint64_t *)data_int_ptr;
 
       if(swap) {
-         data_u64 = bswap_64(*(uint64_t *)&data_u64);
+         data_u64 = mdf_bswap_64(*(uint64_t *)&data_u64);
       }
       data_ieee754 = *(double *)&data_u64;
     }

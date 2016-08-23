@@ -91,7 +91,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/src/libcandbc \
 	   -I$(top_srcdir)/src/libcanasc \
 	   -I$(top_srcdir)/hashtable
 
-DEFS = $(YYDEBUG)
+DEFS = $(YYDEBUG) @DEFS@
 
 # YACC: generate token defines for LEX
 AM_YFLAGS = -d
@@ -114,6 +114,7 @@ include_HEADERS= src/libcandbc/dbcModel.h \
 		 src/libcanvsb/vsbReader.h \
 		 src/cantomat/messageDecoder.h \
 		 src/libcanmdf/mdfcn.h \
+		 src/libcanmdf/mdfswap.h \
 		 src/libcanmdf/mdftypes.h
 
 libcandbc_la_SOURCES= \
