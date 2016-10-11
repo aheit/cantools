@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
-#include <dbcTypes.h>
+#include "../libcandbc/dbcTypes.h"
 #include "../cantomat/measurement.h"
 
 /*

@@ -28,10 +28,7 @@
 #include "matWrite.h"
 #include "ascReader.h"
 #include "vsbReader.h"
-
-#ifdef HAVE_CLGREADER_H
 #include "clgreader.h"
-#endif
 
 int verbose_flag = 0;
 int debug_flag   = 0;
@@ -54,9 +51,7 @@ static void help(void)
           "  -b, --bus <busid>          specify bus for next database\n"
           "  -d, --dbc <dbcfile>        assign database to previously specified bus\n"
           "  -a, --asc <ascfile>        ASC input file\n"
-#ifdef HAVE_CLGREADER_H
           "  -c, --clg <clgfile>        CLG input file\n"
-#endif
           "  -v, --vsb <vsbfile>        VSB input file\n"
           "  -m, --mat <matfile>        MAT output file\n"
           "  -f, --format <format>      signal name format\n"
@@ -99,15 +94,13 @@ int main(int argc, char **argv)
          We distinguish them by their indices. */
       {"asc",     required_argument, 0, 'a'},
       {"bus",     required_argument, 0, 'b'},
-#ifdef HAVE_CLGREADER_H
       {"clg",     required_argument, 0, 'c'},
-#endif
       {"dbc",     required_argument, 0, 'd'},
       {"format",  required_argument, 0, 'f'},
       {"mat",     required_argument, 0, 'm'},
       {"timeres", required_argument, 0, 't'},
       {"vsb",     required_argument, 0, 'v'},
-      {"help",    no_argument,       NULL, 'h'},
+      {"help",    no_argument,    NULL, 'h'},
       {0, 0, 0, 0}
     };
 
@@ -129,13 +122,11 @@ int main(int argc, char **argv)
       parserFunction =ascReader_processFile;
       inputFiles++;
       break;
-#ifdef HAVE_CLGREADER_H
     case 'c':
       inputFilename = optarg;
       parserFunction =clgReader_processFile;
       inputFiles++;
       break;
-#endif
     case 'b':
       bus = atoi(optarg);
       break;

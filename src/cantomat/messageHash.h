@@ -6,8 +6,8 @@
 #endif
 
 #include <stdio.h>
-#include <dbcModel.h>
-#include "../hashtable/hashtable.h"
+#include "dbcModel.h"
+#include "hashtable.h"
 
 typedef uint32 messageHashKey_t;
 typedef struct hashtable messageHash_t;

@@ -23,8 +23,6 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include <endian.h>
-#include <byteswap.h>
 #include "mdfsg.h"
 #include "mdfmodel.h"
 

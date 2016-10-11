@@ -2,7 +2,7 @@
 #define INCLUDE_DBCMODEL_H
 
 #include <stdlib.h>
-#include <dbcTypes.h>
+#include "dbcTypes.h"
 
 #if WITH_DMALLOC
 #include <dmalloc.h>

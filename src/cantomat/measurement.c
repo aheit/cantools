@@ -25,12 +25,12 @@
 #include "busAssignment.h"
 #include "messageHash.h"
 #include "signalFormat.h"
-#include "../hashtable/hashtable.h"
-#include "../hashtable/hashtable_itr.h"
-#include "../libcanasc/ascReader.h"
+#include "hashtable.h"
+#include "hashtable_itr.h"
+#include "ascReader.h"
 #include "messageDecoder.h"
 #include "vsbReader.h"
-#include <dbcModel.h>
+#include "dbcModel.h"
 
 /* callback structure for timeSeries signal handler */
 typedef struct {

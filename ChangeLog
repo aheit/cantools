@@ -1,3 +1,9 @@
+2016-10-11  Andreas Heitmann  <andreas.heitmann@gmail.com>
+        * all: released version 0.19
+	* Makefile.am: improved handling of include paths
+	* configure.ac: and string handling replacement functions added
+	* libcanclg: support for CLG2 format added
+
 2016-08-23  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
         * all: released version 0.18
@@ -5,6 +11,7 @@
         * Makefile.am: added missing @DEFS@ macro
         * libcanmdf: added check and replacement for missing strndup()
           declaration/definition on some systems
+        * libcanmdf: using more portable declaration of packed structures
 	* libcanmdf: removed dependency on byteswap.h (not available on
 	  all systems)
 

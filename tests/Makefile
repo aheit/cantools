@@ -371,15 +371,15 @@ TEST_LOG_DRIVER = $(SHELL) $(top_srcdir)/test-driver
 TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 	$(TEST_LOG_FLAGS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing aclocal-1.14
+ACLOCAL = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing aclocal-1.14
 ALLOCA = 
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
 AS = as
-AUTOCONF = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing autoconf
-AUTOHEADER = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing autoheader
-AUTOMAKE = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing automake-1.14
+AUTOCONF = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing autoconf
+AUTOHEADER = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing autoheader
+AUTOMAKE = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing automake-1.14
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -404,6 +404,8 @@ ECHO_T =
 EGREP = /usr/bin/grep -E
 EXEEXT = .exe
 FGREP = /usr/bin/grep -F
+GLIB_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include
+GLIB_LIBS = -lglib-2.0 -lintl
 GREP = /usr/bin/grep
 HDF5_LIB = -lhdf5
 INSTALL = /usr/bin/install -c
@@ -424,9 +426,10 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing makeinfo
+MAKEINFO = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing makeinfo
 MANIFEST_TOOL = :
-MATIO_LIB = -lmatio
+MATIO_CFLAGS = -I//include
+MATIO_LIBS = -lmatio
 MKDIR_P = /usr/bin/mkdir -p
 NM = /usr/bin/nm -B
 NMEDIT = 
@@ -437,27 +440,30 @@ OTOOL64 =
 PACKAGE = cantools
 PACKAGE_BUGREPORT = andreas.heitmann@gmail.com
 PACKAGE_NAME = cantools
-PACKAGE_STRING = cantools 0.17
+PACKAGE_STRING = cantools 0.19
 PACKAGE_TARNAME = cantools
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.17
+PACKAGE_VERSION = 0.19
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
 PKG_CONFIG_PATH = 
+POW_LIB = 
 RANLIB = ranlib
 SED = /usr/bin/sed
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = strip
-VERSION = 0.17
+VERSION = 0.19
 YACC = bison -y
 YFLAGS = 
+ZLIB_CFLAGS = 
+ZLIB_LIBS = -lz
 Z_LIB = -lz
-abs_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/tests
-abs_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/tests
-abs_top_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
-abs_top_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
+abs_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/tests
+abs_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/tests
+abs_top_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
+abs_top_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -487,7 +493,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/install-sh
+install_sh = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -507,7 +513,7 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-version_info = 0:17:0
+version_info = 0:19:0
 check_mdf_signal_convert_SOURCES = check_mdf_signal_convert.c \
 	$(top_builddir)/src/libcanmdf/mdfsg.h \
 	$(top_builddir)/src/libcanmdf/mdfmodel.h
@@ -528,9 +534,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tests/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu tests/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign tests/Makefile
+	  $(AUTOMAKE) --gnu tests/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \

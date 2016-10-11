@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-#include "../hashtable/hashtable.h"
+#include "hashtable.h"
 #include "busAssignment.h"
 #include "signalFormat.h"
 

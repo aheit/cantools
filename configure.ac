@@ -18,15 +18,16 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.18, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.19, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
+AC_USE_SYSTEM_EXTENSIONS
 
 dnl common library version
-version_info='0:18:0'
+version_info='0:19:0'
 AC_SUBST(version_info)
 
 # Checks for programs.
@@ -98,10 +99,11 @@ fi
 
 # Checks for header files.
 AC_FUNC_ALLOCA
-#AC_FUNC_MALLOC
-#AC_FUNC_REALLOC
-#AC_FUNC_STRNLEN
-#AC_FUNC_STRTOD
+AC_FUNC_FSEEKO
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+AC_FUNC_STRNLEN
+AC_FUNC_STRTOD
 AC_CHECK_HEADERS([fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h \
                   stdint.h stdlib.h string.h unistd.h])
 
@@ -142,41 +144,7 @@ AC_CHECK_LIB([hdf5], [H5Fcreate], AC_SUBST([HDF5_LIB], [-lhdf5]), ,-lz)
 AC_CHECK_LIB([m], [floor], AC_SUBST([Z_LIB], [-lz]))
 AC_CHECK_LIB([z], [deflate])
 
-AC_SUBST(MATIO_LIB)
-matio=1
-AC_CHECK_HEADER(matio.h, [], [matio=0])
-AC_CHECK_LIB(matio, Mat_VarCreate, [matio=matio], [matio=0], -lhdf5 -lz)
-if test $matio == 0
-then
-	echo "Error! You need to install libmatio first."
-        exit -1
-else
-	MATIO_LIB=-lmatio
-fi
-
 AM_WITH_DMALLOC
-
-AC_ARG_ENABLE(clg,
-[  --enable-clg            Enable CLG file format],
-[case "$enableval" in \
-	yes)  enable_clg=yes ;; \
-	no)   enable_clg=no;; \
-	*)    enable_clg=no;; \
-esac], [enable_clg=no])
-
-# pass option to Makefile.am
-AM_CONDITIONAL([ENABLE_CLG], [test "$enable_clg" = "yes"])
-
-# Check for CLG library
-if test $enable_clg = yes; then
-clg_available=1
-AC_CHECK_FILE([src/libcanclg/clgReader.h], [], [clg_available=0])
-if test $clg_available == 0
-then
-	echo "Error! CLG source not installed."
-        exit -1
-fi
-fi
 
 AC_ARG_ENABLE(efence,
 [  --enable-efence         Use electric fence (www.perens.com)],
@@ -195,6 +163,10 @@ fi
 # Configure check for unit testing
 #
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.0])
+PKG_CHECK_MODULES([GLIB],  [glib-2.0 >= 2.0])
+PKG_CHECK_MODULES([MATIO], [matio >= 1.5])
+PKG_CHECK_MODULES([ZLIB],  [zlib >= 1.2])
+#PKG_CHECK_MODULES([HDF5], [hdf5 >= 1.8])
  
 # Checks for library functions.
 #AC_FUNC_ERROR_AT_LINE

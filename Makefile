@@ -103,9 +103,10 @@ subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/config.h.in src/libcandbc/parser.h \
-	src/libcandbc/parser.c src/libcandbc/lexer.c strtok_r.c \
-	depcomp ylwrap $(include_HEADERS) AUTHORS COPYING ChangeLog \
-	README TODO compile config.guess config.sub install-sh missing \
+	src/libcandbc/parser.c src/libcandbc/lexer.c strndup.c \
+	realloc.c strtok_r.c strnlen.c malloc.c strtod.c depcomp \
+	ylwrap $(include_HEADERS) AUTHORS COPYING ChangeLog README \
+	TODO compile config.guess config.sub install-sh missing \
 	ltmain.sh
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -161,6 +162,12 @@ am__v_lt_1 =
 libcanasc_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcanasc_la_LDFLAGS) $(LDFLAGS) -o $@
+libcanclg_la_LIBADD =
+am_libcanclg_la_OBJECTS = src/libcanclg/libcanclg_la-clgReader.lo
+libcanclg_la_OBJECTS = $(am_libcanclg_la_OBJECTS)
+libcanclg_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libcanclg_la_LDFLAGS) $(LDFLAGS) -o $@
 libcandbc_la_DEPENDENCIES =
 am_libcandbc_la_OBJECTS = src/libcandbc/libcandbc_la-dbcModel.lo \
 	src/libcandbc/libcandbc_la-dbcReader.lo \
@@ -190,34 +197,31 @@ libcanvsb_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcanvsb_la_LDFLAGS) $(LDFLAGS) -o $@
 PROGRAMS = $(bin_PROGRAMS)
-am_cantomat_OBJECTS = src/cantomat/cantomat.$(OBJEXT) \
-	src/cantomat/messageDecoder.$(OBJEXT) \
-	src/cantomat/busAssignment.$(OBJEXT) \
-	src/cantomat/matWrite.$(OBJEXT) \
-	src/cantomat/messageHash.$(OBJEXT) \
-	src/cantomat/measurement.$(OBJEXT) \
-	src/cantomat/signalFormat.$(OBJEXT) \
-	src/hashtable/hashtable.$(OBJEXT) \
-	src/hashtable/hashtable_itr.$(OBJEXT)
+am_cantomat_OBJECTS = src/cantomat/cantomat-cantomat.$(OBJEXT) \
+	src/cantomat/cantomat-messageDecoder.$(OBJEXT) \
+	src/cantomat/cantomat-busAssignment.$(OBJEXT) \
+	src/cantomat/cantomat-matWrite.$(OBJEXT) \
+	src/cantomat/cantomat-messageHash.$(OBJEXT) \
+	src/cantomat/cantomat-measurement.$(OBJEXT) \
+	src/cantomat/cantomat-signalFormat.$(OBJEXT) \
+	src/hashtable/cantomat-hashtable.$(OBJEXT) \
+	src/hashtable/cantomat-hashtable_itr.$(OBJEXT)
 cantomat_OBJECTS = $(am_cantomat_OBJECTS)
 am__DEPENDENCIES_1 =
 cantomat_DEPENDENCIES = libcandbc.la libcanasc.la libcanvsb.la \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) 
-am_dbccopy_OBJECTS = src/dbccopy/dbccopy.$(OBJEXT)
+	libcanclg.la $(am__DEPENDENCIES_1) 
+am_dbccopy_OBJECTS = src/dbccopy/dbccopy-dbccopy.$(OBJEXT)
 dbccopy_OBJECTS = $(am_dbccopy_OBJECTS)
 dbccopy_DEPENDENCIES = libcandbc.la
-am_dbcls_OBJECTS = src/dbcls/dbcls.$(OBJEXT)
+am_dbcls_OBJECTS = src/dbcls/dbcls-dbcls.$(OBJEXT)
 dbcls_OBJECTS = $(am_dbcls_OBJECTS)
 dbcls_DEPENDENCIES = libcandbc.la
-am_matdump_OBJECTS = src/matdump/matdump.$(OBJEXT)
+am_matdump_OBJECTS = src/matdump/matdump-matdump.$(OBJEXT)
 matdump_OBJECTS = $(am_matdump_OBJECTS)
-matdump_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) 
-am_mdftomat_OBJECTS = src/mdftomat/mdftomat.$(OBJEXT)
+matdump_DEPENDENCIES = $(am__DEPENDENCIES_1) 
+am_mdftomat_OBJECTS = src/mdftomat/mdftomat-mdftomat.$(OBJEXT)
 mdftomat_OBJECTS = $(am_mdftomat_OBJECTS)
-mdftomat_DEPENDENCIES = libcanmdf.la $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) 
+mdftomat_DEPENDENCIES = libcanmdf.la $(am__DEPENDENCIES_1) 
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -269,14 +273,14 @@ AM_V_YACC = $(am__v_YACC_$(V))
 am__v_YACC_ = $(am__v_YACC_$(AM_DEFAULT_VERBOSITY))
 am__v_YACC_0 = @echo "  YACC    " $@;
 am__v_YACC_1 = 
-SOURCES = $(libcanasc_la_SOURCES) $(libcandbc_la_SOURCES) \
-	$(libcanmdf_la_SOURCES) $(libcanvsb_la_SOURCES) \
-	$(cantomat_SOURCES) $(dbccopy_SOURCES) $(dbcls_SOURCES) \
-	$(matdump_SOURCES) $(mdftomat_SOURCES)
-DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcandbc_la_SOURCES) \
-	$(libcanmdf_la_SOURCES) $(libcanvsb_la_SOURCES) \
-	$(cantomat_SOURCES) $(dbccopy_SOURCES) $(dbcls_SOURCES) \
-	$(matdump_SOURCES) $(mdftomat_SOURCES)
+SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
+	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
+	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
+	$(dbcls_SOURCES) $(matdump_SOURCES) $(mdftomat_SOURCES)
+DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
+	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
+	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
+	$(dbcls_SOURCES) $(matdump_SOURCES) $(mdftomat_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -363,15 +367,15 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing aclocal-1.14
+ACLOCAL = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing aclocal-1.14
 ALLOCA = 
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
 AS = as
-AUTOCONF = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing autoconf
-AUTOHEADER = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing autoheader
-AUTOMAKE = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing automake-1.14
+AUTOCONF = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing autoconf
+AUTOHEADER = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing autoheader
+AUTOMAKE = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing automake-1.14
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -385,7 +389,7 @@ CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = cygpath -w
-DEFS = $(YYDEBUG)
+DEFS = $(YYDEBUG) -DHAVE_CONFIG_H
 DEPDIR = .deps
 DLLTOOL = dlltool
 DSYMUTIL = 
@@ -396,6 +400,8 @@ ECHO_T =
 EGREP = /usr/bin/grep -E
 EXEEXT = .exe
 FGREP = /usr/bin/grep -F
+GLIB_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include
+GLIB_LIBS = -lglib-2.0 -lintl
 GREP = /usr/bin/grep
 HDF5_LIB = -lhdf5
 INSTALL = /usr/bin/install -c
@@ -416,9 +422,10 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/missing makeinfo
+MAKEINFO = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/missing makeinfo
 MANIFEST_TOOL = :
-MATIO_LIB = -lmatio
+MATIO_CFLAGS = -I//include
+MATIO_LIBS = -lmatio
 MKDIR_P = /usr/bin/mkdir -p
 NM = /usr/bin/nm -B
 NMEDIT = 
@@ -429,27 +436,30 @@ OTOOL64 =
 PACKAGE = cantools
 PACKAGE_BUGREPORT = andreas.heitmann@gmail.com
 PACKAGE_NAME = cantools
-PACKAGE_STRING = cantools 0.17
+PACKAGE_STRING = cantools 0.19
 PACKAGE_TARNAME = cantools
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.17
+PACKAGE_VERSION = 0.19
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
 PKG_CONFIG_PATH = 
+POW_LIB = 
 RANLIB = ranlib
 SED = /usr/bin/sed
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = strip
-VERSION = 0.17
+VERSION = 0.19
 YACC = bison -y
 YFLAGS = 
+ZLIB_CFLAGS = 
+ZLIB_LIBS = -lz
 Z_LIB = -lz
-abs_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
-abs_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
-abs_top_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
-abs_top_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code
+abs_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
+abs_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
+abs_top_builddir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
+abs_top_srcdir = /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -479,7 +489,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/cantools-code/install-sh
+install_sh = ${SHELL} /cygdrive/c/Users/aheit/work/Priv/cantools/GitHub/cantools/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -499,7 +509,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-version_info = 0:17:0
+version_info = 0:19:0
 SUBDIRS = . tests
 AUTOMAKE_OPTIONS = foreign subdir-objects
 ACLOCAL_AMFLAGS = -I m4
@@ -507,18 +517,22 @@ ACLOCAL_AMFLAGS = -I m4
 #	
 # What to build and install
 #
-lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la
+lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
+	          libcanclg.la
+
 
 #
 # dbcls
 #
 dbcls_SOURCES = src/dbcls/dbcls.c
+dbcls_CPPFLAGS = -I$(top_srcdir)/src/libcandbc
 dbcls_LDADD = libcandbc.la -lm
 
 #
 # dbccopy
 #
 dbccopy_SOURCES = src/dbccopy/dbccopy.c
+dbccopy_CPPFLAGS = -I$(top_srcdir)/src/libcandbc
 dbccopy_LDADD = libcandbc.la -lm
 
 #
@@ -542,8 +556,16 @@ cantomat_SOURCES = src/cantomat/cantomat.c \
 		   src/hashtable/hashtable_itr.h \
 		   src/hashtable/hashtable_private.h
 
-cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la $(MATIO_LIB) \
-	$(Z_LIB) $(HDF5_LIB)  -lm
+cantomat_CPPFLAGS = -I//include \
+	   -I$(top_srcdir)/src/libcanasc \
+           -I$(top_srcdir)/src/libcanclg \
+	   -I$(top_srcdir)/src/libcandbc \
+	   -I$(top_srcdir)/src/libcanvsb \
+           -I$(top_srcdir)/src/cantomat \
+	   -I$(top_srcdir)/src/hashtable
+
+cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la libcanclg.la \
+	-lmatio -lz $(HDF5_LIB)  -lm
 
 #
 # mdftomat
@@ -551,23 +573,22 @@ cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la $(MATIO_LIB) \
 mdftomat_SOURCES = src/mdftomat/mdftomat.c \
                    src/mdftomat/mdftomat.h
 
-mdftomat_LDADD = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) 
+mdftomat_CPPFLAGS = -I//include \
+	   -I$(top_srcdir)/src/libcanmdf
+
+mdftomat_LDADD = libcanmdf.la -lmatio -lz $(HDF5_LIB) 
 
 #
 # matdump
 #
 matdump_SOURCES = src/matdump/matdump.c \
-                   src/matdump/matdump.h
+                  src/matdump/matdump.h
 
-matdump_LDADD = $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) 
+matdump_CPPFLAGS = -I//include
+matdump_LDADD = -lmatio -lz $(HDF5_LIB) 
 
 # additional include pathes necessary
-AM_CPPFLAGS = -I$(top_srcdir)/src/libcandbc \
-	   -I$(top_srcdir)/src/libcanmdf \
-	   -I$(top_srcdir)/src/libcanvsb \
-	   -I$(top_srcdir)/src/libcanasc \
-	   -I$(top_srcdir)/hashtable
-
+AM_CPPFLAGS = 
 
 # YACC: generate token defines for LEX
 AM_YFLAGS = -d
@@ -586,8 +607,10 @@ include_HEADERS = src/libcandbc/dbcModel.h \
 		 src/libcanmdf/mdffilter.h \
 		 src/libcanasc/ascReader.h \
 		 src/libcanvsb/vsbReader.h \
+		 src/libcanclg/clgReader.h \
 		 src/cantomat/messageDecoder.h \
 		 src/libcanmdf/mdfcn.h \
+		 src/libcanmdf/mdfswap.h \
 		 src/libcanmdf/mdftypes.h
 
 libcandbc_la_SOURCES = \
@@ -598,12 +621,9 @@ libcandbc_la_SOURCES = \
 	src/libcandbc/lexer.l
 
 libcandbc_la_LIBADD = -lm
-libcanasc_la_SOURCES = \
-	src/libcanasc/ascReader.c
-
-libcanvsb_la_SOURCES = \
-	src/libcanvsb/vsbReader.c
-
+libcanasc_la_SOURCES = src/libcanasc/ascReader.c
+libcanvsb_la_SOURCES = src/libcanvsb/vsbReader.c
+libcanclg_la_SOURCES = src/libcanclg/clgReader.c
 libcanmdf_la_SOURCES = \
 	src/libcanmdf/mdfcg.c \
 	src/libcanmdf/mdfcn.c \
@@ -613,20 +633,29 @@ libcanmdf_la_SOURCES = \
 	src/libcanmdf/mdfmodel.c \
 	src/libcanmdf/mdfsg.c
 
+libcanmdf_CPPFLAGS = -I//include
 libcandbc_la_CPPFLAGS = -I$(top_builddir)/src/libcandbc \
                        -I$(top_srcdir)/src/libcandbc
 
-libcandbc_la_LDFLAGS = -no-undefined -version-info 0:17:0
+libcandbc_la_LDFLAGS = -no-undefined -version-info 0:19:0
 libcanasc_la_CPPFLAGS = -I$(top_builddir)/src/libcanasc \
-		       -I$(top_srcdir)/src/libcandbc
+		       -I$(top_srcdir)/src/libcandbc \
+		       -I$(top_srcdir)/src/cantomat \
+                       -I$(top_srcdir)/src/hashtable
 
-libcanasc_la_LDFLAGS = -no-undefined -version-info 0:17:0
+libcanasc_la_LDFLAGS = -no-undefined -version-info 0:19:0
 libcanvsb_la_CPPFLAGS = -I$(top_builddir)/src/libcanvsb \
-		       -I$(top_srcdir)/src/libcandbc
+		       -I$(top_srcdir)/src/libcandbc \
+                       -I$(top_srcdir)/src/hashtable
 
-libcanvsb_la_LDFLAGS = -no-undefined -version-info 0:17:0
-libcanmdf_la_CPPFLAGS = -I$(top_builddir)/src/libcanmdf
-libcanmdf_la_LDFLAGS = -no-undefined -version-info 0:17:0
+libcanvsb_la_LDFLAGS = -no-undefined -version-info 0:19:0
+libcanclg_la_CPPFLAGS = -I$(top_builddir)/src/libcanclg \
+		       -I$(top_srcdir)/src/libcandbc \
+                       -I$(top_srcdir)/src/hashtable
+
+libcanclg_la_LDFLAGS = -no-undefined -version-info 0:19:0
+libcanmdf_la_CPPFLAGS = -I$(top_builddir)/src/libcanmdf -I//include
+libcanmdf_la_LDFLAGS = -no-undefined -version-info 0:19:0
 MAINTAINERCLEANFILES = \
 	src/libcandbc/parser.c \
 	src/libcandbc/parser.h \
@@ -733,6 +762,18 @@ src/libcanasc/libcanasc_la-ascReader.lo:  \
 
 libcanasc.la: $(libcanasc_la_OBJECTS) $(libcanasc_la_DEPENDENCIES) $(EXTRA_libcanasc_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libcanasc_la_LINK) -rpath $(libdir) $(libcanasc_la_OBJECTS) $(libcanasc_la_LIBADD) $(LIBS)
+src/libcanclg/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanclg
+	@: > src/libcanclg/$(am__dirstamp)
+src/libcanclg/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanclg/$(DEPDIR)
+	@: > src/libcanclg/$(DEPDIR)/$(am__dirstamp)
+src/libcanclg/libcanclg_la-clgReader.lo:  \
+	src/libcanclg/$(am__dirstamp) \
+	src/libcanclg/$(DEPDIR)/$(am__dirstamp)
+
+libcanclg.la: $(libcanclg_la_OBJECTS) $(libcanclg_la_DEPENDENCIES) $(EXTRA_libcanclg_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libcanclg_la_LINK) -rpath $(libdir) $(libcanclg_la_OBJECTS) $(libcanclg_la_LIBADD) $(LIBS)
 src/libcandbc/$(am__dirstamp):
 	@$(MKDIR_P) src/libcandbc
 	@: > src/libcandbc/$(am__dirstamp)
@@ -848,19 +889,26 @@ src/cantomat/$(am__dirstamp):
 src/cantomat/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/cantomat/$(DEPDIR)
 	@: > src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/cantomat.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+src/cantomat/cantomat-cantomat.$(OBJEXT):  \
+	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/messageDecoder.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+src/cantomat/cantomat-messageDecoder.$(OBJEXT):  \
+	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/busAssignment.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+src/cantomat/cantomat-busAssignment.$(OBJEXT):  \
+	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/matWrite.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+src/cantomat/cantomat-matWrite.$(OBJEXT):  \
+	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/messageHash.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+src/cantomat/cantomat-messageHash.$(OBJEXT):  \
+	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/measurement.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+src/cantomat/cantomat-measurement.$(OBJEXT):  \
+	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/signalFormat.$(OBJEXT): src/cantomat/$(am__dirstamp) \
+src/cantomat/cantomat-signalFormat.$(OBJEXT):  \
+	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
 src/hashtable/$(am__dirstamp):
 	@$(MKDIR_P) src/hashtable
@@ -868,9 +916,11 @@ src/hashtable/$(am__dirstamp):
 src/hashtable/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/hashtable/$(DEPDIR)
 	@: > src/hashtable/$(DEPDIR)/$(am__dirstamp)
-src/hashtable/hashtable.$(OBJEXT): src/hashtable/$(am__dirstamp) \
+src/hashtable/cantomat-hashtable.$(OBJEXT):  \
+	src/hashtable/$(am__dirstamp) \
 	src/hashtable/$(DEPDIR)/$(am__dirstamp)
-src/hashtable/hashtable_itr.$(OBJEXT): src/hashtable/$(am__dirstamp) \
+src/hashtable/cantomat-hashtable_itr.$(OBJEXT):  \
+	src/hashtable/$(am__dirstamp) \
 	src/hashtable/$(DEPDIR)/$(am__dirstamp)
 
 cantomat$(EXEEXT): $(cantomat_OBJECTS) $(cantomat_DEPENDENCIES) $(EXTRA_cantomat_DEPENDENCIES) 
@@ -882,7 +932,7 @@ src/dbccopy/$(am__dirstamp):
 src/dbccopy/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/dbccopy/$(DEPDIR)
 	@: > src/dbccopy/$(DEPDIR)/$(am__dirstamp)
-src/dbccopy/dbccopy.$(OBJEXT): src/dbccopy/$(am__dirstamp) \
+src/dbccopy/dbccopy-dbccopy.$(OBJEXT): src/dbccopy/$(am__dirstamp) \
 	src/dbccopy/$(DEPDIR)/$(am__dirstamp)
 
 dbccopy$(EXEEXT): $(dbccopy_OBJECTS) $(dbccopy_DEPENDENCIES) $(EXTRA_dbccopy_DEPENDENCIES) 
@@ -894,7 +944,7 @@ src/dbcls/$(am__dirstamp):
 src/dbcls/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/dbcls/$(DEPDIR)
 	@: > src/dbcls/$(DEPDIR)/$(am__dirstamp)
-src/dbcls/dbcls.$(OBJEXT): src/dbcls/$(am__dirstamp) \
+src/dbcls/dbcls-dbcls.$(OBJEXT): src/dbcls/$(am__dirstamp) \
 	src/dbcls/$(DEPDIR)/$(am__dirstamp)
 
 dbcls$(EXEEXT): $(dbcls_OBJECTS) $(dbcls_DEPENDENCIES) $(EXTRA_dbcls_DEPENDENCIES) 
@@ -906,7 +956,7 @@ src/matdump/$(am__dirstamp):
 src/matdump/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/matdump/$(DEPDIR)
 	@: > src/matdump/$(DEPDIR)/$(am__dirstamp)
-src/matdump/matdump.$(OBJEXT): src/matdump/$(am__dirstamp) \
+src/matdump/matdump-matdump.$(OBJEXT): src/matdump/$(am__dirstamp) \
 	src/matdump/$(DEPDIR)/$(am__dirstamp)
 
 matdump$(EXEEXT): $(matdump_OBJECTS) $(matdump_DEPENDENCIES) $(EXTRA_matdump_DEPENDENCIES) 
@@ -918,7 +968,8 @@ src/mdftomat/$(am__dirstamp):
 src/mdftomat/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/mdftomat/$(DEPDIR)
 	@: > src/mdftomat/$(DEPDIR)/$(am__dirstamp)
-src/mdftomat/mdftomat.$(OBJEXT): src/mdftomat/$(am__dirstamp) \
+src/mdftomat/mdftomat-mdftomat.$(OBJEXT):  \
+	src/mdftomat/$(am__dirstamp) \
 	src/mdftomat/$(DEPDIR)/$(am__dirstamp)
 
 mdftomat$(EXEEXT): $(mdftomat_OBJECTS) $(mdftomat_DEPENDENCIES) $(EXTRA_mdftomat_DEPENDENCIES) 
@@ -933,6 +984,8 @@ mostlyclean-compile:
 	-rm -f src/hashtable/*.$(OBJEXT)
 	-rm -f src/libcanasc/*.$(OBJEXT)
 	-rm -f src/libcanasc/*.lo
+	-rm -f src/libcanclg/*.$(OBJEXT)
+	-rm -f src/libcanclg/*.lo
 	-rm -f src/libcandbc/*.$(OBJEXT)
 	-rm -f src/libcandbc/*.lo
 	-rm -f src/libcanmdf/*.$(OBJEXT)
@@ -945,19 +998,25 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include $(DEPDIR)/malloc.Po
+include $(DEPDIR)/realloc.Po
+include $(DEPDIR)/strndup.Po
+include $(DEPDIR)/strnlen.Po
+include $(DEPDIR)/strtod.Po
 include $(DEPDIR)/strtok_r.Po
-include src/cantomat/$(DEPDIR)/busAssignment.Po
-include src/cantomat/$(DEPDIR)/cantomat.Po
-include src/cantomat/$(DEPDIR)/matWrite.Po
-include src/cantomat/$(DEPDIR)/measurement.Po
-include src/cantomat/$(DEPDIR)/messageDecoder.Po
-include src/cantomat/$(DEPDIR)/messageHash.Po
-include src/cantomat/$(DEPDIR)/signalFormat.Po
-include src/dbccopy/$(DEPDIR)/dbccopy.Po
-include src/dbcls/$(DEPDIR)/dbcls.Po
-include src/hashtable/$(DEPDIR)/hashtable.Po
-include src/hashtable/$(DEPDIR)/hashtable_itr.Po
+include src/cantomat/$(DEPDIR)/cantomat-busAssignment.Po
+include src/cantomat/$(DEPDIR)/cantomat-cantomat.Po
+include src/cantomat/$(DEPDIR)/cantomat-matWrite.Po
+include src/cantomat/$(DEPDIR)/cantomat-measurement.Po
+include src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Po
+include src/cantomat/$(DEPDIR)/cantomat-messageHash.Po
+include src/cantomat/$(DEPDIR)/cantomat-signalFormat.Po
+include src/dbccopy/$(DEPDIR)/dbccopy-dbccopy.Po
+include src/dbcls/$(DEPDIR)/dbcls-dbcls.Po
+include src/hashtable/$(DEPDIR)/cantomat-hashtable.Po
+include src/hashtable/$(DEPDIR)/cantomat-hashtable_itr.Po
 include src/libcanasc/$(DEPDIR)/libcanasc_la-ascReader.Plo
+include src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Plo
 include src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Plo
 include src/libcandbc/$(DEPDIR)/libcandbc_la-dbcReader.Plo
 include src/libcandbc/$(DEPDIR)/libcandbc_la-dbcWriter.Plo
@@ -971,8 +1030,8 @@ include src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdffilter.Plo
 include src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfmodel.Plo
 include src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfsg.Plo
 include src/libcanvsb/$(DEPDIR)/libcanvsb_la-vsbReader.Plo
-include src/matdump/$(DEPDIR)/matdump.Po
-include src/mdftomat/$(DEPDIR)/mdftomat.Po
+include src/matdump/$(DEPDIR)/matdump-matdump.Po
+include src/mdftomat/$(DEPDIR)/mdftomat-mdftomat.Po
 
 .c.o:
 	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -1004,6 +1063,13 @@ src/libcanasc/libcanasc_la-ascReader.lo: src/libcanasc/ascReader.c
 #	$(AM_V_CC)source='src/libcanasc/ascReader.c' object='src/libcanasc/libcanasc_la-ascReader.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanasc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanasc/libcanasc_la-ascReader.lo `test -f 'src/libcanasc/ascReader.c' || echo '$(srcdir)/'`src/libcanasc/ascReader.c
+
+src/libcanclg/libcanclg_la-clgReader.lo: src/libcanclg/clgReader.c
+	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanclg_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanclg/libcanclg_la-clgReader.lo -MD -MP -MF src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Tpo -c -o src/libcanclg/libcanclg_la-clgReader.lo `test -f 'src/libcanclg/clgReader.c' || echo '$(srcdir)/'`src/libcanclg/clgReader.c
+	$(AM_V_at)$(am__mv) src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Tpo src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Plo
+#	$(AM_V_CC)source='src/libcanclg/clgReader.c' object='src/libcanclg/libcanclg_la-clgReader.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanclg_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanclg/libcanclg_la-clgReader.lo `test -f 'src/libcanclg/clgReader.c' || echo '$(srcdir)/'`src/libcanclg/clgReader.c
 
 src/libcandbc/libcandbc_la-dbcModel.lo: src/libcandbc/dbcModel.c
 	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-dbcModel.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Tpo -c -o src/libcandbc/libcandbc_la-dbcModel.lo `test -f 'src/libcandbc/dbcModel.c' || echo '$(srcdir)/'`src/libcandbc/dbcModel.c
@@ -1096,6 +1162,188 @@ src/libcanvsb/libcanvsb_la-vsbReader.lo: src/libcanvsb/vsbReader.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanvsb_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanvsb/libcanvsb_la-vsbReader.lo `test -f 'src/libcanvsb/vsbReader.c' || echo '$(srcdir)/'`src/libcanvsb/vsbReader.c
 
+src/cantomat/cantomat-cantomat.o: src/cantomat/cantomat.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-cantomat.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-cantomat.Tpo -c -o src/cantomat/cantomat-cantomat.o `test -f 'src/cantomat/cantomat.c' || echo '$(srcdir)/'`src/cantomat/cantomat.c
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-cantomat.Tpo src/cantomat/$(DEPDIR)/cantomat-cantomat.Po
+#	$(AM_V_CC)source='src/cantomat/cantomat.c' object='src/cantomat/cantomat-cantomat.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-cantomat.o `test -f 'src/cantomat/cantomat.c' || echo '$(srcdir)/'`src/cantomat/cantomat.c
+
+src/cantomat/cantomat-cantomat.obj: src/cantomat/cantomat.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-cantomat.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-cantomat.Tpo -c -o src/cantomat/cantomat-cantomat.obj `if test -f 'src/cantomat/cantomat.c'; then $(CYGPATH_W) 'src/cantomat/cantomat.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/cantomat.c'; fi`
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-cantomat.Tpo src/cantomat/$(DEPDIR)/cantomat-cantomat.Po
+#	$(AM_V_CC)source='src/cantomat/cantomat.c' object='src/cantomat/cantomat-cantomat.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-cantomat.obj `if test -f 'src/cantomat/cantomat.c'; then $(CYGPATH_W) 'src/cantomat/cantomat.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/cantomat.c'; fi`
+
+src/cantomat/cantomat-messageDecoder.o: src/cantomat/messageDecoder.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messageDecoder.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Tpo -c -o src/cantomat/cantomat-messageDecoder.o `test -f 'src/cantomat/messageDecoder.c' || echo '$(srcdir)/'`src/cantomat/messageDecoder.c
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Tpo src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Po
+#	$(AM_V_CC)source='src/cantomat/messageDecoder.c' object='src/cantomat/cantomat-messageDecoder.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messageDecoder.o `test -f 'src/cantomat/messageDecoder.c' || echo '$(srcdir)/'`src/cantomat/messageDecoder.c
+
+src/cantomat/cantomat-messageDecoder.obj: src/cantomat/messageDecoder.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messageDecoder.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Tpo -c -o src/cantomat/cantomat-messageDecoder.obj `if test -f 'src/cantomat/messageDecoder.c'; then $(CYGPATH_W) 'src/cantomat/messageDecoder.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messageDecoder.c'; fi`
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Tpo src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Po
+#	$(AM_V_CC)source='src/cantomat/messageDecoder.c' object='src/cantomat/cantomat-messageDecoder.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messageDecoder.obj `if test -f 'src/cantomat/messageDecoder.c'; then $(CYGPATH_W) 'src/cantomat/messageDecoder.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messageDecoder.c'; fi`
+
+src/cantomat/cantomat-busAssignment.o: src/cantomat/busAssignment.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-busAssignment.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-busAssignment.Tpo -c -o src/cantomat/cantomat-busAssignment.o `test -f 'src/cantomat/busAssignment.c' || echo '$(srcdir)/'`src/cantomat/busAssignment.c
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-busAssignment.Tpo src/cantomat/$(DEPDIR)/cantomat-busAssignment.Po
+#	$(AM_V_CC)source='src/cantomat/busAssignment.c' object='src/cantomat/cantomat-busAssignment.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-busAssignment.o `test -f 'src/cantomat/busAssignment.c' || echo '$(srcdir)/'`src/cantomat/busAssignment.c
+
+src/cantomat/cantomat-busAssignment.obj: src/cantomat/busAssignment.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-busAssignment.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-busAssignment.Tpo -c -o src/cantomat/cantomat-busAssignment.obj `if test -f 'src/cantomat/busAssignment.c'; then $(CYGPATH_W) 'src/cantomat/busAssignment.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/busAssignment.c'; fi`
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-busAssignment.Tpo src/cantomat/$(DEPDIR)/cantomat-busAssignment.Po
+#	$(AM_V_CC)source='src/cantomat/busAssignment.c' object='src/cantomat/cantomat-busAssignment.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-busAssignment.obj `if test -f 'src/cantomat/busAssignment.c'; then $(CYGPATH_W) 'src/cantomat/busAssignment.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/busAssignment.c'; fi`
+
+src/cantomat/cantomat-matWrite.o: src/cantomat/matWrite.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-matWrite.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-matWrite.Tpo -c -o src/cantomat/cantomat-matWrite.o `test -f 'src/cantomat/matWrite.c' || echo '$(srcdir)/'`src/cantomat/matWrite.c
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-matWrite.Tpo src/cantomat/$(DEPDIR)/cantomat-matWrite.Po
+#	$(AM_V_CC)source='src/cantomat/matWrite.c' object='src/cantomat/cantomat-matWrite.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-matWrite.o `test -f 'src/cantomat/matWrite.c' || echo '$(srcdir)/'`src/cantomat/matWrite.c
+
+src/cantomat/cantomat-matWrite.obj: src/cantomat/matWrite.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-matWrite.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-matWrite.Tpo -c -o src/cantomat/cantomat-matWrite.obj `if test -f 'src/cantomat/matWrite.c'; then $(CYGPATH_W) 'src/cantomat/matWrite.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/matWrite.c'; fi`
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-matWrite.Tpo src/cantomat/$(DEPDIR)/cantomat-matWrite.Po
+#	$(AM_V_CC)source='src/cantomat/matWrite.c' object='src/cantomat/cantomat-matWrite.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-matWrite.obj `if test -f 'src/cantomat/matWrite.c'; then $(CYGPATH_W) 'src/cantomat/matWrite.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/matWrite.c'; fi`
+
+src/cantomat/cantomat-messageHash.o: src/cantomat/messageHash.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messageHash.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messageHash.Tpo -c -o src/cantomat/cantomat-messageHash.o `test -f 'src/cantomat/messageHash.c' || echo '$(srcdir)/'`src/cantomat/messageHash.c
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messageHash.Tpo src/cantomat/$(DEPDIR)/cantomat-messageHash.Po
+#	$(AM_V_CC)source='src/cantomat/messageHash.c' object='src/cantomat/cantomat-messageHash.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messageHash.o `test -f 'src/cantomat/messageHash.c' || echo '$(srcdir)/'`src/cantomat/messageHash.c
+
+src/cantomat/cantomat-messageHash.obj: src/cantomat/messageHash.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messageHash.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messageHash.Tpo -c -o src/cantomat/cantomat-messageHash.obj `if test -f 'src/cantomat/messageHash.c'; then $(CYGPATH_W) 'src/cantomat/messageHash.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messageHash.c'; fi`
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messageHash.Tpo src/cantomat/$(DEPDIR)/cantomat-messageHash.Po
+#	$(AM_V_CC)source='src/cantomat/messageHash.c' object='src/cantomat/cantomat-messageHash.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messageHash.obj `if test -f 'src/cantomat/messageHash.c'; then $(CYGPATH_W) 'src/cantomat/messageHash.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messageHash.c'; fi`
+
+src/cantomat/cantomat-measurement.o: src/cantomat/measurement.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-measurement.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-measurement.Tpo -c -o src/cantomat/cantomat-measurement.o `test -f 'src/cantomat/measurement.c' || echo '$(srcdir)/'`src/cantomat/measurement.c
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-measurement.Tpo src/cantomat/$(DEPDIR)/cantomat-measurement.Po
+#	$(AM_V_CC)source='src/cantomat/measurement.c' object='src/cantomat/cantomat-measurement.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-measurement.o `test -f 'src/cantomat/measurement.c' || echo '$(srcdir)/'`src/cantomat/measurement.c
+
+src/cantomat/cantomat-measurement.obj: src/cantomat/measurement.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-measurement.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-measurement.Tpo -c -o src/cantomat/cantomat-measurement.obj `if test -f 'src/cantomat/measurement.c'; then $(CYGPATH_W) 'src/cantomat/measurement.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/measurement.c'; fi`
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-measurement.Tpo src/cantomat/$(DEPDIR)/cantomat-measurement.Po
+#	$(AM_V_CC)source='src/cantomat/measurement.c' object='src/cantomat/cantomat-measurement.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-measurement.obj `if test -f 'src/cantomat/measurement.c'; then $(CYGPATH_W) 'src/cantomat/measurement.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/measurement.c'; fi`
+
+src/cantomat/cantomat-signalFormat.o: src/cantomat/signalFormat.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-signalFormat.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-signalFormat.Tpo -c -o src/cantomat/cantomat-signalFormat.o `test -f 'src/cantomat/signalFormat.c' || echo '$(srcdir)/'`src/cantomat/signalFormat.c
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-signalFormat.Tpo src/cantomat/$(DEPDIR)/cantomat-signalFormat.Po
+#	$(AM_V_CC)source='src/cantomat/signalFormat.c' object='src/cantomat/cantomat-signalFormat.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-signalFormat.o `test -f 'src/cantomat/signalFormat.c' || echo '$(srcdir)/'`src/cantomat/signalFormat.c
+
+src/cantomat/cantomat-signalFormat.obj: src/cantomat/signalFormat.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-signalFormat.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-signalFormat.Tpo -c -o src/cantomat/cantomat-signalFormat.obj `if test -f 'src/cantomat/signalFormat.c'; then $(CYGPATH_W) 'src/cantomat/signalFormat.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/signalFormat.c'; fi`
+	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-signalFormat.Tpo src/cantomat/$(DEPDIR)/cantomat-signalFormat.Po
+#	$(AM_V_CC)source='src/cantomat/signalFormat.c' object='src/cantomat/cantomat-signalFormat.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-signalFormat.obj `if test -f 'src/cantomat/signalFormat.c'; then $(CYGPATH_W) 'src/cantomat/signalFormat.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/signalFormat.c'; fi`
+
+src/hashtable/cantomat-hashtable.o: src/hashtable/hashtable.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/hashtable/cantomat-hashtable.o -MD -MP -MF src/hashtable/$(DEPDIR)/cantomat-hashtable.Tpo -c -o src/hashtable/cantomat-hashtable.o `test -f 'src/hashtable/hashtable.c' || echo '$(srcdir)/'`src/hashtable/hashtable.c
+	$(AM_V_at)$(am__mv) src/hashtable/$(DEPDIR)/cantomat-hashtable.Tpo src/hashtable/$(DEPDIR)/cantomat-hashtable.Po
+#	$(AM_V_CC)source='src/hashtable/hashtable.c' object='src/hashtable/cantomat-hashtable.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/hashtable/cantomat-hashtable.o `test -f 'src/hashtable/hashtable.c' || echo '$(srcdir)/'`src/hashtable/hashtable.c
+
+src/hashtable/cantomat-hashtable.obj: src/hashtable/hashtable.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/hashtable/cantomat-hashtable.obj -MD -MP -MF src/hashtable/$(DEPDIR)/cantomat-hashtable.Tpo -c -o src/hashtable/cantomat-hashtable.obj `if test -f 'src/hashtable/hashtable.c'; then $(CYGPATH_W) 'src/hashtable/hashtable.c'; else $(CYGPATH_W) '$(srcdir)/src/hashtable/hashtable.c'; fi`
+	$(AM_V_at)$(am__mv) src/hashtable/$(DEPDIR)/cantomat-hashtable.Tpo src/hashtable/$(DEPDIR)/cantomat-hashtable.Po
+#	$(AM_V_CC)source='src/hashtable/hashtable.c' object='src/hashtable/cantomat-hashtable.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/hashtable/cantomat-hashtable.obj `if test -f 'src/hashtable/hashtable.c'; then $(CYGPATH_W) 'src/hashtable/hashtable.c'; else $(CYGPATH_W) '$(srcdir)/src/hashtable/hashtable.c'; fi`
+
+src/hashtable/cantomat-hashtable_itr.o: src/hashtable/hashtable_itr.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/hashtable/cantomat-hashtable_itr.o -MD -MP -MF src/hashtable/$(DEPDIR)/cantomat-hashtable_itr.Tpo -c -o src/hashtable/cantomat-hashtable_itr.o `test -f 'src/hashtable/hashtable_itr.c' || echo '$(srcdir)/'`src/hashtable/hashtable_itr.c
+	$(AM_V_at)$(am__mv) src/hashtable/$(DEPDIR)/cantomat-hashtable_itr.Tpo src/hashtable/$(DEPDIR)/cantomat-hashtable_itr.Po
+#	$(AM_V_CC)source='src/hashtable/hashtable_itr.c' object='src/hashtable/cantomat-hashtable_itr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/hashtable/cantomat-hashtable_itr.o `test -f 'src/hashtable/hashtable_itr.c' || echo '$(srcdir)/'`src/hashtable/hashtable_itr.c
+
+src/hashtable/cantomat-hashtable_itr.obj: src/hashtable/hashtable_itr.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/hashtable/cantomat-hashtable_itr.obj -MD -MP -MF src/hashtable/$(DEPDIR)/cantomat-hashtable_itr.Tpo -c -o src/hashtable/cantomat-hashtable_itr.obj `if test -f 'src/hashtable/hashtable_itr.c'; then $(CYGPATH_W) 'src/hashtable/hashtable_itr.c'; else $(CYGPATH_W) '$(srcdir)/src/hashtable/hashtable_itr.c'; fi`
+	$(AM_V_at)$(am__mv) src/hashtable/$(DEPDIR)/cantomat-hashtable_itr.Tpo src/hashtable/$(DEPDIR)/cantomat-hashtable_itr.Po
+#	$(AM_V_CC)source='src/hashtable/hashtable_itr.c' object='src/hashtable/cantomat-hashtable_itr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/hashtable/cantomat-hashtable_itr.obj `if test -f 'src/hashtable/hashtable_itr.c'; then $(CYGPATH_W) 'src/hashtable/hashtable_itr.c'; else $(CYGPATH_W) '$(srcdir)/src/hashtable/hashtable_itr.c'; fi`
+
+src/dbccopy/dbccopy-dbccopy.o: src/dbccopy/dbccopy.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dbccopy_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/dbccopy/dbccopy-dbccopy.o -MD -MP -MF src/dbccopy/$(DEPDIR)/dbccopy-dbccopy.Tpo -c -o src/dbccopy/dbccopy-dbccopy.o `test -f 'src/dbccopy/dbccopy.c' || echo '$(srcdir)/'`src/dbccopy/dbccopy.c
+	$(AM_V_at)$(am__mv) src/dbccopy/$(DEPDIR)/dbccopy-dbccopy.Tpo src/dbccopy/$(DEPDIR)/dbccopy-dbccopy.Po
+#	$(AM_V_CC)source='src/dbccopy/dbccopy.c' object='src/dbccopy/dbccopy-dbccopy.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dbccopy_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/dbccopy/dbccopy-dbccopy.o `test -f 'src/dbccopy/dbccopy.c' || echo '$(srcdir)/'`src/dbccopy/dbccopy.c
+
+src/dbccopy/dbccopy-dbccopy.obj: src/dbccopy/dbccopy.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dbccopy_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/dbccopy/dbccopy-dbccopy.obj -MD -MP -MF src/dbccopy/$(DEPDIR)/dbccopy-dbccopy.Tpo -c -o src/dbccopy/dbccopy-dbccopy.obj `if test -f 'src/dbccopy/dbccopy.c'; then $(CYGPATH_W) 'src/dbccopy/dbccopy.c'; else $(CYGPATH_W) '$(srcdir)/src/dbccopy/dbccopy.c'; fi`
+	$(AM_V_at)$(am__mv) src/dbccopy/$(DEPDIR)/dbccopy-dbccopy.Tpo src/dbccopy/$(DEPDIR)/dbccopy-dbccopy.Po
+#	$(AM_V_CC)source='src/dbccopy/dbccopy.c' object='src/dbccopy/dbccopy-dbccopy.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dbccopy_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/dbccopy/dbccopy-dbccopy.obj `if test -f 'src/dbccopy/dbccopy.c'; then $(CYGPATH_W) 'src/dbccopy/dbccopy.c'; else $(CYGPATH_W) '$(srcdir)/src/dbccopy/dbccopy.c'; fi`
+
+src/dbcls/dbcls-dbcls.o: src/dbcls/dbcls.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dbcls_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/dbcls/dbcls-dbcls.o -MD -MP -MF src/dbcls/$(DEPDIR)/dbcls-dbcls.Tpo -c -o src/dbcls/dbcls-dbcls.o `test -f 'src/dbcls/dbcls.c' || echo '$(srcdir)/'`src/dbcls/dbcls.c
+	$(AM_V_at)$(am__mv) src/dbcls/$(DEPDIR)/dbcls-dbcls.Tpo src/dbcls/$(DEPDIR)/dbcls-dbcls.Po
+#	$(AM_V_CC)source='src/dbcls/dbcls.c' object='src/dbcls/dbcls-dbcls.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dbcls_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/dbcls/dbcls-dbcls.o `test -f 'src/dbcls/dbcls.c' || echo '$(srcdir)/'`src/dbcls/dbcls.c
+
+src/dbcls/dbcls-dbcls.obj: src/dbcls/dbcls.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dbcls_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/dbcls/dbcls-dbcls.obj -MD -MP -MF src/dbcls/$(DEPDIR)/dbcls-dbcls.Tpo -c -o src/dbcls/dbcls-dbcls.obj `if test -f 'src/dbcls/dbcls.c'; then $(CYGPATH_W) 'src/dbcls/dbcls.c'; else $(CYGPATH_W) '$(srcdir)/src/dbcls/dbcls.c'; fi`
+	$(AM_V_at)$(am__mv) src/dbcls/$(DEPDIR)/dbcls-dbcls.Tpo src/dbcls/$(DEPDIR)/dbcls-dbcls.Po
+#	$(AM_V_CC)source='src/dbcls/dbcls.c' object='src/dbcls/dbcls-dbcls.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dbcls_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/dbcls/dbcls-dbcls.obj `if test -f 'src/dbcls/dbcls.c'; then $(CYGPATH_W) 'src/dbcls/dbcls.c'; else $(CYGPATH_W) '$(srcdir)/src/dbcls/dbcls.c'; fi`
+
+src/matdump/matdump-matdump.o: src/matdump/matdump.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(matdump_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/matdump/matdump-matdump.o -MD -MP -MF src/matdump/$(DEPDIR)/matdump-matdump.Tpo -c -o src/matdump/matdump-matdump.o `test -f 'src/matdump/matdump.c' || echo '$(srcdir)/'`src/matdump/matdump.c
+	$(AM_V_at)$(am__mv) src/matdump/$(DEPDIR)/matdump-matdump.Tpo src/matdump/$(DEPDIR)/matdump-matdump.Po
+#	$(AM_V_CC)source='src/matdump/matdump.c' object='src/matdump/matdump-matdump.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(matdump_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/matdump/matdump-matdump.o `test -f 'src/matdump/matdump.c' || echo '$(srcdir)/'`src/matdump/matdump.c
+
+src/matdump/matdump-matdump.obj: src/matdump/matdump.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(matdump_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/matdump/matdump-matdump.obj -MD -MP -MF src/matdump/$(DEPDIR)/matdump-matdump.Tpo -c -o src/matdump/matdump-matdump.obj `if test -f 'src/matdump/matdump.c'; then $(CYGPATH_W) 'src/matdump/matdump.c'; else $(CYGPATH_W) '$(srcdir)/src/matdump/matdump.c'; fi`
+	$(AM_V_at)$(am__mv) src/matdump/$(DEPDIR)/matdump-matdump.Tpo src/matdump/$(DEPDIR)/matdump-matdump.Po
+#	$(AM_V_CC)source='src/matdump/matdump.c' object='src/matdump/matdump-matdump.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(matdump_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/matdump/matdump-matdump.obj `if test -f 'src/matdump/matdump.c'; then $(CYGPATH_W) 'src/matdump/matdump.c'; else $(CYGPATH_W) '$(srcdir)/src/matdump/matdump.c'; fi`
+
+src/mdftomat/mdftomat-mdftomat.o: src/mdftomat/mdftomat.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mdftomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/mdftomat/mdftomat-mdftomat.o -MD -MP -MF src/mdftomat/$(DEPDIR)/mdftomat-mdftomat.Tpo -c -o src/mdftomat/mdftomat-mdftomat.o `test -f 'src/mdftomat/mdftomat.c' || echo '$(srcdir)/'`src/mdftomat/mdftomat.c
+	$(AM_V_at)$(am__mv) src/mdftomat/$(DEPDIR)/mdftomat-mdftomat.Tpo src/mdftomat/$(DEPDIR)/mdftomat-mdftomat.Po
+#	$(AM_V_CC)source='src/mdftomat/mdftomat.c' object='src/mdftomat/mdftomat-mdftomat.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mdftomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/mdftomat/mdftomat-mdftomat.o `test -f 'src/mdftomat/mdftomat.c' || echo '$(srcdir)/'`src/mdftomat/mdftomat.c
+
+src/mdftomat/mdftomat-mdftomat.obj: src/mdftomat/mdftomat.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mdftomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/mdftomat/mdftomat-mdftomat.obj -MD -MP -MF src/mdftomat/$(DEPDIR)/mdftomat-mdftomat.Tpo -c -o src/mdftomat/mdftomat-mdftomat.obj `if test -f 'src/mdftomat/mdftomat.c'; then $(CYGPATH_W) 'src/mdftomat/mdftomat.c'; else $(CYGPATH_W) '$(srcdir)/src/mdftomat/mdftomat.c'; fi`
+	$(AM_V_at)$(am__mv) src/mdftomat/$(DEPDIR)/mdftomat-mdftomat.Tpo src/mdftomat/$(DEPDIR)/mdftomat-mdftomat.Po
+#	$(AM_V_CC)source='src/mdftomat/mdftomat.c' object='src/mdftomat/mdftomat-mdftomat.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mdftomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/mdftomat/mdftomat-mdftomat.obj `if test -f 'src/mdftomat/mdftomat.c'; then $(CYGPATH_W) 'src/mdftomat/mdftomat.c'; else $(CYGPATH_W) '$(srcdir)/src/mdftomat/mdftomat.c'; fi`
+
 .l.c:
 	$(AM_V_LEX)$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(LEXCOMPILE)
 
@@ -1108,6 +1356,7 @@ mostlyclean-libtool:
 clean-libtool:
 	-rm -rf .libs _libs
 	-rm -rf src/libcanasc/.libs src/libcanasc/_libs
+	-rm -rf src/libcanclg/.libs src/libcanclg/_libs
 	-rm -rf src/libcandbc/.libs src/libcandbc/_libs
 	-rm -rf src/libcanmdf/.libs src/libcanmdf/_libs
 	-rm -rf src/libcanvsb/.libs src/libcanvsb/_libs
@@ -1476,6 +1725,8 @@ distclean-generic:
 	-rm -f src/hashtable/$(am__dirstamp)
 	-rm -f src/libcanasc/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcanasc/$(am__dirstamp)
+	-rm -f src/libcanclg/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/libcanclg/$(am__dirstamp)
 	-rm -f src/libcandbc/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcandbc/$(am__dirstamp)
 	-rm -f src/libcanmdf/$(DEPDIR)/$(am__dirstamp)
@@ -1501,7 +1752,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -1550,7 +1801,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1601,6 +1852,8 @@ install-exec-hook:
 		$(LN_S) cantomat$(EXEEXT) asctomat$(EXEEXT)
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) cantomat$(EXEEXT) vsbtomat$(EXEEXT)
+	cd $(DESTDIR)$(bindir) && \
+		$(LN_S) cantomat$(EXEEXT) clgtomat$(EXEEXT)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

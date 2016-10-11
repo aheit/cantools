@@ -28,21 +28,24 @@ YACC=@YACC@
 #	
 # What to build and install
 #
-lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la
+lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
+	          libcanclg.la
 
 bin_PROGRAMS	= dbccopy dbcls cantomat mdftomat matdump
 
 #
 # dbcls
 #
-dbcls_SOURCES = src/dbcls/dbcls.c
-dbcls_LDADD   = libcandbc.la -lm
+dbcls_SOURCES  = src/dbcls/dbcls.c
+dbcls_CPPFLAGS = -I$(top_srcdir)/src/libcandbc
+dbcls_LDADD    = libcandbc.la -lm
 
 #
 # dbccopy
 #
-dbccopy_SOURCES = src/dbccopy/dbccopy.c
-dbccopy_LDADD	= libcandbc.la -lm
+dbccopy_SOURCES  = src/dbccopy/dbccopy.c
+dbccopy_CPPFLAGS = -I$(top_srcdir)/src/libcandbc
+dbccopy_LDADD	 = libcandbc.la -lm
 
 #
 # cantomat
@@ -64,33 +67,35 @@ cantomat_SOURCES = src/cantomat/cantomat.c \
 		   src/hashtable/hashtable.h \
 		   src/hashtable/hashtable_itr.h \
 		   src/hashtable/hashtable_private.h
-
-cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la
-cantomat_LDADD +=  $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@ -lm
+cantomat_CPPFLAGS = @MATIO_CFLAGS@ \
+	   -I$(top_srcdir)/src/libcanasc \
+           -I$(top_srcdir)/src/libcanclg \
+	   -I$(top_srcdir)/src/libcandbc \
+	   -I$(top_srcdir)/src/libcanvsb \
+           -I$(top_srcdir)/src/cantomat \
+	   -I$(top_srcdir)/src/hashtable
+cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la libcanclg.la
+cantomat_LDADD += @MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@ -lm
 
 #
 # mdftomat
 #
 mdftomat_SOURCES = src/mdftomat/mdftomat.c \
                    src/mdftomat/mdftomat.h
-
-mdftomat_LDADD	   = libcanmdf.la $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
+mdftomat_CPPFLAGS  = @MATIO_CFLAGS@ \
+	   -I$(top_srcdir)/src/libcanmdf
+mdftomat_LDADD	   = libcanmdf.la @MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@
 
 #
 # matdump
 #
 matdump_SOURCES = src/matdump/matdump.c \
-                   src/matdump/matdump.h
-
-matdump_LDADD	   = $(MATIO_LIB) $(Z_LIB) $(HDF5_LIB) @LIBOBJS@
+                  src/matdump/matdump.h
+matdump_CPPFLAGS  = @MATIO_CFLAGS@
+matdump_LDADD	= @MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@
 
 # additional include pathes necessary
-AM_CPPFLAGS = -I$(top_srcdir)/src/libcandbc \
-	   -I$(top_srcdir)/src/libcanmdf \
-	   -I$(top_srcdir)/src/libcanvsb \
-	   -I$(top_srcdir)/src/libcanasc \
-	   -I$(top_srcdir)/hashtable
-
+AM_CPPFLAGS = 
 DEFS = $(YYDEBUG) @DEFS@
 
 # YACC: generate token defines for LEX
@@ -112,6 +117,7 @@ include_HEADERS= src/libcandbc/dbcModel.h \
 		 src/libcanmdf/mdffilter.h \
 		 src/libcanasc/ascReader.h \
 		 src/libcanvsb/vsbReader.h \
+		 src/libcanclg/clgReader.h \
 		 src/cantomat/messageDecoder.h \
 		 src/libcanmdf/mdfcn.h \
 		 src/libcanmdf/mdfswap.h \
@@ -126,11 +132,11 @@ libcandbc_la_SOURCES= \
 
 libcandbc_la_LIBADD= -lm
 
-libcanasc_la_SOURCES= \
-	src/libcanasc/ascReader.c
+libcanasc_la_SOURCES= src/libcanasc/ascReader.c
 
-libcanvsb_la_SOURCES= \
-	src/libcanvsb/vsbReader.c
+libcanvsb_la_SOURCES= src/libcanvsb/vsbReader.c
+
+libcanclg_la_SOURCES= src/libcanclg/clgReader.c
 
 libcanmdf_la_SOURCES= \
 	src/libcanmdf/mdfcg.c \
@@ -140,20 +146,29 @@ libcanmdf_la_SOURCES= \
 	src/libcanmdf/mdffilter.c \
 	src/libcanmdf/mdfmodel.c \
 	src/libcanmdf/mdfsg.c
+libcanmdf_CPPFLAGS = @MATIO_CFLAGS@
 
 libcandbc_la_CPPFLAGS= -I$(top_builddir)/src/libcandbc \
                        -I$(top_srcdir)/src/libcandbc
 libcandbc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc \
-		       -I$(top_srcdir)/src/libcandbc
+		       -I$(top_srcdir)/src/libcandbc \
+		       -I$(top_srcdir)/src/cantomat \
+                       -I$(top_srcdir)/src/hashtable
 libcanasc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanvsb_la_CPPFLAGS= -I$(top_builddir)/src/libcanvsb \
-		       -I$(top_srcdir)/src/libcandbc
+		       -I$(top_srcdir)/src/libcandbc \
+                       -I$(top_srcdir)/src/hashtable
 libcanvsb_la_LDFLAGS= -no-undefined -version-info @version_info@
 
-libcanmdf_la_CPPFLAGS= -I$(top_builddir)/src/libcanmdf
+libcanclg_la_CPPFLAGS= -I$(top_builddir)/src/libcanclg \
+		       -I$(top_srcdir)/src/libcandbc \
+                       -I$(top_srcdir)/src/hashtable
+libcanclg_la_LDFLAGS= -no-undefined -version-info @version_info@
+
+libcanmdf_la_CPPFLAGS= -I$(top_builddir)/src/libcanmdf @MATIO_CFLAGS@
 libcanmdf_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 MAINTAINERCLEANFILES = \
@@ -168,3 +183,5 @@ install-exec-hook:
 		$(LN_S) cantomat$(EXEEXT) asctomat$(EXEEXT)
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) cantomat$(EXEEXT) vsbtomat$(EXEEXT)
+	cd $(DESTDIR)$(bindir) && \
+		$(LN_S) cantomat$(EXEEXT) clgtomat$(EXEEXT)

@@ -19,10 +19,10 @@
 #endif
 
 #include <stdio.h>
-#include <dbcModel.h>
+#include "dbcModel.h"
 #include "messageHash.h"
-#include "../hashtable/hashtable.h"
-#include "../hashtable/hashtable_itr.h"
+#include "hashtable.h"
+#include "hashtable_itr.h"
 
 /*
  * J1939 extended message decomposition

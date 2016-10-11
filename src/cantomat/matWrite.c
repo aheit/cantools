@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <matio.h>
 #include "measurement.h"
-#include "../hashtable/hashtable_itr.h"
+#include "hashtable_itr.h"
 
 /*
  * matWrite - write signals from measurement structure to MAT file
