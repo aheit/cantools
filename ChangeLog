@@ -1,3 +1,14 @@
+2017-01-01  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+	* all: released version 0.20
+	* libcanblf: decoder for BLF files. This is a first implementation
+	  which only handles CAN messages (but not CAN-FD or other object
+	  types)
+	* all: bug fix: an include file was incorrectly named, such that
+          the code didn't compiled on case-sensitive operating systems. I
+	  converted all filenames to lower-case to avoid this issue in the
+          future. (Thanks, Johan)
+
 2016-10-11  Andreas Heitmann  <andreas.heitmann@gmail.com>
         * all: released version 0.19
 	* Makefile.am: improved handling of include paths

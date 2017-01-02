@@ -18,7 +18,7 @@
 #include <string.h>
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
-#include <dbcModel.h>
+#include "dbcmodel.h"
 
 void trace(char *str)
 {

@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "vsbReader.h"
+#include "vsbreader.h"
 
 /*
  * Parser for VSB files.

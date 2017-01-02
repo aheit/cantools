@@ -8,8 +8,8 @@
 #include <stdio.h>
 
 #include "hashtable.h"
-#include "busAssignment.h"
-#include "signalFormat.h"
+#include "busassignment.h"
+#include "signalformat.h"
 
 /* CAN message type */
 typedef struct {

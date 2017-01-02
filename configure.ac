@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.19, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.20, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -176,3 +176,4 @@ AC_CHECK_FUNCS([memset munmap strchr strdup strndup strpbrk strspn strstr strtol
 AC_CONFIG_FILES([Makefile tests/Makefile])
 AC_OUTPUT
 
+AM_WITH_DMALLOC

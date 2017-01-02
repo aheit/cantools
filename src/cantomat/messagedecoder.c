@@ -18,8 +18,8 @@
 #include "config.h"
 #endif
 
-#include "dbcModel.h"
-#include "messageDecoder.h"
+#include "dbcmodel.h"
+#include "messagedecoder.h"
 
 void canMessage_decode(message_t      *dbcMessage,
 		       canMessage_t   *canMessage,

@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "signalFormat.h"
+#include "signalformat.h"
 
 /* strapp - copies source string without \0 and returns pointer to
    next destination character */

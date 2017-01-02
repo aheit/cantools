@@ -19,8 +19,8 @@
 
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
-#include <dbcModel.h>
-#include <dbcReader.h>
+#include "dbcmodel.h"
+#include "dbcreader.h"
 
 dbc_t *dbc_read_file(char *filename)
 {

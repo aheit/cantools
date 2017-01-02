@@ -1,20 +1,21 @@
 General Information
 ===================
 
-cantools is a set of command line tools for dealing with ASC, MDF, and
-DBC files from Vector-Informatik. The tools can be used to analyze and
-convert the data to other formats:
+cantools is a set of libraries and command line tools for handling
+ASC, BLF, CLG, VSB, MDF, and DBC files from Vector-Informatik and
+others. The tools can be used to analyze and convert the data to other
+formats:
 
 * dbcls lists the contents of a DBC file.
-* cantomat converts a .ASC, a .VSB, or a .CLG log file to a MATLAB
-  .MAT file 
-* mdftomat converts a .MDF log file to a MATLAB .MAT file (up to MDF
+* cantomat converts log files in ASC, BLF, CLG, VSB format to a MAT
+* file (MATLAB format)
+* mdftomat converts log files in MDF format to a MAT file (up to MDF
   version 3.x) 
 
 Some tools are available for testing of converters:
 
-* matdump displays the content of a mat file as ASCII text
-* dbccopy copies a dbcfile
+* matdump displays the content of a MAT file as ASCII text
+* dbccopy copies a DBC file
 
 The tools 'asctomat' and 'mdftomat' require the package matio, which
 needs to be compiled and installed first (see instructions below).
@@ -22,7 +23,8 @@ needs to be compiled and installed first (see instructions below).
 Shared libraries for parsing and accessing these files are also
 provided:
 
-* libcandbc, libcanasc, libcanmdf: parsing of DBC, ASC, MDF files
+* libcandbc, libcanasc, libcanblf, libcanclg, libcanvsb, libcanmdf for 
+  parsing of DBC, ASC, BLF, CLG, VSB, MDF files 
 
 
 Installation of hdf5

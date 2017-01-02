@@ -1,7 +1,7 @@
-#ifndef INCLUDE_ASCREAD_H
-#define INCLUDE_ASCREAD_H
+#ifndef INCLUDE_DBCREADER_H
+#define INCLUDE_DBCREADER_H
 
-/*  ascReader.h --  declarations for ascReader
+/*  dbcreader.h --  declarations for libcandbc
     Copyright (C) 2007-2016 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
@@ -17,21 +17,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-
-#include <stdio.h>
-#include "dbcTypes.h"
-#include <time.h>
-#include "measurement.h"
+#include "dbcmodel.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* ascRead function */
-void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
+dbc_t *dbc_read_file(char *filename);
 
 #ifdef __cplusplus
 }
 #endif
+
 
 #endif

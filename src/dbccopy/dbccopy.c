@@ -3,8 +3,8 @@
 #endif
 
 #include <stdio.h>
-#include <dbcReader.h>
-#include <dbcWriter.h>
+#include "dbcreader.h"
+#include "dbcwriter.h"
 
 int
 main(int argc, char **argv)

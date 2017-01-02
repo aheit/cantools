@@ -1,5 +1,5 @@
-/*  clgReader.c --  parse CLG files
-    Copyright (C) 2014 Andreas Heitmann
+/*  clgreader.c --  parse CLG files
+    Copyright (C) 2014-2016 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "clgReader.h"
+#include "clgreader.h"
 
 /*
  * Parser for CLG files.

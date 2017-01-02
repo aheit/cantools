@@ -21,8 +21,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
-#include "../libcandbc/dbcTypes.h"
-#include "../cantomat/measurement.h"
+#include "dbctypes.h"
+#include "measurement.h"
 
 /*
  * vs3bin data structures, see

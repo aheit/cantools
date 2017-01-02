@@ -22,15 +22,15 @@
 #include <string.h>
 #include <assert.h>
 #include "measurement.h"
-#include "busAssignment.h"
-#include "messageHash.h"
-#include "signalFormat.h"
+#include "busassignment.h"
+#include "messagehash.h"
+#include "signalformat.h"
 #include "hashtable.h"
 #include "hashtable_itr.h"
-#include "ascReader.h"
-#include "messageDecoder.h"
-#include "vsbReader.h"
-#include "dbcModel.h"
+#include "ascreader.h"
+#include "messagedecoder.h"
+#include "vsbreader.h"
+#include "dbcmodel.h"
 
 /* callback structure for timeSeries signal handler */
 typedef struct {

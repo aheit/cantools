@@ -29,7 +29,7 @@ YACC=@YACC@
 # What to build and install
 #
 lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
-	          libcanclg.la
+	          libcanclg.la libcanblf.la
 
 bin_PROGRAMS	= dbccopy dbcls cantomat mdftomat matdump
 
@@ -51,30 +51,32 @@ dbccopy_LDADD	 = libcandbc.la -lm
 # cantomat
 #
 cantomat_SOURCES = src/cantomat/cantomat.c \
-		   src/cantomat/messageDecoder.c \
-		   src/cantomat/busAssignment.c \
-		   src/cantomat/matWrite.c \
-		   src/cantomat/messageHash.c \
+		   src/cantomat/messagedecoder.c \
+		   src/cantomat/busassignment.c \
+		   src/cantomat/matwrite.c \
+		   src/cantomat/messagehash.c \
 		   src/cantomat/measurement.c \
-		   src/cantomat/signalFormat.c \
+		   src/cantomat/signalformat.c \
 		   src/cantomat/measurement.h \
-		   src/cantomat/signalFormat.h \
-		   src/cantomat/busAssignment.h \
-		   src/cantomat/matWrite.h \
-		   src/cantomat/messageHash.h \
+		   src/cantomat/signalformat.h \
+		   src/cantomat/busassignment.h \
+		   src/cantomat/matwrite.h \
+		   src/cantomat/messagehash.h \
 		   src/hashtable/hashtable.c \
 		   src/hashtable/hashtable_itr.c \
 		   src/hashtable/hashtable.h \
 		   src/hashtable/hashtable_itr.h \
 		   src/hashtable/hashtable_private.h
 cantomat_CPPFLAGS = @MATIO_CFLAGS@ \
-	   -I$(top_srcdir)/src/libcanasc \
+		   -I$(top_srcdir)/src/libcanasc \
+	   	   -I$(top_srcdir)/src/libcanblf \
            -I$(top_srcdir)/src/libcanclg \
-	   -I$(top_srcdir)/src/libcandbc \
-	   -I$(top_srcdir)/src/libcanvsb \
+		   -I$(top_srcdir)/src/libcandbc \
+		   -I$(top_srcdir)/src/libcanvsb \
            -I$(top_srcdir)/src/cantomat \
-	   -I$(top_srcdir)/src/hashtable
-cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la libcanclg.la
+	  	   -I$(top_srcdir)/src/hashtable
+cantomat_LDADD = libcandbc.la libcanasc.la libcanblf.la \
+	         libcanvsb.la libcanclg.la
 cantomat_LDADD += @MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@ -lm
 
 #
@@ -107,32 +109,41 @@ YYDEBUG = -DYYDEBUG=1
 #
 # library headers, source, etc.
 #
-include_HEADERS= src/libcandbc/dbcModel.h \
-		 src/libcandbc/dbcTypes.h \
-		 src/libcandbc/dbcReader.h \
-		 src/libcandbc/dbcWriter.h \
+include_HEADERS= src/libcandbc/dbcmodel.h \
+		 src/libcandbc/dbctypes.h \
+		 src/libcandbc/dbcreader.h \
+		 src/libcandbc/dbcwriter.h \
 		 src/libcanmdf/mdfcg.h \
 		 src/libcanmdf/mdfdg.h \
 		 src/libcanmdf/mdffile.h \
 		 src/libcanmdf/mdffilter.h \
-		 src/libcanasc/ascReader.h \
-		 src/libcanvsb/vsbReader.h \
-		 src/libcanclg/clgReader.h \
-		 src/cantomat/messageDecoder.h \
+		 src/libcanasc/ascreader.h \
+		 src/libcanblf/blfreader.h \
+		 src/libcanblf/blfapi.h \
+		 src/libcanblf/blfstream.h \
+		 src/libcanblf/blfparser.h \
+		 src/libcanvsb/vsbreader.h \
+		 src/libcanclg/clgreader.h \
+		 src/cantomat/messagedecoder.h \
 		 src/libcanmdf/mdfcn.h \
 		 src/libcanmdf/mdfswap.h \
 		 src/libcanmdf/mdftypes.h
 
 libcandbc_la_SOURCES= \
-	src/libcandbc/dbcModel.c \
-	src/libcandbc/dbcReader.c \
-	src/libcandbc/dbcWriter.c \
+	src/libcandbc/dbcmodel.c \
+	src/libcandbc/dbcreader.c \
+	src/libcandbc/dbcwriter.c \
 	src/libcandbc/parser.y \
 	src/libcandbc/lexer.l
 
 libcandbc_la_LIBADD= -lm
 
 libcanasc_la_SOURCES= src/libcanasc/ascReader.c
+
+libcanblf_la_SOURCES= src/libcanblf/blfreader.c \
+		              src/libcanblf/blfparser.c \
+				      src/libcanblf/blfstream.c \
+		     		  src/libcanblf/blfapi.c
 
 libcanvsb_la_SOURCES= src/libcanvsb/vsbReader.c
 
@@ -153,18 +164,27 @@ libcandbc_la_CPPFLAGS= -I$(top_builddir)/src/libcandbc \
 libcandbc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc \
-		       -I$(top_srcdir)/src/libcandbc \
-		       -I$(top_srcdir)/src/cantomat \
+		      	       -I$(top_srcdir)/src/libcandbc \
+		    		   -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable
 libcanasc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
+libcanblf_la_CPPFLAGS= -I$(top_builddir)/src/libcanblf \
+				       -I$(top_srcdir)/src/libcandbc \
+                       -I$(top_srcdir)/src/cantomat \
+                       -I$(top_srcdir)/src/hashtable \
+                       -Wunused -pedantic
+libcanblf_la_LDFLAGS= -no-undefined -version-info @version_info@
+
 libcanvsb_la_CPPFLAGS= -I$(top_builddir)/src/libcanvsb \
-		       -I$(top_srcdir)/src/libcandbc \
+					   -I$(top_srcdir)/src/libcandbc \
+				       -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable
 libcanvsb_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanclg_la_CPPFLAGS= -I$(top_builddir)/src/libcanclg \
-		       -I$(top_srcdir)/src/libcandbc \
+				       -I$(top_srcdir)/src/libcandbc \
+	       		       -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable
 libcanclg_la_LDFLAGS= -no-undefined -version-info @version_info@
 
@@ -181,6 +201,8 @@ src/libcandbc/parser.h src/libcandbc/parser.c: src/libcandbc/parser.y
 install-exec-hook:
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) cantomat$(EXEEXT) asctomat$(EXEEXT)
+	cd $(DESTDIR)$(bindir) && \
+		$(LN_S) cantomat$(EXEEXT) blftomat$(EXEEXT)
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) cantomat$(EXEEXT) vsbtomat$(EXEEXT)
 	cd $(DESTDIR)$(bindir) && \

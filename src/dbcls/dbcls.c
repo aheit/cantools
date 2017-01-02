@@ -34,8 +34,8 @@
 #include <libgen.h>
 #include <getopt.h>
 
-#include <dbcModel.h>
-#include <dbcReader.h>
+#include "dbcmodel.h"
+#include "dbcreader.h"
 
 static int verbose_flag;
 static int networks_flag;
@@ -114,9 +114,7 @@ static void show_string_list(string_list_t *string_list)
 static void show_attribute_list(attribute_list_t *al)
 {
   if(al != NULL) {
-    for(al = al;
-        al != NULL;
-        al = al->next) {
+    for(; al != NULL; al = al->next) {
       if(al->attribute != NULL) {
         show_attribute(al->attribute);
       }
@@ -126,7 +124,7 @@ static void show_attribute_list(attribute_list_t *al)
 
 static void show_val_map(val_map_t *vm)
 {
-  for(;vm!=NULL;vm=vm->next) {
+  for(; vm!=NULL; vm=vm->next) {
     printf("%lu=\"%s\"", vm->val_map_entry->index, vm->val_map_entry->value);
     if(vm->next != NULL) putchar(',');
   }
@@ -134,7 +132,7 @@ static void show_val_map(val_map_t *vm)
 
 static void show_valtable_list(valtable_list_t *valtable_list)
 {
-  for(;valtable_list!=NULL;valtable_list=valtable_list->next) {
+  for(; valtable_list!=NULL; valtable_list=valtable_list->next) {
     printf("%s;\"%s\";",
       valtable_list->valtable->name,
       valtable_list->valtable->comment?valtable_list->valtable->comment:"");
@@ -239,19 +237,6 @@ static void show_string(string_t string)
   if(string) {
     printf("\"%s\"", string);
   }
-}
-
-static void show_message_old(message_t *message)
-{
-  printf("$%lX;%s;%d;%s",
-	 message->id,
-	 message->name,
-	 message->len,
-	 message->sender);
-  putchar(';');
-  show_string(message->comment);
-  putchar(';');
-  show_string_list(message->transmitter_list);
 }
 
 static void show_message(message_list_t *ml)

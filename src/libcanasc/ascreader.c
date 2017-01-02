@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "ascReader.h"
+#include "ascreader.h"
 
 typedef enum {
   unset = 0,
@@ -163,11 +163,11 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
         if(len == 0) break;
 
         switch(id_str[len-1]) {
-	case 'h':
+        case 'h':
           /* symbolic mode with hex hint */
           {
             char *cp;
-	    char *id_lasts;
+            char *id_lasts;
 
             strtok_r(id_str,"_", &id_lasts);
             cp = strtok_r(NULL, "h", &id_lasts);
@@ -179,13 +179,13 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
         case 'x':
           /* J1939 extended message IDs */
           message.id = (uint32)strtol(id_str,NULL,numbase);
-	  /* remove node's source address */
+          /* remove node's source address */
           message.id &= ~0xFF;
           break;
-	default:
+        default:
           /* assume numeric mode */
           message.id = (uint32)strtol(id_str,NULL,numbase);
-	  break;
+          break;
         }
       }
 

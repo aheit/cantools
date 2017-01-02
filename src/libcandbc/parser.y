@@ -1,5 +1,5 @@
 /*  parser.c --  parser for DBC files
-    Copyright (C) 2007-2009 Andreas Heitmann
+    Copyright (C) 2007-2016 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <ctype.h>
-#include <dbcModel.h>
 #include <math.h>
+#include "dbcmodel.h"
 
 /* Tell Bison how much stack space is needed. */
 #define YYMAXDEPTH 20000

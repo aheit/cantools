@@ -1,7 +1,7 @@
 #ifndef INCLUDE_MESSAGEDECODER_H
 #define INCLUDE_MESSAGEDECODER_H
 
-#include "dbcModel.h"
+#include "dbcmodel.h"
 #include "measurement.h"
 
 #ifdef __cplusplus

@@ -19,8 +19,8 @@
 #endif
 
 #include <stdio.h>
-#include "dbcModel.h"
-#include "messageHash.h"
+#include "dbcmodel.h"
+#include "messagehash.h"
 #include "hashtable.h"
 #include "hashtable_itr.h"
 

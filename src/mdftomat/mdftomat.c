@@ -1,5 +1,5 @@
 /*  mdftomat -- convert MDF files to MAT files
-    Copyright (C) 2012, 2013 Andreas Heitmann
+    Copyright (C) 2012-2016 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -160,7 +160,7 @@ static void help(const char *program_name)
 {
   fprintf(stderr,
           "Usage: %s [OPTIONS] <mdffile> <matfile>\n"
-          "Convert MDF file to MAT file.\n"
+          "mdftomat " VERSION ": Convert MDF file to MAT file.\n"
           "\n"
           "Options:\n"
           "  -f, --filter <filterfile>  filter signals\n"

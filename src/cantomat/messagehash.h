@@ -6,7 +6,7 @@
 #endif
 
 #include <stdio.h>
-#include "dbcModel.h"
+#include "dbcmodel.h"
 #include "hashtable.h"
 
 typedef uint32 messageHashKey_t;

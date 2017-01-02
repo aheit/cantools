@@ -19,8 +19,8 @@
 
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
-#include <dbcModel.h>
-#include <dbcWriter.h>
+#include "dbcmodel.h"
+#include "dbcwriter.h"
 
 #define PLIST_ITER(iter) \
   for(;iter != NULL; iter = iter->next)

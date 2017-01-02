@@ -1,8 +1,8 @@
-#ifndef INCLUDE_CLGREAD_H
-#define INCLUDE_CLGREAD_H
+#ifndef INCLUDE_CLGREADER_H
+#define INCLUDE_CLGREADER_H
 
-/*  clgReader.h --  declarations for clgReader
-    Copyright (C) 2007-2011 Andreas Heitmann
+/*  clgreader.h --  declarations for clgreader
+    Copyright (C) 2014-2016 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,12 +17,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
-#include <dbcTypes.h>
-#include "../cantomat/measurement.h"
+#include "dbctypes.h"
+#include "measurement.h"
 
 typedef struct {
   uint8_t  log_time_array[4];   /* time */

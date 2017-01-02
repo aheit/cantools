@@ -103,8 +103,8 @@ subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/config.h.in src/libcandbc/parser.h \
-	src/libcandbc/parser.c src/libcandbc/lexer.c strndup.c \
-	realloc.c strtok_r.c strnlen.c malloc.c strtod.c depcomp \
+	src/libcandbc/parser.c src/libcandbc/lexer.c strnlen.c \
+	strndup.c realloc.c strtok_r.c strtod.c malloc.c depcomp \
 	ylwrap $(include_HEADERS) AUTHORS COPYING ChangeLog README \
 	TODO compile config.guess config.sub install-sh missing \
 	ltmain.sh
@@ -162,6 +162,15 @@ am__v_lt_1 =
 libcanasc_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcanasc_la_LDFLAGS) $(LDFLAGS) -o $@
+libcanblf_la_LIBADD =
+am_libcanblf_la_OBJECTS = src/libcanblf/libcanblf_la-blfreader.lo \
+	src/libcanblf/libcanblf_la-blfparser.lo \
+	src/libcanblf/libcanblf_la-blfstream.lo \
+	src/libcanblf/libcanblf_la-blfapi.lo
+libcanblf_la_OBJECTS = $(am_libcanblf_la_OBJECTS)
+libcanblf_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libcanblf_la_LDFLAGS) $(LDFLAGS) -o $@
 libcanclg_la_LIBADD =
 am_libcanclg_la_OBJECTS = src/libcanclg/libcanclg_la-clgReader.lo
 libcanclg_la_OBJECTS = $(am_libcanclg_la_OBJECTS)
@@ -169,9 +178,9 @@ libcanclg_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcanclg_la_LDFLAGS) $(LDFLAGS) -o $@
 libcandbc_la_DEPENDENCIES =
-am_libcandbc_la_OBJECTS = src/libcandbc/libcandbc_la-dbcModel.lo \
-	src/libcandbc/libcandbc_la-dbcReader.lo \
-	src/libcandbc/libcandbc_la-dbcWriter.lo \
+am_libcandbc_la_OBJECTS = src/libcandbc/libcandbc_la-dbcmodel.lo \
+	src/libcandbc/libcandbc_la-dbcreader.lo \
+	src/libcandbc/libcandbc_la-dbcwriter.lo \
 	src/libcandbc/libcandbc_la-parser.lo \
 	src/libcandbc/libcandbc_la-lexer.lo
 libcandbc_la_OBJECTS = $(am_libcandbc_la_OBJECTS)
@@ -198,18 +207,18 @@ libcanvsb_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(libcanvsb_la_LDFLAGS) $(LDFLAGS) -o $@
 PROGRAMS = $(bin_PROGRAMS)
 am_cantomat_OBJECTS = src/cantomat/cantomat-cantomat.$(OBJEXT) \
-	src/cantomat/cantomat-messageDecoder.$(OBJEXT) \
-	src/cantomat/cantomat-busAssignment.$(OBJEXT) \
-	src/cantomat/cantomat-matWrite.$(OBJEXT) \
-	src/cantomat/cantomat-messageHash.$(OBJEXT) \
+	src/cantomat/cantomat-messagedecoder.$(OBJEXT) \
+	src/cantomat/cantomat-busassignment.$(OBJEXT) \
+	src/cantomat/cantomat-matwrite.$(OBJEXT) \
+	src/cantomat/cantomat-messagehash.$(OBJEXT) \
 	src/cantomat/cantomat-measurement.$(OBJEXT) \
-	src/cantomat/cantomat-signalFormat.$(OBJEXT) \
+	src/cantomat/cantomat-signalformat.$(OBJEXT) \
 	src/hashtable/cantomat-hashtable.$(OBJEXT) \
 	src/hashtable/cantomat-hashtable_itr.$(OBJEXT)
 cantomat_OBJECTS = $(am_cantomat_OBJECTS)
 am__DEPENDENCIES_1 =
-cantomat_DEPENDENCIES = libcandbc.la libcanasc.la libcanvsb.la \
-	libcanclg.la $(am__DEPENDENCIES_1) @LIBOBJS@
+cantomat_DEPENDENCIES = libcandbc.la libcanasc.la libcanblf.la \
+	libcanvsb.la libcanclg.la $(am__DEPENDENCIES_1) @LIBOBJS@
 am_dbccopy_OBJECTS = src/dbccopy/dbccopy-dbccopy.$(OBJEXT)
 dbccopy_OBJECTS = $(am_dbccopy_OBJECTS)
 dbccopy_DEPENDENCIES = libcandbc.la
@@ -273,14 +282,16 @@ AM_V_YACC = $(am__v_YACC_@AM_V@)
 am__v_YACC_ = $(am__v_YACC_@AM_DEFAULT_V@)
 am__v_YACC_0 = @echo "  YACC    " $@;
 am__v_YACC_1 = 
-SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
-	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
-	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
-	$(dbcls_SOURCES) $(matdump_SOURCES) $(mdftomat_SOURCES)
-DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcanclg_la_SOURCES) \
-	$(libcandbc_la_SOURCES) $(libcanmdf_la_SOURCES) \
-	$(libcanvsb_la_SOURCES) $(cantomat_SOURCES) $(dbccopy_SOURCES) \
-	$(dbcls_SOURCES) $(matdump_SOURCES) $(mdftomat_SOURCES)
+SOURCES = $(libcanasc_la_SOURCES) $(libcanblf_la_SOURCES) \
+	$(libcanclg_la_SOURCES) $(libcandbc_la_SOURCES) \
+	$(libcanmdf_la_SOURCES) $(libcanvsb_la_SOURCES) \
+	$(cantomat_SOURCES) $(dbccopy_SOURCES) $(dbcls_SOURCES) \
+	$(matdump_SOURCES) $(mdftomat_SOURCES)
+DIST_SOURCES = $(libcanasc_la_SOURCES) $(libcanblf_la_SOURCES) \
+	$(libcanclg_la_SOURCES) $(libcandbc_la_SOURCES) \
+	$(libcanmdf_la_SOURCES) $(libcanvsb_la_SOURCES) \
+	$(cantomat_SOURCES) $(dbccopy_SOURCES) $(dbcls_SOURCES) \
+	$(matdump_SOURCES) $(mdftomat_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -518,7 +529,7 @@ ACLOCAL_AMFLAGS = -I m4
 # What to build and install
 #
 lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
-	          libcanclg.la
+	          libcanclg.la libcanblf.la
 
 
 #
@@ -539,17 +550,17 @@ dbccopy_LDADD = libcandbc.la -lm
 # cantomat
 #
 cantomat_SOURCES = src/cantomat/cantomat.c \
-		   src/cantomat/messageDecoder.c \
-		   src/cantomat/busAssignment.c \
-		   src/cantomat/matWrite.c \
-		   src/cantomat/messageHash.c \
+		   src/cantomat/messagedecoder.c \
+		   src/cantomat/busassignment.c \
+		   src/cantomat/matwrite.c \
+		   src/cantomat/messagehash.c \
 		   src/cantomat/measurement.c \
-		   src/cantomat/signalFormat.c \
+		   src/cantomat/signalformat.c \
 		   src/cantomat/measurement.h \
-		   src/cantomat/signalFormat.h \
-		   src/cantomat/busAssignment.h \
-		   src/cantomat/matWrite.h \
-		   src/cantomat/messageHash.h \
+		   src/cantomat/signalformat.h \
+		   src/cantomat/busassignment.h \
+		   src/cantomat/matwrite.h \
+		   src/cantomat/messagehash.h \
 		   src/hashtable/hashtable.c \
 		   src/hashtable/hashtable_itr.c \
 		   src/hashtable/hashtable.h \
@@ -557,15 +568,17 @@ cantomat_SOURCES = src/cantomat/cantomat.c \
 		   src/hashtable/hashtable_private.h
 
 cantomat_CPPFLAGS = @MATIO_CFLAGS@ \
-	   -I$(top_srcdir)/src/libcanasc \
+		   -I$(top_srcdir)/src/libcanasc \
+	   	   -I$(top_srcdir)/src/libcanblf \
            -I$(top_srcdir)/src/libcanclg \
-	   -I$(top_srcdir)/src/libcandbc \
-	   -I$(top_srcdir)/src/libcanvsb \
+		   -I$(top_srcdir)/src/libcandbc \
+		   -I$(top_srcdir)/src/libcanvsb \
            -I$(top_srcdir)/src/cantomat \
-	   -I$(top_srcdir)/src/hashtable
+	  	   -I$(top_srcdir)/src/hashtable
 
-cantomat_LDADD = libcandbc.la libcanasc.la libcanvsb.la libcanclg.la \
-	@MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@ -lm
+cantomat_LDADD = libcandbc.la libcanasc.la libcanblf.la libcanvsb.la \
+	libcanclg.la @MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@ \
+	-lm
 
 #
 # mdftomat
@@ -597,31 +610,40 @@ YYDEBUG = -DYYDEBUG=1
 #
 # library headers, source, etc.
 #
-include_HEADERS = src/libcandbc/dbcModel.h \
-		 src/libcandbc/dbcTypes.h \
-		 src/libcandbc/dbcReader.h \
-		 src/libcandbc/dbcWriter.h \
+include_HEADERS = src/libcandbc/dbcmodel.h \
+		 src/libcandbc/dbctypes.h \
+		 src/libcandbc/dbcreader.h \
+		 src/libcandbc/dbcwriter.h \
 		 src/libcanmdf/mdfcg.h \
 		 src/libcanmdf/mdfdg.h \
 		 src/libcanmdf/mdffile.h \
 		 src/libcanmdf/mdffilter.h \
-		 src/libcanasc/ascReader.h \
-		 src/libcanvsb/vsbReader.h \
-		 src/libcanclg/clgReader.h \
-		 src/cantomat/messageDecoder.h \
+		 src/libcanasc/ascreader.h \
+		 src/libcanblf/blfreader.h \
+		 src/libcanblf/blfapi.h \
+		 src/libcanblf/blfstream.h \
+		 src/libcanblf/blfparser.h \
+		 src/libcanvsb/vsbreader.h \
+		 src/libcanclg/clgreader.h \
+		 src/cantomat/messagedecoder.h \
 		 src/libcanmdf/mdfcn.h \
 		 src/libcanmdf/mdfswap.h \
 		 src/libcanmdf/mdftypes.h
 
 libcandbc_la_SOURCES = \
-	src/libcandbc/dbcModel.c \
-	src/libcandbc/dbcReader.c \
-	src/libcandbc/dbcWriter.c \
+	src/libcandbc/dbcmodel.c \
+	src/libcandbc/dbcreader.c \
+	src/libcandbc/dbcwriter.c \
 	src/libcandbc/parser.y \
 	src/libcandbc/lexer.l
 
 libcandbc_la_LIBADD = -lm
 libcanasc_la_SOURCES = src/libcanasc/ascReader.c
+libcanblf_la_SOURCES = src/libcanblf/blfreader.c \
+		              src/libcanblf/blfparser.c \
+				      src/libcanblf/blfstream.c \
+		     		  src/libcanblf/blfapi.c
+
 libcanvsb_la_SOURCES = src/libcanvsb/vsbReader.c
 libcanclg_la_SOURCES = src/libcanclg/clgReader.c
 libcanmdf_la_SOURCES = \
@@ -639,18 +661,27 @@ libcandbc_la_CPPFLAGS = -I$(top_builddir)/src/libcandbc \
 
 libcandbc_la_LDFLAGS = -no-undefined -version-info @version_info@
 libcanasc_la_CPPFLAGS = -I$(top_builddir)/src/libcanasc \
-		       -I$(top_srcdir)/src/libcandbc \
-		       -I$(top_srcdir)/src/cantomat \
+		      	       -I$(top_srcdir)/src/libcandbc \
+		    		   -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable
 
 libcanasc_la_LDFLAGS = -no-undefined -version-info @version_info@
+libcanblf_la_CPPFLAGS = -I$(top_builddir)/src/libcanblf \
+				       -I$(top_srcdir)/src/libcandbc \
+                       -I$(top_srcdir)/src/cantomat \
+                       -I$(top_srcdir)/src/hashtable \
+                       -Wunused -pedantic
+
+libcanblf_la_LDFLAGS = -no-undefined -version-info @version_info@
 libcanvsb_la_CPPFLAGS = -I$(top_builddir)/src/libcanvsb \
-		       -I$(top_srcdir)/src/libcandbc \
+					   -I$(top_srcdir)/src/libcandbc \
+				       -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable
 
 libcanvsb_la_LDFLAGS = -no-undefined -version-info @version_info@
 libcanclg_la_CPPFLAGS = -I$(top_builddir)/src/libcanclg \
-		       -I$(top_srcdir)/src/libcandbc \
+				       -I$(top_srcdir)/src/libcandbc \
+	       		       -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable
 
 libcanclg_la_LDFLAGS = -no-undefined -version-info @version_info@
@@ -762,6 +793,26 @@ src/libcanasc/libcanasc_la-ascReader.lo:  \
 
 libcanasc.la: $(libcanasc_la_OBJECTS) $(libcanasc_la_DEPENDENCIES) $(EXTRA_libcanasc_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libcanasc_la_LINK) -rpath $(libdir) $(libcanasc_la_OBJECTS) $(libcanasc_la_LIBADD) $(LIBS)
+src/libcanblf/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanblf
+	@: > src/libcanblf/$(am__dirstamp)
+src/libcanblf/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/libcanblf/$(DEPDIR)
+	@: > src/libcanblf/$(DEPDIR)/$(am__dirstamp)
+src/libcanblf/libcanblf_la-blfreader.lo:  \
+	src/libcanblf/$(am__dirstamp) \
+	src/libcanblf/$(DEPDIR)/$(am__dirstamp)
+src/libcanblf/libcanblf_la-blfparser.lo:  \
+	src/libcanblf/$(am__dirstamp) \
+	src/libcanblf/$(DEPDIR)/$(am__dirstamp)
+src/libcanblf/libcanblf_la-blfstream.lo:  \
+	src/libcanblf/$(am__dirstamp) \
+	src/libcanblf/$(DEPDIR)/$(am__dirstamp)
+src/libcanblf/libcanblf_la-blfapi.lo: src/libcanblf/$(am__dirstamp) \
+	src/libcanblf/$(DEPDIR)/$(am__dirstamp)
+
+libcanblf.la: $(libcanblf_la_OBJECTS) $(libcanblf_la_DEPENDENCIES) $(EXTRA_libcanblf_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libcanblf_la_LINK) -rpath $(libdir) $(libcanblf_la_OBJECTS) $(libcanblf_la_LIBADD) $(LIBS)
 src/libcanclg/$(am__dirstamp):
 	@$(MKDIR_P) src/libcanclg
 	@: > src/libcanclg/$(am__dirstamp)
@@ -780,12 +831,12 @@ src/libcandbc/$(am__dirstamp):
 src/libcandbc/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/libcandbc/$(DEPDIR)
 	@: > src/libcandbc/$(DEPDIR)/$(am__dirstamp)
-src/libcandbc/libcandbc_la-dbcModel.lo: src/libcandbc/$(am__dirstamp) \
+src/libcandbc/libcandbc_la-dbcmodel.lo: src/libcandbc/$(am__dirstamp) \
 	src/libcandbc/$(DEPDIR)/$(am__dirstamp)
-src/libcandbc/libcandbc_la-dbcReader.lo:  \
+src/libcandbc/libcandbc_la-dbcreader.lo:  \
 	src/libcandbc/$(am__dirstamp) \
 	src/libcandbc/$(DEPDIR)/$(am__dirstamp)
-src/libcandbc/libcandbc_la-dbcWriter.lo:  \
+src/libcandbc/libcandbc_la-dbcwriter.lo:  \
 	src/libcandbc/$(am__dirstamp) \
 	src/libcandbc/$(DEPDIR)/$(am__dirstamp)
 src/libcandbc/parser.h: src/libcandbc/parser.c
@@ -892,22 +943,22 @@ src/cantomat/$(DEPDIR)/$(am__dirstamp):
 src/cantomat/cantomat-cantomat.$(OBJEXT):  \
 	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/cantomat-messageDecoder.$(OBJEXT):  \
+src/cantomat/cantomat-messagedecoder.$(OBJEXT):  \
 	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/cantomat-busAssignment.$(OBJEXT):  \
+src/cantomat/cantomat-busassignment.$(OBJEXT):  \
 	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/cantomat-matWrite.$(OBJEXT):  \
+src/cantomat/cantomat-matwrite.$(OBJEXT):  \
 	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/cantomat-messageHash.$(OBJEXT):  \
+src/cantomat/cantomat-messagehash.$(OBJEXT):  \
 	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
 src/cantomat/cantomat-measurement.$(OBJEXT):  \
 	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
-src/cantomat/cantomat-signalFormat.$(OBJEXT):  \
+src/cantomat/cantomat-signalformat.$(OBJEXT):  \
 	src/cantomat/$(am__dirstamp) \
 	src/cantomat/$(DEPDIR)/$(am__dirstamp)
 src/hashtable/$(am__dirstamp):
@@ -984,6 +1035,8 @@ mostlyclean-compile:
 	-rm -f src/hashtable/*.$(OBJEXT)
 	-rm -f src/libcanasc/*.$(OBJEXT)
 	-rm -f src/libcanasc/*.lo
+	-rm -f src/libcanblf/*.$(OBJEXT)
+	-rm -f src/libcanblf/*.lo
 	-rm -f src/libcanclg/*.$(OBJEXT)
 	-rm -f src/libcanclg/*.lo
 	-rm -f src/libcandbc/*.$(OBJEXT)
@@ -1004,22 +1057,26 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strnlen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtod.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtok_r.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-busAssignment.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-busassignment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-cantomat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-matWrite.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-matwrite.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-measurement.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-messageHash.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-signalFormat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-messagedecoder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-messagehash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cantomat/$(DEPDIR)/cantomat-signalformat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/dbccopy/$(DEPDIR)/dbccopy-dbccopy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/dbcls/$(DEPDIR)/dbcls-dbcls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/hashtable/$(DEPDIR)/cantomat-hashtable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/hashtable/$(DEPDIR)/cantomat-hashtable_itr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanasc/$(DEPDIR)/libcanasc_la-ascReader.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanblf/$(DEPDIR)/libcanblf_la-blfapi.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanblf/$(DEPDIR)/libcanblf_la-blfparser.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanblf/$(DEPDIR)/libcanblf_la-blfreader.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcanblf/$(DEPDIR)/libcanblf_la-blfstream.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcReader.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcWriter.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcmodel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcreader.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-dbcwriter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-lexer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcandbc/$(DEPDIR)/libcandbc_la-parser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/libcanmdf/$(DEPDIR)/libcanmdf_la-mdfcg.Plo@am__quote@
@@ -1064,6 +1121,34 @@ src/libcanasc/libcanasc_la-ascReader.lo: src/libcanasc/ascReader.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanasc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanasc/libcanasc_la-ascReader.lo `test -f 'src/libcanasc/ascReader.c' || echo '$(srcdir)/'`src/libcanasc/ascReader.c
 
+src/libcanblf/libcanblf_la-blfreader.lo: src/libcanblf/blfreader.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanblf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanblf/libcanblf_la-blfreader.lo -MD -MP -MF src/libcanblf/$(DEPDIR)/libcanblf_la-blfreader.Tpo -c -o src/libcanblf/libcanblf_la-blfreader.lo `test -f 'src/libcanblf/blfreader.c' || echo '$(srcdir)/'`src/libcanblf/blfreader.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcanblf/$(DEPDIR)/libcanblf_la-blfreader.Tpo src/libcanblf/$(DEPDIR)/libcanblf_la-blfreader.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcanblf/blfreader.c' object='src/libcanblf/libcanblf_la-blfreader.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanblf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanblf/libcanblf_la-blfreader.lo `test -f 'src/libcanblf/blfreader.c' || echo '$(srcdir)/'`src/libcanblf/blfreader.c
+
+src/libcanblf/libcanblf_la-blfparser.lo: src/libcanblf/blfparser.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanblf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanblf/libcanblf_la-blfparser.lo -MD -MP -MF src/libcanblf/$(DEPDIR)/libcanblf_la-blfparser.Tpo -c -o src/libcanblf/libcanblf_la-blfparser.lo `test -f 'src/libcanblf/blfparser.c' || echo '$(srcdir)/'`src/libcanblf/blfparser.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcanblf/$(DEPDIR)/libcanblf_la-blfparser.Tpo src/libcanblf/$(DEPDIR)/libcanblf_la-blfparser.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcanblf/blfparser.c' object='src/libcanblf/libcanblf_la-blfparser.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanblf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanblf/libcanblf_la-blfparser.lo `test -f 'src/libcanblf/blfparser.c' || echo '$(srcdir)/'`src/libcanblf/blfparser.c
+
+src/libcanblf/libcanblf_la-blfstream.lo: src/libcanblf/blfstream.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanblf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanblf/libcanblf_la-blfstream.lo -MD -MP -MF src/libcanblf/$(DEPDIR)/libcanblf_la-blfstream.Tpo -c -o src/libcanblf/libcanblf_la-blfstream.lo `test -f 'src/libcanblf/blfstream.c' || echo '$(srcdir)/'`src/libcanblf/blfstream.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcanblf/$(DEPDIR)/libcanblf_la-blfstream.Tpo src/libcanblf/$(DEPDIR)/libcanblf_la-blfstream.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcanblf/blfstream.c' object='src/libcanblf/libcanblf_la-blfstream.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanblf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanblf/libcanblf_la-blfstream.lo `test -f 'src/libcanblf/blfstream.c' || echo '$(srcdir)/'`src/libcanblf/blfstream.c
+
+src/libcanblf/libcanblf_la-blfapi.lo: src/libcanblf/blfapi.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanblf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanblf/libcanblf_la-blfapi.lo -MD -MP -MF src/libcanblf/$(DEPDIR)/libcanblf_la-blfapi.Tpo -c -o src/libcanblf/libcanblf_la-blfapi.lo `test -f 'src/libcanblf/blfapi.c' || echo '$(srcdir)/'`src/libcanblf/blfapi.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcanblf/$(DEPDIR)/libcanblf_la-blfapi.Tpo src/libcanblf/$(DEPDIR)/libcanblf_la-blfapi.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcanblf/blfapi.c' object='src/libcanblf/libcanblf_la-blfapi.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanblf_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanblf/libcanblf_la-blfapi.lo `test -f 'src/libcanblf/blfapi.c' || echo '$(srcdir)/'`src/libcanblf/blfapi.c
+
 src/libcanclg/libcanclg_la-clgReader.lo: src/libcanclg/clgReader.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanclg_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcanclg/libcanclg_la-clgReader.lo -MD -MP -MF src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Tpo -c -o src/libcanclg/libcanclg_la-clgReader.lo `test -f 'src/libcanclg/clgReader.c' || echo '$(srcdir)/'`src/libcanclg/clgReader.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Tpo src/libcanclg/$(DEPDIR)/libcanclg_la-clgReader.Plo
@@ -1071,26 +1156,26 @@ src/libcanclg/libcanclg_la-clgReader.lo: src/libcanclg/clgReader.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcanclg_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcanclg/libcanclg_la-clgReader.lo `test -f 'src/libcanclg/clgReader.c' || echo '$(srcdir)/'`src/libcanclg/clgReader.c
 
-src/libcandbc/libcandbc_la-dbcModel.lo: src/libcandbc/dbcModel.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-dbcModel.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Tpo -c -o src/libcandbc/libcandbc_la-dbcModel.lo `test -f 'src/libcandbc/dbcModel.c' || echo '$(srcdir)/'`src/libcandbc/dbcModel.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Tpo src/libcandbc/$(DEPDIR)/libcandbc_la-dbcModel.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcandbc/dbcModel.c' object='src/libcandbc/libcandbc_la-dbcModel.lo' libtool=yes @AMDEPBACKSLASH@
+src/libcandbc/libcandbc_la-dbcmodel.lo: src/libcandbc/dbcmodel.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-dbcmodel.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-dbcmodel.Tpo -c -o src/libcandbc/libcandbc_la-dbcmodel.lo `test -f 'src/libcandbc/dbcmodel.c' || echo '$(srcdir)/'`src/libcandbc/dbcmodel.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcandbc/$(DEPDIR)/libcandbc_la-dbcmodel.Tpo src/libcandbc/$(DEPDIR)/libcandbc_la-dbcmodel.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcandbc/dbcmodel.c' object='src/libcandbc/libcandbc_la-dbcmodel.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcandbc/libcandbc_la-dbcModel.lo `test -f 'src/libcandbc/dbcModel.c' || echo '$(srcdir)/'`src/libcandbc/dbcModel.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcandbc/libcandbc_la-dbcmodel.lo `test -f 'src/libcandbc/dbcmodel.c' || echo '$(srcdir)/'`src/libcandbc/dbcmodel.c
 
-src/libcandbc/libcandbc_la-dbcReader.lo: src/libcandbc/dbcReader.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-dbcReader.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-dbcReader.Tpo -c -o src/libcandbc/libcandbc_la-dbcReader.lo `test -f 'src/libcandbc/dbcReader.c' || echo '$(srcdir)/'`src/libcandbc/dbcReader.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcandbc/$(DEPDIR)/libcandbc_la-dbcReader.Tpo src/libcandbc/$(DEPDIR)/libcandbc_la-dbcReader.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcandbc/dbcReader.c' object='src/libcandbc/libcandbc_la-dbcReader.lo' libtool=yes @AMDEPBACKSLASH@
+src/libcandbc/libcandbc_la-dbcreader.lo: src/libcandbc/dbcreader.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-dbcreader.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-dbcreader.Tpo -c -o src/libcandbc/libcandbc_la-dbcreader.lo `test -f 'src/libcandbc/dbcreader.c' || echo '$(srcdir)/'`src/libcandbc/dbcreader.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcandbc/$(DEPDIR)/libcandbc_la-dbcreader.Tpo src/libcandbc/$(DEPDIR)/libcandbc_la-dbcreader.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcandbc/dbcreader.c' object='src/libcandbc/libcandbc_la-dbcreader.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcandbc/libcandbc_la-dbcReader.lo `test -f 'src/libcandbc/dbcReader.c' || echo '$(srcdir)/'`src/libcandbc/dbcReader.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcandbc/libcandbc_la-dbcreader.lo `test -f 'src/libcandbc/dbcreader.c' || echo '$(srcdir)/'`src/libcandbc/dbcreader.c
 
-src/libcandbc/libcandbc_la-dbcWriter.lo: src/libcandbc/dbcWriter.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-dbcWriter.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-dbcWriter.Tpo -c -o src/libcandbc/libcandbc_la-dbcWriter.lo `test -f 'src/libcandbc/dbcWriter.c' || echo '$(srcdir)/'`src/libcandbc/dbcWriter.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcandbc/$(DEPDIR)/libcandbc_la-dbcWriter.Tpo src/libcandbc/$(DEPDIR)/libcandbc_la-dbcWriter.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcandbc/dbcWriter.c' object='src/libcandbc/libcandbc_la-dbcWriter.lo' libtool=yes @AMDEPBACKSLASH@
+src/libcandbc/libcandbc_la-dbcwriter.lo: src/libcandbc/dbcwriter.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-dbcwriter.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-dbcwriter.Tpo -c -o src/libcandbc/libcandbc_la-dbcwriter.lo `test -f 'src/libcandbc/dbcwriter.c' || echo '$(srcdir)/'`src/libcandbc/dbcwriter.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/libcandbc/$(DEPDIR)/libcandbc_la-dbcwriter.Tpo src/libcandbc/$(DEPDIR)/libcandbc_la-dbcwriter.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/libcandbc/dbcwriter.c' object='src/libcandbc/libcandbc_la-dbcwriter.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcandbc/libcandbc_la-dbcWriter.lo `test -f 'src/libcandbc/dbcWriter.c' || echo '$(srcdir)/'`src/libcandbc/dbcWriter.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libcandbc/libcandbc_la-dbcwriter.lo `test -f 'src/libcandbc/dbcwriter.c' || echo '$(srcdir)/'`src/libcandbc/dbcwriter.c
 
 src/libcandbc/libcandbc_la-parser.lo: src/libcandbc/parser.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcandbc_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libcandbc/libcandbc_la-parser.lo -MD -MP -MF src/libcandbc/$(DEPDIR)/libcandbc_la-parser.Tpo -c -o src/libcandbc/libcandbc_la-parser.lo `test -f 'src/libcandbc/parser.c' || echo '$(srcdir)/'`src/libcandbc/parser.c
@@ -1176,61 +1261,61 @@ src/cantomat/cantomat-cantomat.obj: src/cantomat/cantomat.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-cantomat.obj `if test -f 'src/cantomat/cantomat.c'; then $(CYGPATH_W) 'src/cantomat/cantomat.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/cantomat.c'; fi`
 
-src/cantomat/cantomat-messageDecoder.o: src/cantomat/messageDecoder.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messageDecoder.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Tpo -c -o src/cantomat/cantomat-messageDecoder.o `test -f 'src/cantomat/messageDecoder.c' || echo '$(srcdir)/'`src/cantomat/messageDecoder.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Tpo src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/messageDecoder.c' object='src/cantomat/cantomat-messageDecoder.o' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-messagedecoder.o: src/cantomat/messagedecoder.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messagedecoder.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messagedecoder.Tpo -c -o src/cantomat/cantomat-messagedecoder.o `test -f 'src/cantomat/messagedecoder.c' || echo '$(srcdir)/'`src/cantomat/messagedecoder.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messagedecoder.Tpo src/cantomat/$(DEPDIR)/cantomat-messagedecoder.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/messagedecoder.c' object='src/cantomat/cantomat-messagedecoder.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messageDecoder.o `test -f 'src/cantomat/messageDecoder.c' || echo '$(srcdir)/'`src/cantomat/messageDecoder.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messagedecoder.o `test -f 'src/cantomat/messagedecoder.c' || echo '$(srcdir)/'`src/cantomat/messagedecoder.c
 
-src/cantomat/cantomat-messageDecoder.obj: src/cantomat/messageDecoder.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messageDecoder.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Tpo -c -o src/cantomat/cantomat-messageDecoder.obj `if test -f 'src/cantomat/messageDecoder.c'; then $(CYGPATH_W) 'src/cantomat/messageDecoder.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messageDecoder.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Tpo src/cantomat/$(DEPDIR)/cantomat-messageDecoder.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/messageDecoder.c' object='src/cantomat/cantomat-messageDecoder.obj' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-messagedecoder.obj: src/cantomat/messagedecoder.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messagedecoder.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messagedecoder.Tpo -c -o src/cantomat/cantomat-messagedecoder.obj `if test -f 'src/cantomat/messagedecoder.c'; then $(CYGPATH_W) 'src/cantomat/messagedecoder.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messagedecoder.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messagedecoder.Tpo src/cantomat/$(DEPDIR)/cantomat-messagedecoder.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/messagedecoder.c' object='src/cantomat/cantomat-messagedecoder.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messageDecoder.obj `if test -f 'src/cantomat/messageDecoder.c'; then $(CYGPATH_W) 'src/cantomat/messageDecoder.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messageDecoder.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messagedecoder.obj `if test -f 'src/cantomat/messagedecoder.c'; then $(CYGPATH_W) 'src/cantomat/messagedecoder.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messagedecoder.c'; fi`
 
-src/cantomat/cantomat-busAssignment.o: src/cantomat/busAssignment.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-busAssignment.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-busAssignment.Tpo -c -o src/cantomat/cantomat-busAssignment.o `test -f 'src/cantomat/busAssignment.c' || echo '$(srcdir)/'`src/cantomat/busAssignment.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-busAssignment.Tpo src/cantomat/$(DEPDIR)/cantomat-busAssignment.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/busAssignment.c' object='src/cantomat/cantomat-busAssignment.o' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-busassignment.o: src/cantomat/busassignment.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-busassignment.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-busassignment.Tpo -c -o src/cantomat/cantomat-busassignment.o `test -f 'src/cantomat/busassignment.c' || echo '$(srcdir)/'`src/cantomat/busassignment.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-busassignment.Tpo src/cantomat/$(DEPDIR)/cantomat-busassignment.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/busassignment.c' object='src/cantomat/cantomat-busassignment.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-busAssignment.o `test -f 'src/cantomat/busAssignment.c' || echo '$(srcdir)/'`src/cantomat/busAssignment.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-busassignment.o `test -f 'src/cantomat/busassignment.c' || echo '$(srcdir)/'`src/cantomat/busassignment.c
 
-src/cantomat/cantomat-busAssignment.obj: src/cantomat/busAssignment.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-busAssignment.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-busAssignment.Tpo -c -o src/cantomat/cantomat-busAssignment.obj `if test -f 'src/cantomat/busAssignment.c'; then $(CYGPATH_W) 'src/cantomat/busAssignment.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/busAssignment.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-busAssignment.Tpo src/cantomat/$(DEPDIR)/cantomat-busAssignment.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/busAssignment.c' object='src/cantomat/cantomat-busAssignment.obj' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-busassignment.obj: src/cantomat/busassignment.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-busassignment.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-busassignment.Tpo -c -o src/cantomat/cantomat-busassignment.obj `if test -f 'src/cantomat/busassignment.c'; then $(CYGPATH_W) 'src/cantomat/busassignment.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/busassignment.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-busassignment.Tpo src/cantomat/$(DEPDIR)/cantomat-busassignment.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/busassignment.c' object='src/cantomat/cantomat-busassignment.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-busAssignment.obj `if test -f 'src/cantomat/busAssignment.c'; then $(CYGPATH_W) 'src/cantomat/busAssignment.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/busAssignment.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-busassignment.obj `if test -f 'src/cantomat/busassignment.c'; then $(CYGPATH_W) 'src/cantomat/busassignment.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/busassignment.c'; fi`
 
-src/cantomat/cantomat-matWrite.o: src/cantomat/matWrite.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-matWrite.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-matWrite.Tpo -c -o src/cantomat/cantomat-matWrite.o `test -f 'src/cantomat/matWrite.c' || echo '$(srcdir)/'`src/cantomat/matWrite.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-matWrite.Tpo src/cantomat/$(DEPDIR)/cantomat-matWrite.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/matWrite.c' object='src/cantomat/cantomat-matWrite.o' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-matwrite.o: src/cantomat/matwrite.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-matwrite.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-matwrite.Tpo -c -o src/cantomat/cantomat-matwrite.o `test -f 'src/cantomat/matwrite.c' || echo '$(srcdir)/'`src/cantomat/matwrite.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-matwrite.Tpo src/cantomat/$(DEPDIR)/cantomat-matwrite.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/matwrite.c' object='src/cantomat/cantomat-matwrite.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-matWrite.o `test -f 'src/cantomat/matWrite.c' || echo '$(srcdir)/'`src/cantomat/matWrite.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-matwrite.o `test -f 'src/cantomat/matwrite.c' || echo '$(srcdir)/'`src/cantomat/matwrite.c
 
-src/cantomat/cantomat-matWrite.obj: src/cantomat/matWrite.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-matWrite.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-matWrite.Tpo -c -o src/cantomat/cantomat-matWrite.obj `if test -f 'src/cantomat/matWrite.c'; then $(CYGPATH_W) 'src/cantomat/matWrite.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/matWrite.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-matWrite.Tpo src/cantomat/$(DEPDIR)/cantomat-matWrite.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/matWrite.c' object='src/cantomat/cantomat-matWrite.obj' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-matwrite.obj: src/cantomat/matwrite.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-matwrite.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-matwrite.Tpo -c -o src/cantomat/cantomat-matwrite.obj `if test -f 'src/cantomat/matwrite.c'; then $(CYGPATH_W) 'src/cantomat/matwrite.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/matwrite.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-matwrite.Tpo src/cantomat/$(DEPDIR)/cantomat-matwrite.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/matwrite.c' object='src/cantomat/cantomat-matwrite.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-matWrite.obj `if test -f 'src/cantomat/matWrite.c'; then $(CYGPATH_W) 'src/cantomat/matWrite.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/matWrite.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-matwrite.obj `if test -f 'src/cantomat/matwrite.c'; then $(CYGPATH_W) 'src/cantomat/matwrite.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/matwrite.c'; fi`
 
-src/cantomat/cantomat-messageHash.o: src/cantomat/messageHash.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messageHash.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messageHash.Tpo -c -o src/cantomat/cantomat-messageHash.o `test -f 'src/cantomat/messageHash.c' || echo '$(srcdir)/'`src/cantomat/messageHash.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messageHash.Tpo src/cantomat/$(DEPDIR)/cantomat-messageHash.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/messageHash.c' object='src/cantomat/cantomat-messageHash.o' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-messagehash.o: src/cantomat/messagehash.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messagehash.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messagehash.Tpo -c -o src/cantomat/cantomat-messagehash.o `test -f 'src/cantomat/messagehash.c' || echo '$(srcdir)/'`src/cantomat/messagehash.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messagehash.Tpo src/cantomat/$(DEPDIR)/cantomat-messagehash.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/messagehash.c' object='src/cantomat/cantomat-messagehash.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messageHash.o `test -f 'src/cantomat/messageHash.c' || echo '$(srcdir)/'`src/cantomat/messageHash.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messagehash.o `test -f 'src/cantomat/messagehash.c' || echo '$(srcdir)/'`src/cantomat/messagehash.c
 
-src/cantomat/cantomat-messageHash.obj: src/cantomat/messageHash.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messageHash.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messageHash.Tpo -c -o src/cantomat/cantomat-messageHash.obj `if test -f 'src/cantomat/messageHash.c'; then $(CYGPATH_W) 'src/cantomat/messageHash.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messageHash.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messageHash.Tpo src/cantomat/$(DEPDIR)/cantomat-messageHash.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/messageHash.c' object='src/cantomat/cantomat-messageHash.obj' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-messagehash.obj: src/cantomat/messagehash.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-messagehash.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-messagehash.Tpo -c -o src/cantomat/cantomat-messagehash.obj `if test -f 'src/cantomat/messagehash.c'; then $(CYGPATH_W) 'src/cantomat/messagehash.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messagehash.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-messagehash.Tpo src/cantomat/$(DEPDIR)/cantomat-messagehash.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/messagehash.c' object='src/cantomat/cantomat-messagehash.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messageHash.obj `if test -f 'src/cantomat/messageHash.c'; then $(CYGPATH_W) 'src/cantomat/messageHash.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messageHash.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-messagehash.obj `if test -f 'src/cantomat/messagehash.c'; then $(CYGPATH_W) 'src/cantomat/messagehash.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/messagehash.c'; fi`
 
 src/cantomat/cantomat-measurement.o: src/cantomat/measurement.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-measurement.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-measurement.Tpo -c -o src/cantomat/cantomat-measurement.o `test -f 'src/cantomat/measurement.c' || echo '$(srcdir)/'`src/cantomat/measurement.c
@@ -1246,19 +1331,19 @@ src/cantomat/cantomat-measurement.obj: src/cantomat/measurement.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-measurement.obj `if test -f 'src/cantomat/measurement.c'; then $(CYGPATH_W) 'src/cantomat/measurement.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/measurement.c'; fi`
 
-src/cantomat/cantomat-signalFormat.o: src/cantomat/signalFormat.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-signalFormat.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-signalFormat.Tpo -c -o src/cantomat/cantomat-signalFormat.o `test -f 'src/cantomat/signalFormat.c' || echo '$(srcdir)/'`src/cantomat/signalFormat.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-signalFormat.Tpo src/cantomat/$(DEPDIR)/cantomat-signalFormat.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/signalFormat.c' object='src/cantomat/cantomat-signalFormat.o' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-signalformat.o: src/cantomat/signalformat.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-signalformat.o -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-signalformat.Tpo -c -o src/cantomat/cantomat-signalformat.o `test -f 'src/cantomat/signalformat.c' || echo '$(srcdir)/'`src/cantomat/signalformat.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-signalformat.Tpo src/cantomat/$(DEPDIR)/cantomat-signalformat.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/signalformat.c' object='src/cantomat/cantomat-signalformat.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-signalFormat.o `test -f 'src/cantomat/signalFormat.c' || echo '$(srcdir)/'`src/cantomat/signalFormat.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-signalformat.o `test -f 'src/cantomat/signalformat.c' || echo '$(srcdir)/'`src/cantomat/signalformat.c
 
-src/cantomat/cantomat-signalFormat.obj: src/cantomat/signalFormat.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-signalFormat.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-signalFormat.Tpo -c -o src/cantomat/cantomat-signalFormat.obj `if test -f 'src/cantomat/signalFormat.c'; then $(CYGPATH_W) 'src/cantomat/signalFormat.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/signalFormat.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-signalFormat.Tpo src/cantomat/$(DEPDIR)/cantomat-signalFormat.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/signalFormat.c' object='src/cantomat/cantomat-signalFormat.obj' libtool=no @AMDEPBACKSLASH@
+src/cantomat/cantomat-signalformat.obj: src/cantomat/signalformat.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/cantomat/cantomat-signalformat.obj -MD -MP -MF src/cantomat/$(DEPDIR)/cantomat-signalformat.Tpo -c -o src/cantomat/cantomat-signalformat.obj `if test -f 'src/cantomat/signalformat.c'; then $(CYGPATH_W) 'src/cantomat/signalformat.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/signalformat.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/cantomat/$(DEPDIR)/cantomat-signalformat.Tpo src/cantomat/$(DEPDIR)/cantomat-signalformat.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cantomat/signalformat.c' object='src/cantomat/cantomat-signalformat.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-signalFormat.obj `if test -f 'src/cantomat/signalFormat.c'; then $(CYGPATH_W) 'src/cantomat/signalFormat.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/signalFormat.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/cantomat/cantomat-signalformat.obj `if test -f 'src/cantomat/signalformat.c'; then $(CYGPATH_W) 'src/cantomat/signalformat.c'; else $(CYGPATH_W) '$(srcdir)/src/cantomat/signalformat.c'; fi`
 
 src/hashtable/cantomat-hashtable.o: src/hashtable/hashtable.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cantomat_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/hashtable/cantomat-hashtable.o -MD -MP -MF src/hashtable/$(DEPDIR)/cantomat-hashtable.Tpo -c -o src/hashtable/cantomat-hashtable.o `test -f 'src/hashtable/hashtable.c' || echo '$(srcdir)/'`src/hashtable/hashtable.c
@@ -1356,6 +1441,7 @@ mostlyclean-libtool:
 clean-libtool:
 	-rm -rf .libs _libs
 	-rm -rf src/libcanasc/.libs src/libcanasc/_libs
+	-rm -rf src/libcanblf/.libs src/libcanblf/_libs
 	-rm -rf src/libcanclg/.libs src/libcanclg/_libs
 	-rm -rf src/libcandbc/.libs src/libcandbc/_libs
 	-rm -rf src/libcanmdf/.libs src/libcanmdf/_libs
@@ -1725,6 +1811,8 @@ distclean-generic:
 	-rm -f src/hashtable/$(am__dirstamp)
 	-rm -f src/libcanasc/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcanasc/$(am__dirstamp)
+	-rm -f src/libcanblf/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/libcanblf/$(am__dirstamp)
 	-rm -f src/libcanclg/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/libcanclg/$(am__dirstamp)
 	-rm -f src/libcandbc/$(DEPDIR)/$(am__dirstamp)
@@ -1752,7 +1840,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanblf/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -1801,7 +1889,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
+	-rm -rf $(DEPDIR) src/cantomat/$(DEPDIR) src/dbccopy/$(DEPDIR) src/dbcls/$(DEPDIR) src/hashtable/$(DEPDIR) src/libcanasc/$(DEPDIR) src/libcanblf/$(DEPDIR) src/libcanclg/$(DEPDIR) src/libcandbc/$(DEPDIR) src/libcanmdf/$(DEPDIR) src/libcanvsb/$(DEPDIR) src/matdump/$(DEPDIR) src/mdftomat/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1850,6 +1938,8 @@ src/libcandbc/parser.h src/libcandbc/parser.c: src/libcandbc/parser.y
 install-exec-hook:
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) cantomat$(EXEEXT) asctomat$(EXEEXT)
+	cd $(DESTDIR)$(bindir) && \
+		$(LN_S) cantomat$(EXEEXT) blftomat$(EXEEXT)
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) cantomat$(EXEEXT) vsbtomat$(EXEEXT)
 	cd $(DESTDIR)$(bindir) && \
