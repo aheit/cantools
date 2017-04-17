@@ -1,3 +1,15 @@
+2017-04-17  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+	* all: released version 0.22
+	* Makefile: fixed duplicate header file
+
+2017-04-17  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+	* all: fixed filenames for case-sensitive operating systems
+	* libcanblf: fixed crash on non-supported objects
+	* libcanblf: fixed premature abort of parsing
+	* libcanblf: fixed compiler warnings, missing data types
+
 2017-01-01  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
 	* all: released version 0.20

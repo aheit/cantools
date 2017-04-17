@@ -21,6 +21,7 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
 #include "blfstream.h"
 
 #define BL_OBJ_TYPE_CAN_MESSAGE            1

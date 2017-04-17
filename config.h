@@ -40,7 +40,7 @@
 #define HAVE_FSEEKO 1
 
 /* Define to 1 if you have the `getpagesize' function. */
-#define HAVE_GETPAGESIZE 1
+/* #undef HAVE_GETPAGESIZE */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
@@ -68,13 +68,13 @@
 #define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the `memset' function. */
-#define HAVE_MEMSET 1
+/* #undef HAVE_MEMSET */
 
 /* Define to 1 if you have a working `mmap' system call. */
-#define HAVE_MMAP 1
+/* #undef HAVE_MMAP */
 
 /* Define to 1 if you have the `munmap' function. */
-#define HAVE_MUNMAP 1
+/* #undef HAVE_MUNMAP */
 
 /* Define to 1 if your system has a GNU libc compatible `realloc' function,
    and to 0 otherwise. */
@@ -90,10 +90,10 @@
 #define HAVE_STDLIB_H 1
 
 /* Define to 1 if you have the `strchr' function. */
-#define HAVE_STRCHR 1
+/* #undef HAVE_STRCHR */
 
 /* Define to 1 if you have the `strdup' function. */
-#define HAVE_STRDUP 1
+/* #undef HAVE_STRDUP */
 
 /* Define to 1 if you have the <strings.h> header file. */
 #define HAVE_STRINGS_H 1
@@ -105,22 +105,22 @@
 #define HAVE_STRNDUP 1
 
 /* Define to 1 if you have the `strpbrk' function. */
-#define HAVE_STRPBRK 1
+/* #undef HAVE_STRPBRK */
 
 /* Define to 1 if you have the `strspn' function. */
-#define HAVE_STRSPN 1
+/* #undef HAVE_STRSPN */
 
 /* Define to 1 if you have the `strstr' function. */
-#define HAVE_STRSTR 1
+/* #undef HAVE_STRSTR */
 
 /* Define to 1 if you have the `strtok_r' function. */
 #define HAVE_STRTOK_R 1
 
 /* Define to 1 if you have the `strtol' function. */
-#define HAVE_STRTOL 1
+/* #undef HAVE_STRTOL */
 
 /* Define to 1 if you have the `strtoul' function. */
-#define HAVE_STRTOUL 1
+/* #undef HAVE_STRTOUL */
 
 /* Define to 1 if you have the <sys/param.h> header file. */
 #define HAVE_SYS_PARAM_H 1
@@ -153,7 +153,7 @@
 #define PACKAGE_NAME "cantools"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "cantools 0.19"
+#define PACKAGE_STRING "cantools 0.22"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "cantools"
@@ -162,7 +162,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.19"
+#define PACKAGE_VERSION "0.22"
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
@@ -198,10 +198,10 @@
 
 
 /* Version number of package */
-#define VERSION "0.19"
+#define VERSION "0.22"
 
 /* Define if using the dmalloc debugging malloc package */
-/* #undef WITH_DMALLOC */
+#define WITH_DMALLOC 1
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */

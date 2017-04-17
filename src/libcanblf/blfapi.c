@@ -163,9 +163,13 @@ blfFreeObject(BLFHANDLE h, VBLObjectHeaderBase* pBase)
 success_t
 blfSkipObject(BLFHANDLE h, VBLObjectHeaderBase* pBase)
 {
-  return   blfHandleIsInitialized(h)
+  success_t success = 
+           blfHandleIsInitialized(h)
         && (pBase != NULL)
         && (pBase->mObjectSize >= pBase->mHeaderSize)
-        && blfHandleSkip(h, pBase->mObjectSize - 16)
-        && h->mStatistics.mObjectsRead++;
+        && blfHandleSkip(h, pBase->mObjectSize - 16);
+  if(success) {
+    h->mStatistics.mObjectsRead++;
+  }
+  return success;
 }

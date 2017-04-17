@@ -75,6 +75,14 @@ autoreconf -f -i
 make
 make install
 
+Compilation of cantools on Windows Subsystem for Linux (WSL)
+====================
+sudo apt-get install gcc libz-dev libmatio-dev pkg-config flex bison check libglib2.0 subversion automake
+svn checkout https://svn.code.sf.net/p/cantools/code/trunk cantools-code
+cd cantools-code
+./configure
+make
+
 Execute Unit Test(s)
 ====================
      - run 'make check'
