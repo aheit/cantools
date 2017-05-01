@@ -1,3 +1,13 @@
+2017-05-01  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+	* all: released version 0.23
+	* libcanmdf: fixed conversion of signed integer signals on hosts
+	  without arithmetic right shift
+	* matdump: new options to list all values of all or selected
+	  variables and to list all variable names
+	* libcanclg, libcanasc, libcanvsb, cantomat: duplicate closure of
+	  BLF input file, potentially leading to crash (Thanks, Andreas W!)
+
 2017-04-17  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
 	* all: released version 0.22

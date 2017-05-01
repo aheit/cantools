@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.22, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.23, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -27,7 +27,7 @@ AC_LIBTOOL_WIN32_DLL
 AC_USE_SYSTEM_EXTENSIONS
 
 dnl common library version
-version_info='0:19:0'
+version_info='0:23:0'
 AC_SUBST(version_info)
 
 # Checks for programs.

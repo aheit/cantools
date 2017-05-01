@@ -115,9 +115,12 @@ void vsbReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
     } while(i!=0);
     puts("");
   }
-  return;
+  goto done;
 
 read_error:
   fprintf(stderr,"error reading vsb file, aborting\n");
-  return;
+
+done:
+  /* close input file stream */
+  fclose(fp);
 }

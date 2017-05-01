@@ -1,5 +1,5 @@
 /*  clgreader.c --  parse CLG files
-    Copyright (C) 2014-2016 Andreas Heitmann
+    Copyright (C) 2014-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ void clgReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
     channelshift = 29; /* 29-bit CAN */
   } else {
     fprintf(stderr, "unexpected bus type (%d, %d), aborting.\n",
-	    header.channel_type1, header.channel_type2 );
+            header.channel_type1, header.channel_type2 );
     return;
   }
 
@@ -125,9 +125,12 @@ void clgReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
     /* invoke message receive callback function */
     msgRxCb(&message, cbData);
   } /* end message loop */
-  return;
+  goto done;
 
 read_error:
   fprintf(stderr,"error reading CLG file, aborting\n");
-  return;
+
+done:
+  /* close input file stream */
+  fclose(fp);
 }

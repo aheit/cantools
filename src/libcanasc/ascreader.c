@@ -1,5 +1,5 @@
 /*  ascReader.c --  parse ASC files
-    Copyright (C) 2007-2011 Andreas Heitmann
+    Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -193,4 +193,7 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
       msgRxCb(&message, cbData);
     }
   }
+
+  /* close input file stream */
+  fclose(fp);
 }
