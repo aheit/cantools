@@ -1,5 +1,5 @@
 /*  mdftomat -- convert MDF files to MAT files
-    Copyright (C) 2012-2016 Andreas Heitmann
+    Copyright (C) 2012-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,7 +14,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <stddef.h>
 #include <stdio.h>
@@ -49,9 +51,9 @@ sanitize_name(const char *in)
     int i;
     for(i=0;i<sizeof(xtable);i++) {
       if(isupper(i) || islower(i) || isdigit(i) || (i=='_')) {
-	xtable[i] = i;
+        xtable[i] = i;
       } else {
-	xtable[i] = '_';
+        xtable[i] = '_';
       }
     }
     init=1;
@@ -113,23 +115,23 @@ mat_write_signal(const mdf_t *const mdf,
     filter_signal_name_in = sanitize_name(signal_name);
     filter_message_name_in = sanitize_name(message_name);
     filter_name_out = filter_apply(filter, can_channel,
-				   filter_message_name_in,
-				   filter_signal_name_in);
+                                   filter_message_name_in,
+                                   filter_signal_name_in);
     if(mdf->verbose_level >= 2) {
       printf("    CNBLOCK can_ch=%lu\n"
-	     "            message      = %s\n"
-	     "            signal_name  = %s\n"
-	     "            filter_input = %s\n"
-	     "            filter_output= %s\n",
-	     (unsigned long)can_channel, filter_message_name_in,
-	     signal_name, filter_signal_name_in,
-	     (filter_name_out!=NULL)?filter_name_out:"<rejected by filter>" );
+             "            message      = %s\n"
+             "            signal_name  = %s\n"
+             "            filter_input = %s\n"
+             "            filter_output= %s\n",
+             (unsigned long)can_channel, filter_message_name_in,
+             signal_name, filter_signal_name_in,
+             (filter_name_out!=NULL)?filter_name_out:"<rejected by filter>" );
       if(filter_name_out != NULL) {
-	printf("+ %d %s %s %s\n",
-	       can_channel,
-	       filter_message_name_in,
-	       filter_signal_name_in,
-	       filter_name_out );
+        printf("+ %d %s %s %s\n",
+               can_channel,
+               filter_message_name_in,
+               filter_signal_name_in,
+               filter_name_out );
       }
     }
     free(filter_signal_name_in);
@@ -141,7 +143,7 @@ mat_write_signal(const mdf_t *const mdf,
 
       /* write matlab variable */
       matvar = Mat_VarCreate(filter_name_out, MAT_C_DOUBLE, MAT_T_DOUBLE,
-			     2, dims, (double *)timeValue, 0);
+                             2, dims, (double *)timeValue, 0);
       rv = Mat_VarWrite(mdftomat->mat, matvar, mdftomat->compress);
       assert(rv == 0);
       Mat_VarFree(matvar);
@@ -228,7 +230,7 @@ mdfPrintHeaderInfo(const mdf_t *const mdf)
   FIELD_PRINT("Project      = ", hd_block->project);
   FIELD_PRINT("Measurement  = ", hd_block->measurement_id);
   printf("Byte Order   = %s\n", 
-	 (id_block->byte_order==0)?"Little Endian":"Big Endian");
+         (id_block->byte_order==0)?"Little Endian":"Big Endian");
   printf("Version      = %u\n", id_block->version_number);
   FIELD_PRINT("File Id      = ", id_block->file_identifier);
   FIELD_PRINT("Format Id    = ", id_block->format_identifier);

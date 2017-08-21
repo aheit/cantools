@@ -14,7 +14,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <stddef.h>
 #include <stdio.h>
@@ -160,13 +162,13 @@ full_dump(matvar_t *matvar)
       size_t stride = Mat_SizeOf(matvar->data_type);
       char *data = (char*)matvar->data;
       for ( i = 0; i < matvar->dims[0]; i++ ) {
-	for ( j = 0; j < matvar->dims[1]; j++ ) {
-	  size_t idx = matvar->dims[0]*j+i;
-	  Mat_PrintNumber(matvar->data_type,
-			  data+idx*stride);
-	  printf(" ");
-	}
-	printf("\n");
+        for ( j = 0; j < matvar->dims[1]; j++ ) {
+          size_t idx = matvar->dims[0]*j+i;
+          Mat_PrintNumber(matvar->data_type,
+                          data+idx*stride);
+          printf(" ");
+        }
+        printf("\n");
       }
     }
     break;
@@ -232,7 +234,7 @@ static void help(const char *program_name)
   fprintf(stderr,
           "Usage: %s [OPTIONS] <matfile> [name1] ... \n"
           "Dump contents of .mat file.\n"
-	  "Dump specific variables if names are given"
+          "Dump specific variables if names are given"
           "\n"
           "Options:\n"
           "  -v, --verbose              verbose output\n"

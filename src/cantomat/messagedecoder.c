@@ -1,5 +1,5 @@
 /*  messageDecoder.c --  decode CAN messages
-    Copyright (C) 2007-2009 Andreas Heitmann
+    Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,17 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
 #endif
 
 #include "dbcmodel.h"
 #include "messagedecoder.h"
 
 void canMessage_decode(message_t      *dbcMessage,
-		       canMessage_t   *canMessage,
-		       sint32          timeResolution,
-		       signalProcCb_t  signalProcCb,
-		       void           *cbData)
+                       canMessage_t   *canMessage,
+                       sint32          timeResolution,
+                       signalProcCb_t  signalProcCb,
+                       void           *cbData)
 {
   signal_list_t *sl;
   uint32  sec = canMessage->t.tv_sec;
@@ -102,24 +102,24 @@ void canMessage_decode(message_t      *dbcMessage,
 
       /* loop over all source bytes from start_byte to end_byte */
       for(work_byte = start_byte; work_byte <= end_byte; work_byte++) {
-	/* fetch source byte */
+        /* fetch source byte */
         data = canMessage->byte_arr[work_byte];
 
-	/* process source byte */
+        /* process source byte */
         if(work_byte == start_byte && start_offset != 7) {
-	  /* less that 8 bits in start byte? mask out unused bits */
+          /* less that 8 bits in start byte? mask out unused bits */
           data &= (uint8)~0 >> (7 - start_offset);
           shift = start_offset + 1;
         } else {
           shift = 8; /* use all eight bits */
         }
         if(work_byte == end_byte && end_offset != 0) {
-	  /* less that 8 bits in end byte? shift out unused bits */
+          /* less that 8 bits in end byte? shift out unused bits */
           data >>= end_offset;
           shift -= end_offset;
         }
 
-	/* store processed byte */
+        /* store processed byte */
         rawValue <<= shift; /* make room for shift bits */
         rawValue |= data;   /* insert new bits at low position */
       }

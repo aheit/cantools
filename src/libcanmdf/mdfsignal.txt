@@ -1,0 +1,25 @@
+
+Little Endian input signal
+Big Endian machine
+
+a) 1 Bit unsigned signal
+
+         data_int64 = ((*(uint8_t *)data_int_ptr) >> bit_offset) & 1;
+
+   xxxBxxxx | SHIFT
+   0000xxxB | AND
+   0000000B | CAST
+   00000000 00000000 00000000 00000000 00000000 00000000 00000000 0000000B
+
+b) 2-9 Bit unsigned signal
+
+      data_int64 = ((*(uint16_t *)data_int_ptr) >> bit_offset)
+        & ((1u<<number_bits)-1u);
+
+   xxxLLLHH HHHHHHxx | CAST
+   xxxLLLHHHHHHHHxx  | SHIFT
+   00xxxLLLHHHHHHHH  | AND
+   00000LLLHHHHHHHH  | CAST
+   00000000 00000000 00000000 00000000 00000000 00000000 00000LLL HHHHHHHH | SWAP
+   
+--> incorrect result

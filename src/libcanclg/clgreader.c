@@ -15,7 +15,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
+#endif
+
+#ifdef HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+#ifdef HAVE_STDINT_H
+# include <stdint.h>
 #endif
 
 #include <stdio.h>
@@ -33,9 +40,7 @@
  */
 void clgReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
 {
-  char busmap[256];
-  char buffer[100];
-  char *cp;
+  uint8_t busmap[256];
   size_t ret;
   clg_header_t header;
   clg_message_t msg;

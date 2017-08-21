@@ -1,4 +1,19 @@
+cantools
+
 Andreas Heitmann <andreas.heitmann@gmail.com>
+
+Re-used GPL Code
+
+Ian Lance Taylor <iant@google.com>                    byte-swapping routines
+Christopher Clark <firstname.lastname@cl.cam.ac.uk>   hash tables
+
+Referenced Libraries
+
+matio   Christopher Hulbert            https://sourceforge.net/projects/matio/
+hdf5    HDF-Group                      https://www.hdfgroup.org/
+zlib    Jean-loup Gailly, Mark Adler   http://zlib.net/
+bison   GNU Project                    https://savannah.gnu.org/projects/bison/
+flex    Will Estes                     https://github.com/westes/flex
 
 Contributors (patches, bug reports):
 
@@ -8,12 +23,14 @@ Torsten Finke
 Harsh Panchal
 Daniel Brier
 Joe Burmeister
-leiricho
+Oskar Leirich
 Johannes Rehnman
-maximus1987
+Max Seidenstuecker
 Christian Tacke
 Stéphane Raimbault
-hngatio5
-stropee
+https://sourceforge.net/u/hngatio5
+Simon Tropée
 Michael Hoffacker
 Andreas Martin
+Andreas Wittmann
+Rainer Posch

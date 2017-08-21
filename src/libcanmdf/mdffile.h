@@ -1,8 +1,8 @@
 #ifndef INCLUDE_MDFFILE_H
 #define INCLUDE_MDFFILE_H
 
-/*  mdffile.h --  declarations for mdffile
-    Copyright (C) 2012,2013 Andreas Heitmann
+/*  mdffile.h -- declarations for mdffile
+    Copyright (C) 2012-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

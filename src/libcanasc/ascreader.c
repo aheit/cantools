@@ -1,4 +1,4 @@
-/*  ascReader.c --  parse ASC files
+/*  ascReader.c -- parse ASC files
     Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
 #endif
 
 #include <stdio.h>

@@ -1,8 +1,8 @@
 #ifndef INCLUDE_DBCREADER_H
 #define INCLUDE_DBCREADER_H
 
-/*  dbcreader.h --  declarations for libcandbc
-    Copyright (C) 2007-2016 Andreas Heitmann
+/*  dbcreader.h -- declarations for libcandbc
+    Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

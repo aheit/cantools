@@ -1,6 +1,9 @@
+#ifndef MDF_SWAP_H
+#define MDF_SWAP_H
+
 /* mdfswap_swap.h -- Handle swapping for cantools -*- C++ -*-
 
-   Copyright (C) 2006-2016 Free Software Foundation, Inc.
+   Copyright (C) 2006-2017 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <iant@google.com>.
 
    This file is part of cantools.
@@ -29,13 +32,15 @@
    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA
    02110-1301, USA. */
 
-#ifndef MDF_SWAP_H
-#define MDF_SWAP_H
-
-#include <stdint.h>
-
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
+#endif
+
+#ifdef HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+#ifdef HAVE_STDINT_H
+# include <stdint.h>
 #endif
 
 /* gcc 4.3 and later provides __builtin_bswap32 and __builtin_bswap64. */

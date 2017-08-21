@@ -2,7 +2,7 @@
 #define INCLUDE_BLFPARSER_H
 
 /*  blfparser.h --  declarations for blfReader
-    Copyright (C) 2016 Andreas Heitmann
+    Copyright (C) 2016-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,8 +17,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#ifdef HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+#ifdef HAVE_STDINT_H
+# include <stdint.h>
+#endif
+
 #include <stdio.h>
-#include <stdint.h>
 
 #include "blfstream.h"
 #include "blfapi.h"
@@ -37,7 +47,7 @@ success_t blfHandleIsInitialized(BLFHANDLE h);
 success_t blfPeekObjectInternal(BLFHANDLE hFile, VBLObjectHeaderBase *pBase);
 BLFHANDLE  blfHandleInit(BLFHANDLE this);
 success_t blfHandleOpen(BLFHANDLE h, FILE *fp);
-success_t blfHandleRead(BLFHANDLE h, char fileOnlyBit, uint8_t *dest_ptr,
+success_t blfHandleRead(BLFHANDLE h, uint8_t fileOnlyBit, uint8_t *dest_ptr,
                         uint32_t nBytes);
 success_t blfFreeHeader(BLFHANDLE hFile, VBLObjectHeader *pBase);
 success_t blfHandleSkip(BLFHANDLE h, uint32_t nBytes);

@@ -1,5 +1,5 @@
 /*  mdffilter -- filter and transform signal names
-    Copyright (C) 2012,2013 Andreas Heitmann
+    Copyright (C) 2012-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,27 +14,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <stdio.h>
 #include <limits.h>
 #include <fnmatch.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "mdffilter.h"
 
 // extern char *strdup(const char *);
 static int filter_test_channel(const mdf_t *const mdf,
-			       const filter_t *const filter,
-			       const cn_block_t *const cn_block);
+                               const filter_t *const filter,
+                               const cn_block_t *const cn_block);
 
 static const filter_element_t *filter_match(const filter_element_t *const fe,
-			       const uint32_t channel,
-			       const char *message, const char *signal)
+                               const uint32_t channel,
+                               const char *message, const char *signal)
 {
   if(fe != NULL) {
     if(fe->channel_wildcard || (fe->channel == channel))
       if(0 == fnmatch(fe->message, message,0))
-	if(0 == fnmatch(fe->signal, signal,0))
-	  return fe;
+        if(0 == fnmatch(fe->signal, signal,0))
+          return fe;
     return filter_match(fe->next, channel, message, signal);
   } else {
     return NULL;
@@ -49,13 +54,13 @@ standard_name(const char *message, const char *signal)
   char *dst;
   char *mat_name = malloc(strlen(message)+1+strlen(signal)+1);
   dst=mat_name;
-	
+        
   /* message name */
   for(src=message; *src; src++, dst++) {
     *dst=*src;
   }
   *dst++ ='_';
-	
+        
   /* signal long name */
   for(src=signal; *src; src++, dst++) {
     if(*src==':') *dst='_';
@@ -67,7 +72,7 @@ standard_name(const char *message, const char *signal)
 
 char *
 filter_apply(const filter_t *filter, const uint32_t channel,
-	     const char *message, const char *signal)
+             const char *message, const char *signal)
 {
   char *mat_name = NULL;
   const filter_element_t *el;
@@ -76,11 +81,11 @@ filter_apply(const filter_t *filter, const uint32_t channel,
     el = filter_match(filter->first, channel, message, signal);
     if(el != NULL) {             /* element found? */
       if(el->operation == '+') { /* accept? */
-	if(el->newname) {        /* new name given? */
-	  mat_name = strdup(el->newname);
-	} else {                 /* no new name given */
-	  mat_name = standard_name(message, signal);
-	}
+        if(el->newname) {        /* new name given? */
+          mat_name = strdup(el->newname);
+        } else {                 /* no new name given */
+          mat_name = standard_name(message, signal);
+        }
       }
     }
   } else {                       /* no filter */
@@ -91,8 +96,8 @@ filter_apply(const filter_t *filter, const uint32_t channel,
 
 int
 filter_test_channel(const mdf_t *const mdf,
-		    const filter_t *const filter,
-		    const cn_block_t *const cn_block)
+                    const filter_t *const filter,
+                    const cn_block_t *const cn_block)
 {
   uint32_t can_id, can_channel;
   ce_block_t *ce_block;
@@ -113,8 +118,8 @@ filter_test_channel(const mdf_t *const mdf,
 
 int
 filter_test_channel_group(const mdf_t *const mdf,
-		    const filter_t *const filter,
-		    const cg_block_t *const cg_block)
+                    const filter_t *const filter,
+                    const cg_block_t *const cg_block)
 {
   const cn_block_t *cn_block;
 
@@ -156,48 +161,48 @@ mdf_filter_create(const char *filename)
 
       token = strtok(line, " \t\r\n");
       if(token == NULL) {
-	fprintf(stderr, "error: can't parse filter operation, line %d\n",linenr);
-	goto ERROR;
+        fprintf(stderr, "error: can't parse filter operation, line %d\n",linenr);
+        goto ERROR;
       }
 
       /* operation */
       if((token[0] == '+') || (token[0]=='-')) {
-	operation = token[0];
+        operation = token[0];
       } else {
-	fprintf(stderr, "error: unexpected filter operation '%c' (ascii %d). Please use + or - to allow or reject signals\n",
-		token[0], token[0]);
-	goto ERROR;
+        fprintf(stderr, "error: unexpected filter operation '%c' (ascii %d). Please use + or - to allow or reject signals\n",
+                token[0], token[0]);
+        goto ERROR;
       }
 
       /* CAN channel */
       token = strtok(NULL, " \t\r\n");
       if(token == NULL) {
-	fprintf(stderr, "error: can't parse channel number, line %d\n",linenr);
-	goto ERROR;
+        fprintf(stderr, "error: can't parse channel number, line %d\n",linenr);
+        goto ERROR;
       }
       channel_wildcard = (token[0] == '*');
       if(channel_wildcard) {
-	channel = 0;
+        channel = 0;
       } else {
-	if(1 != sscanf(token,"%lu",(unsigned long *)&channel)) {
-	  fprintf(stderr, "error: can't parse channel number %s\n",token);
-	  goto ERROR;
-	}
+        if(1 != sscanf(token,"%lu",(unsigned long *)&channel)) {
+          fprintf(stderr, "error: can't parse channel number %s\n",token);
+          goto ERROR;
+        }
       }
 
       /* message name */
       token = strtok(NULL, " \t\r\n");
       if(token == NULL) {
-	fprintf(stderr, "error: can't parse message name, line %d\n",linenr);
-	goto ERROR;
+        fprintf(stderr, "error: can't parse message name, line %d\n",linenr);
+        goto ERROR;
       }
       message = token;
 
       /* signal name */
       token = strtok(NULL, " \t\r\n");
       if(token == NULL) {
-	fprintf(stderr, "error: can't parse signal name, line %d\n",linenr);
-	goto ERROR;
+        fprintf(stderr, "error: can't parse signal name, line %d\n",linenr);
+        goto ERROR;
       }
       signal = token;
 
@@ -207,21 +212,21 @@ mdf_filter_create(const char *filename)
 
       /* create element */
       {
-	filter_element_t *filter_element =
-	  (filter_element_t *)malloc(sizeof(filter_element_t));
-	filter_element->next = NULL;
-	filter_element->operation = operation;
-	filter_element->channel = channel;
-	filter_element->channel_wildcard = channel_wildcard;
-	filter_element->message = strdup(message);
-	filter_element->signal  = strdup(signal);
-	if(newname != NULL) {
-	  filter_element->newname = strdup(newname);
-	} else {
-	  filter_element->newname = NULL;
-	}
-	*next_filter_element = filter_element;
-	next_filter_element = &(filter_element->next);
+        filter_element_t *filter_element =
+          (filter_element_t *)malloc(sizeof(filter_element_t));
+        filter_element->next = NULL;
+        filter_element->operation = operation;
+        filter_element->channel = channel;
+        filter_element->channel_wildcard = channel_wildcard;
+        filter_element->message = strdup(message);
+        filter_element->signal  = strdup(signal);
+        if(newname != NULL) {
+          filter_element->newname = strdup(newname);
+        } else {
+          filter_element->newname = NULL;
+        }
+        *next_filter_element = filter_element;
+        next_filter_element = &(filter_element->next);
       }
 
       

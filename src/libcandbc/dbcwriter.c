@@ -1,5 +1,5 @@
 /*  dbcWriter.c --  function for serializing the DBC model to a file
-    Copyright (C) 2007-2009,2015 Andreas Heitmann
+    Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -80,35 +80,35 @@ static void symbol_write(FILE *out)
 {
   newline(out);
   fprintf(out,
-	  "NS_ : " NEWLINE
-	  "	NS_DESC_" NEWLINE
-	  "	CM_" NEWLINE
-	  "	BA_DEF_" NEWLINE
-	  "	BA_" NEWLINE
-	  "	VAL_" NEWLINE
-	  "	CAT_DEF_" NEWLINE
-	  "	CAT_" NEWLINE
-	  "	FILTER" NEWLINE
-	  "	BA_DEF_DEF_" NEWLINE
-	  "	EV_DATA_" NEWLINE
-	  "	ENVVAR_DATA_" NEWLINE
-	  "	SGTYPE_" NEWLINE
-	  "	SGTYPE_VAL_" NEWLINE
-	  "	BA_DEF_SGTYPE_" NEWLINE
-	  "	BA_SGTYPE_" NEWLINE
-	  "	SIG_TYPE_REF_" NEWLINE
-	  "	VAL_TABLE_" NEWLINE
-	  "	SIG_GROUP_" NEWLINE
-	  "	SIG_VALTYPE_" NEWLINE
-	  "	SIGTYPE_VALTYPE_" NEWLINE
-	  "	BO_TX_BU_" NEWLINE
-	  "	BA_DEF_REL_" NEWLINE
-	  "	BA_REL_" NEWLINE
-	  "	BA_DEF_DEF_REL_" NEWLINE
-	  "	BU_SG_REL_" NEWLINE
-	  "	BU_EV_REL_" NEWLINE
-	  "	BU_BO_REL_" NEWLINE
-	  "	SG_MUL_VAL_" NEWLINE);
+          "NS_ : " NEWLINE
+          "\tNS_DESC_" NEWLINE
+          "\tCM_" NEWLINE
+          "\tBA_DEF_" NEWLINE
+          "\tBA_" NEWLINE
+          "\tVAL_" NEWLINE
+          "\tCAT_DEF_" NEWLINE
+          "\tCAT_" NEWLINE
+          "\tFILTER" NEWLINE
+          "\tBA_DEF_DEF_" NEWLINE
+          "\tEV_DATA_" NEWLINE
+          "\tENVVAR_DATA_" NEWLINE
+          "\tSGTYPE_" NEWLINE
+          "\tSGTYPE_VAL_" NEWLINE
+          "\tBA_DEF_SGTYPE_" NEWLINE
+          "\tBA_SGTYPE_" NEWLINE
+          "\tSIG_TYPE_REF_" NEWLINE
+          "\tVAL_TABLE_" NEWLINE
+          "\tSIG_GROUP_" NEWLINE
+          "\tSIG_VALTYPE_" NEWLINE
+          "\tSIGTYPE_VALTYPE_" NEWLINE
+          "\tBO_TX_BU_" NEWLINE
+          "\tBA_DEF_REL_" NEWLINE
+          "\tBA_REL_" NEWLINE
+          "\tBA_DEF_DEF_REL_" NEWLINE
+          "\tBU_SG_REL_" NEWLINE
+          "\tBU_EV_REL_" NEWLINE
+          "\tBU_BO_REL_" NEWLINE
+          "\tSG_MUL_VAL_" NEWLINE);
 }
 
 static void message_section_write(FILE *out)
@@ -130,8 +130,8 @@ static void node_list_write(FILE *out, node_list_t *node_list)
 static void val_map_entry_write(FILE *out, val_map_entry_t *val_map_entry)
 {
   fprintf(out, "%lu \"%s\" ",
-	  val_map_entry->index,
-	  val_map_entry->value);
+          val_map_entry->index,
+          val_map_entry->value);
 }
 
 static void val_map_write(FILE *out, val_map_t *val_map)
@@ -178,14 +178,14 @@ static void signal_write(FILE *out, signal_t *signal)
   fprintf(out, " SG_ %s", signal->name);
   mux_info_write(out,signal);
   fprintf(out, " : %u|%u@%u%c (%.11G,%.11G) [%.11G|%.11G] ",
-	  signal->bit_start,
-	  signal->bit_len,
-	  signal->endianess,
-	  signal->signedness?'-':'+',
-	  signal->scale,
-	  signal->offset,
-	  signal->min,
-	  signal->max);
+          signal->bit_start,
+          signal->bit_len,
+          signal->endianess,
+          signal->signedness?'-':'+',
+          signal->scale,
+          signal->offset,
+          signal->min,
+          signal->max);
   string_write(out,signal->unit);
   fputs("  ", out);
   comma_identifier_list_write(out, signal->receiver_list);
@@ -203,10 +203,10 @@ static void signal_list_write(FILE *out, signal_list_t *signal_list)
 static void message_write(FILE *out, message_t *message)
 {
   fprintf(out, "BO_ %lu %s: %u %s" NEWLINE,
-	  message->id,
-	  message->name,
-	  message->len,
-	  message->sender);
+          message->id,
+          message->name,
+          message->len,
+          message->sender);
   signal_list_write(out, message->signal_list);
 }
 
@@ -284,9 +284,9 @@ static void comment_list_write(FILE *out, dbc_t *dbc)
     PLIST_ITER(message_list) {
       signal_list_t *signal_list = message_list->message->signal_list;
       PLIST_ITER(signal_list) {
-	signal_comment_write(out,
-			     message_list->message->id,
-			     signal_list->signal); 
+        signal_comment_write(out,
+                             message_list->message->id,
+                             signal_list->signal); 
       }
     }
   }
@@ -313,13 +313,13 @@ static void attribute_definition_write(
   switch(attribute_definition->value_type) {
   case vt_integer:
     fprintf(out," INT %ld %ld", 
-	    attribute_definition->range.int_range.min,
-	    attribute_definition->range.int_range.max);
+            attribute_definition->range.int_range.min,
+            attribute_definition->range.int_range.max);
     break;
   case vt_float:
     fprintf(out," FLOAT %lg %lg", 
-	    attribute_definition->range.double_range.min,
-	    attribute_definition->range.double_range.max);
+            attribute_definition->range.double_range.min,
+            attribute_definition->range.double_range.max);
     break;
   case vt_string:
     fprintf(out," STRING ");
@@ -330,8 +330,8 @@ static void attribute_definition_write(
     break;
   case vt_hex:
     fprintf(out," HEX %ld %ld", 
-	    attribute_definition->range.hex_range.min,
-	    attribute_definition->range.hex_range.max);
+            attribute_definition->range.hex_range.min,
+            attribute_definition->range.hex_range.max);
     break;
   }
   fputs(";" NEWLINE, out);
@@ -385,8 +385,8 @@ static void attribute_definition_default_write(
   fputc(' ', out);
 
   value_write(out,
-	      attribute_definition->value_type,
-	      attribute_definition->default_value);
+              attribute_definition->value_type,
+              attribute_definition->default_value);
 
   fputs(";" NEWLINE, out);
 }
@@ -419,8 +419,8 @@ static void attribute_definition_default_list_write(
 
     if(aoc == attribute_definition_getObjectClass(ad)) {
       attribute_definition_default_write(out,
-	attribute_definition_list->attribute_definition,
-	aoc);
+        attribute_definition_list->attribute_definition,
+        aoc);
     }
   }
 }
@@ -428,8 +428,8 @@ static void attribute_definition_default_list_write(
 static void attribute_value_write(FILE *out, attribute_value_t *attribute_value)
 {
   value_write(out,
-	      attribute_value->value_type,
-	      attribute_value->value);
+              attribute_value->value_type,
+              attribute_value->value);
 }
 
 static void attribute_write(FILE *out, attribute_t *attribute, string_t target)
@@ -485,12 +485,12 @@ static void signal_attribute_list_write(FILE *out, message_list_t *message_list)
     PLIST_ITER(signal_list) {
       const signal_t *signal = signal_list->signal;
       if(signal->attribute_list != NULL) {
-	string_t target = (string_t)malloc(3+1+10+1+strlen(signal->name)+1);
-	sprintf(target, "SG_ %lu %s",
-		message->id,
-		signal->name);
-	attribute_list_write(out, signal->attribute_list, target);
-	string_free(target);
+        string_t target = (string_t)malloc(3+1+10+1+strlen(signal->name)+1);
+        sprintf(target, "SG_ %lu %s",
+                message->id,
+                signal->name);
+        attribute_list_write(out, signal->attribute_list, target);
+        string_free(target);
       }
     }
   }
@@ -531,9 +531,9 @@ static void signal_val_map_write(FILE *out, message_list_t *message_list)
       val_map_t *val_map = signal->val_map;
       
       if(val_map != NULL) {
-	fprintf(out, "VAL_ %lu %s ", message->id, signal->name);
-	val_map_write(out, val_map);
-	fputs(";" NEWLINE, out);
+        fprintf(out, "VAL_ %lu %s ", message->id, signal->name);
+        val_map_write(out, val_map);
+        fputs(";" NEWLINE, out);
       }
     }
   }
@@ -557,8 +557,8 @@ static void message_transmitter_list_write(
 static void signal_group_write(FILE *out, signal_group_t *signal_group)
 {
   fprintf(out, "SIG_GROUP_ %lu %s 1 : ",
-	  signal_group->id,
-	  signal_group->name);
+          signal_group->id,
+          signal_group->name);
   space_identifier_list_write(out, signal_group->signal_name_list);
   fputs(";" NEWLINE,out);
 }
@@ -582,9 +582,9 @@ static void signal_valtype_write(FILE *out, message_list_t *message_list)
       const signal_t *signal = signal_list->signal;
       
       if(signal->signal_val_type == svt_float) {
-	fprintf(out, "SIG_VALTYPE_ %lu %s : 1;", message->id, signal->name);
+        fprintf(out, "SIG_VALTYPE_ %lu %s : 1;", message->id, signal->name);
       } else if(signal->signal_val_type == svt_double ) {
-	fprintf(out, "SIG_VALTYPE_ %lu %s : 2;", message->id, signal->name);
+        fprintf(out, "SIG_VALTYPE_ %lu %s : 2;", message->id, signal->name);
       }
     }
   }

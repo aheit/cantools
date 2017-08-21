@@ -16,3 +16,4 @@ TODO LIST
 2012-04-29	handle symbolic message names in ASC files
 2013-12-22	fix compilation issues reported by Sebastian	done
 2013-12-22	man pages	    	     	       		
+2017-05-07	Autodetect input file format

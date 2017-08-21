@@ -1,3 +1,12 @@
+2017-08-21  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+	* all: released version 0.24
+	* all: using stdint.h for defining 8 bit signed integers instead
+          of char basic type due to its implementation defined signedness
+	(thanks, Rainer)
+	* all: cleanup of header files
+	* cantomat: added error message for failed dbc parsing
+
 2017-05-01  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
 	* all: released version 0.23

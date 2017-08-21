@@ -1,0 +1,1646 @@
+
+src/cantomat/busassignment.c,338
+busAssignment_t *busAssignment_create(void)busAssignment_create27,919
+void busAssignment_associate(busAssignment_t *busAssignment,busAssignment_associate36,1098
+int busAssignment_parseDBC(busAssignment_t *busAssignment)busAssignment_parseDBC49,1597
+void busAssignment_free(busAssignment_t *busAssignment)busAssignment_free83,2578
+
+src/cantomat/busassignment.h,358
+#define INCLUDE_BUSASSIGNMENTINCLUDE_BUSASSIGNMENT2,31
+  int bus;bus27,936
+  char *filename;filename28,948
+  messageHash_t *messageHash;messageHash29,967
+} busAssignmentEntry_t;busAssignmentEntry_t30,998
+  int n;n33,1043
+  busAssignmentEntry_t *list; /* array of n busAssigmentEntry_t's */list34,1053
+} busAssignment_t;busAssignment_t35,1123
+
+src/cantomat/cantomat.c,246
+int verbose_flag = 0;verbose_flag34,1107
+int debug_flag   = 0;debug_flag35,1130
+const char *program_name;program_name37,1155
+static void usage_error(void)usage_error39,1184
+help(void)help46,1324
+main(int argc, char **argv)main75,2694
+
+src/cantomat/matwrite.c,83
+int matWrite(measurement_t *measurement, const char *outFileName)matWrite32,1029
+
+src/cantomat/matwrite.h,51
+#define INCLUDE_MATWRITE_HINCLUDE_MATWRITE_H2,28
+
+src/cantomat/measurement.c,976
+  struct hashtable *timeSeriesHash;timeSeriesHash37,1177
+  char             *local_prefix;local_prefix38,1213
+} signalProcCbData_t;signalProcCbData_t39,1247
+  busAssignment_t *busAssignment;busAssignment43,1343
+  measurement_t   *measurement;measurement44,1377
+  signalFormat_t   signalFormat;signalFormat45,1409
+  sint32           timeResolution;timeResolution46,1442
+} messageProcCbData_t;messageProcCbData_t47,1477
+static unsigned int signalName_computeHash( void *k)signalName_computeHash50,1552
+static int signalNames_equal ( void *key1, void *key2 )signalNames_equal63,1805
+static void signalProc_print(signalProc_print69,1968
+static void signalProc_timeSeries(signalProc_timeSeries108,2905
+static void canMessage_process(canMessage_t *canMessage, void *cbData)canMessage_process168,4804
+measurement_t *measurement_read(busAssignment_t *busAssignment,measurement_read225,6393
+void measurement_free(measurement_t *m)measurement_free284,7929
+
+src/cantomat/measurement.h,770
+#define INCLUDE_MEASUREMENT_HINCLUDE_MEASUREMENT_H2,31
+    time_t tv_sec;tv_sec33,1043
+    uint32 tv_nsec;tv_nsec34,1063
+  } t; /* time stamp */t35,1084
+  uint8   bus;     /* can bus */bus36,1109
+  uint32  id;      /* numeric CAN-ID */id37,1143
+  uint8   dlc;dlc38,1184
+  uint8   byte_arr[8];byte_arr39,1200
+} canMessage_t;canMessage_t40,1224
+typedef void (* msgRxCb_t)(canMessage_t *message, void *cbData);msgRxCb_t43,1285
+  struct hashtable *timeSeriesHash;timeSeriesHash46,1371
+} measurement_t;measurement_t47,1408
+  unsigned int n;n50,1446
+  double *time;time51,1465
+  double *value;value52,1482
+} timeSeries_t;timeSeries_t53,1500
+typedef void (* parserFunction_t)(FILE *fp, msgRxCb_t msgRxCb, void *cbData);parserFunction_t55,1519
+
+src/cantomat/messagedecoder.c,76
+void canMessage_decode(message_t      *dbcMessage,canMessage_decode24,870
+
+src/cantomat/messagedecoder.h,140
+#define INCLUDE_MESSAGEDECODER_HINCLUDE_MESSAGEDECODER_H2,34
+typedef void (* signalProcCb_t)(const signal_t     *s,signalProcCb_t28,982
+
+src/cantomat/messagehash.c,989
+const uint32 mask_ext = 0x80000000UL;mask_ext31,1040
+const uint32 mask_29  = 0x1FFFFFFFUL;mask_2932,1079
+const uint32 mask_11  = 0x000007FFUL;mask_1133,1118
+const uint32 mask_pri = 0x1C000000UL; /* Priority */mask_pri34,1157
+const uint32 mask_pgn = 0x03FFFF00UL; /* Parameter Group Number */mask_pgn35,1211
+const uint32 mask_res = 0x02000000UL; /* Reserved */mask_res36,1279
+const uint32 mask_dp  = 0x01000000UL; /* Data Page */mask_dp37,1333
+const uint32 mask_pf  = 0x00FF0000UL; /* PDU Format */mask_pf38,1388
+const uint32 mask_ps  = 0x0000FF00UL; /* PDU Specific */mask_ps39,1444
+const uint32 mask_sad = 0x000000FFUL; /* Source Address */mask_sad40,1502
+static unsigned int hash_from_canid(void *keyp)hash_from_canid43,1596
+static int canids_equal(void *key1p, void *key2p)canids_equal60,2160
+struct hashtable *messageHash_create(message_list_t *message_list)messageHash_create76,2584
+void messageHash_free(struct hashtable *const h)messageHash_free103,3299
+
+src/cantomat/messagehash.h,175
+#define INCLUDE_MESSAGEHASH_HINCLUDE_MESSAGEHASH_H2,31
+typedef uint32 messageHashKey_t;messageHashKey_t28,955
+typedef struct hashtable messageHash_t;messageHash_t29,989
+
+src/cantomat/signalformat.c,159
+static char *strapp(char *dp, const char *sp)strapp25,955
+char *signalFormat_stringAppend(const char *in, const char *app)signalFormat_stringAppend33,1073
+
+src/cantomat/signalformat.h,278
+#define INCLUDE_SIGNALFORMAT_HINCLUDE_SIGNALFORMAT_H2,32
+  signalFormat_Name     = 1<<1,signalFormat_Name25,906
+  signalFormat_Message  = 1<<2,signalFormat_Message26,939
+  signalFormat_Database = 1<<3,signalFormat_Database27,972
+} signalFormat_t;signalFormat_t28,1005
+
+src/dbccopy/dbccopy.c,40
+main(int argc, char **argv)main10,128
+
+src/dbcls/dbcls.c,1621
+static int verbose_flag;verbose_flag40,1193
+static int networks_flag;networks_flag41,1219
+static int messages_flag;messages_flag42,1246
+static int signals_flag;signals_flag43,1273
+static int nodes_flag;nodes_flag44,1299
+static int envvars_flag;envvars_flag45,1323
+static int valtables_flag;valtables_flag46,1349
+static char *decode_mux_type(mux_t mux_type)decode_mux_type48,1379
+static char *decode_signal_val_type(signal_val_type_t signal_val_type)decode_signal_val_type62,1701
+static void show_attribute(attribute_t *a)show_attribute76,2041
+static void show_string_list(string_list_t *string_list)show_string_list105,2689
+static void show_attribute_list(attribute_list_t *al)show_attribute_list114,2912
+static void show_val_map(val_map_t *vm)show_val_map125,3131
+static void show_valtable_list(valtable_list_t *valtable_list)show_valtable_list133,3338
+static void show_network(dbc_t *dbc)show_network143,3677
+static void show_message_header(void)show_message_header164,4179
+static void show_signal_header(void)show_signal_header175,4392
+static void show_signal(signal_list_t *sl)show_signal196,4802
+static void show_string(string_t string)show_string235,5907
+static void show_message(message_list_t *ml)show_message242,6009
+static void show_message_list(message_list_t *message_list)show_message_list261,6483
+static void show_signals(dbc_t *dbc)show_signals271,6685
+static void show_nodes(dbc_t *dbc)show_nodes288,7062
+static void show_envvars(envvar_list_t *envvar_list)show_envvars302,7378
+static void help(void)help340,8288
+main(int argc, char **argv)main358,8965
+
+src/hashtable/hashtable.c,759
+static const unsigned int primes[] = {primes15,349
+const unsigned int prime_table_length = sizeof(primes)/sizeof(primes[0]);prime_table_length24,596
+const float max_load_factor = 0.65;max_load_factor25,670
+create_hashtable(unsigned int minsize,create_hashtable29,806
+hash(struct hashtable *h, void *k)hash57,1875
+hashtable_expand(struct hashtable *h)hashtable_expand71,2311
+hashtable_count(struct hashtable *h)hashtable_count130,4326
+hashtable_insert(struct hashtable *h, void *k, void *v)hashtable_insert137,4478
+hashtable_search(struct hashtable *h, void *k)hashtable_search163,5428
+hashtable_remove(struct hashtable *h, void *k)hashtable_remove181,5970
+hashtable_destroy(struct hashtable *h, int free_values)hashtable_destroy216,6844
+
+src/hashtable/hashtable.h,256
+#define __HASHTABLE_CWC22_H____HASHTABLE_CWC22_H__4,108
+#define DEFINE_HASHTABLE_INSERT(DEFINE_HASHTABLE_INSERT101,3880
+#define DEFINE_HASHTABLE_SEARCH(DEFINE_HASHTABLE_SEARCH119,4424
+#define DEFINE_HASHTABLE_REMOVE(DEFINE_HASHTABLE_REMOVE137,5010
+
+src/hashtable/hashtable_itr.c,331
+hashtable_iterator(struct hashtable *h)hashtable_iterator12,361
+hashtable_iterator_advance(struct hashtable_itr *itr)hashtable_iterator_advance56,1539
+hashtable_iterator_remove(struct hashtable_itr *itr)hashtable_iterator_remove101,2687
+hashtable_iterator_search(struct hashtable_itr *itr,hashtable_iterator_search130,3538
+
+src/hashtable/hashtable_itr.h,489
+#define __HASHTABLE_ITR_CWC22____HASHTABLE_ITR_CWC22__4,116
+struct hashtable_itrhashtable_itr11,414
+    struct hashtable *h;h13,437
+    struct entry *e;e14,462
+    struct entry *parent;parent15,483
+    unsigned int index;index16,509
+hashtable_iterator_key(struct hashtable_itr *i)hashtable_iterator_key32,911
+hashtable_iterator_value(struct hashtable_itr *i)hashtable_iterator_value41,1165
+#define DEFINE_HASHTABLE_ITERATOR_SEARCH(DEFINE_HASHTABLE_ITERATOR_SEARCH71,2277
+
+src/hashtable/hashtable_private.h,691
+#define __HASHTABLE_PRIVATE_CWC22_H____HASHTABLE_PRIVATE_CWC22_H__4,122
+struct entryentry9,265
+    void *k, *v;k11,280
+    void *k, *v;v11,280
+    unsigned int h;h12,297
+    struct entry *next;next13,317
+struct hashtable {hashtable16,345
+    unsigned int tablelength;tablelength17,364
+    struct entry **table;table18,394
+    unsigned int entrycount;entrycount19,420
+    unsigned int loadlimit;loadlimit20,449
+    unsigned int primeindex;primeindex21,477
+    unsigned int (*hashfn) (void *k);hashfn22,506
+    int (*eqfn) (void *k1, void *k2);eqfn23,544
+indexFor(unsigned int tablelength, unsigned int hashvalue) {indexFor33,838
+#define freekey(freekey46,1201
+
+src/libcanasc/ascreader.c,225
+  unset = 0,unset28,931
+  decimal = 10,decimal29,945
+  hexadecimal = 16hexadecimal30,962
+} numBase_t;numBase_t31,982
+void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)ascReader_processFile40,1175
+
+src/libcanasc/ascreader.h,49
+#define INCLUDE_ASCREAD_HINCLUDE_ASCREAD_H2,27
+
+src/libcanblf/blfapi.c,601
+blfPeekObject(BLFHANDLE h, VBLObjectHeaderBase* pBase)blfPeekObject29,949
+blfCreateFile(FILE *fp)blfCreateFile42,1219
+blfCloseHandle(BLFHANDLE h)blfCloseHandle59,1536
+blfGetFileStatisticsEx(BLFHANDLE h, VBLFileStatisticsEx* pStatistics)blfGetFileStatisticsEx67,1696
+blfReadObject(BLFHANDLE hFile, VBLObjectHeaderBase *pBase)blfReadObject85,2129
+blfReadObjectSecure(BLFHANDLE h, VBLObjectHeaderBase* pBase,blfReadObjectSecure114,2882
+blfFreeObject(BLFHANDLE h, VBLObjectHeaderBase* pBase)blfFreeObject155,4008
+blfSkipObject(BLFHANDLE h, VBLObjectHeaderBase* pBase)blfSkipObject164,4223
+
+src/libcanblf/blfapi.h,6326
+#define INCLUDE_BLFAPI_HINCLUDE_BLFAPI_H2,26
+#define BL_OBJ_TYPE_CAN_MESSAGE BL_OBJ_TYPE_CAN_MESSAGE27,900
+#define BL_OBJ_TYPE_CAN_STATISTIC BL_OBJ_TYPE_CAN_STATISTIC28,946
+#define BL_OBJ_TYPE_LOG_CONTAINER BL_OBJ_TYPE_LOG_CONTAINER29,992
+#define BL_OBJ_TYPE_CAN_DRIVER_ERROR BL_OBJ_TYPE_CAN_DRIVER_ERROR30,1038
+#define BL_OBJ_TYPE_CAN_ERROR_EXT BL_OBJ_TYPE_CAN_ERROR_EXT31,1084
+#define BL_OBJ_TYPE_CAN_MESSAGE2 BL_OBJ_TYPE_CAN_MESSAGE232,1130
+#define BL_OBJ_FLAG_TIME_TEN_MICS BL_OBJ_FLAG_TIME_TEN_MICS34,1178
+#define BL_OBJ_FLAG_TIME_ONE_NANS BL_OBJ_FLAG_TIME_ONE_NANS35,1215
+  uint16_t wYear;wYear38,1307
+  uint16_t wMonth;wMonth39,1326
+  uint16_t wDayOfWeek;wDayOfWeek40,1346
+  uint16_t wDay;wDay41,1370
+  uint16_t wHour;wHour42,1388
+  uint16_t wMinute;wMinute43,1407
+  uint16_t wSecond;wSecond44,1428
+  uint16_t wMilliseconds;wMilliseconds45,1449
+} SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;SYSTEMTIME46,1476
+} SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;PSYSTEMTIME46,1476
+} SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;LPSYSTEMTIME46,1476
+  uint32_t mSignature;mSignature49,1569
+  uint32_t mHeaderSize;mHeaderSize50,1593
+  uint32_t mCRC;mCRC51,1618
+  uint8_t  appID;appID52,1636
+  uint8_t  dwCompression;dwCompression53,1655
+  uint8_t  appMajor;appMajor54,1682
+  uint8_t  appMinor;appMinor55,1704
+  uint64_t fileSize;fileSize56,1726
+  uint64_t uncompressedFileSize;uncompressedFileSize57,1748
+  uint32_t objectCount;objectCount58,1782
+  uint8_t  appBuild;appBuild59,1807
+  uint8_t  mReserved1;mReserved160,1829
+  uint8_t  mReserved2;mReserved261,1853
+  uint8_t  mReserved3;mReserved362,1877
+  SYSTEMTIME mMeasurementStartTime;mMeasurementStartTime63,1901
+  SYSTEMTIME mMeasurementEndTime;mMeasurementEndTime64,1938
+  uint8_t  mReserved4[72];mReserved465,1973
+} *LOGG, LOGG_t;LOGG66,2001
+} *LOGG, LOGG_t;LOGG_t66,2001
+  uint32_t  mSignature;         /*  0: "LOBJ" BL_OBJ_SIGNATURE */mSignature69,2068
+  uint16_t  mHeaderSize;        /*  4: header size */mHeaderSize70,2135
+  uint16_t  mHeaderVersion;     /*  6: 1=VBLObjectHeader, 2=VBLObjectHeader2*/mHeaderVersion71,2190
+  uint32_t  mObjectSize;        /*  8: object size*/mObjectSize72,2270
+  uint32_t  mObjectType;        /* 12: block type */mObjectType73,2324
+} VBLObjectHeaderBase;          /* 16 */VBLObjectHeaderBase74,2378
+  VBLObjectHeaderBase mBase;mBase77,2469
+  uint32_t  mObjectFlags;       /* 16 */mObjectFlags78,2499
+  uint16_t  mReserved;          /* 20 */mReserved79,2541
+  uint16_t  mObjectVersion;     /* 22 */mObjectVersion80,2583
+  uint64_t  mObjectTimeStamp;   /* 24..31 */mObjectTimeStamp81,2625
+} VBLObjectHeader;              /* 32 */VBLObjectHeader82,2671
+  VBLObjectHeaderBase base;    /*  0: base */base86,2764
+  uint32_t            compressedflag;    /* 16: compressed data=2 */compressedflag87,2811
+  uint32_t            reserved1;         /* 20: reserved */reserved188,2881
+  uint32_t            deflatebuffersize; /* 24: uncompressed size*/deflatebuffersize89,2942
+  uint32_t            reserved2;         /* 28: reserved */reserved290,3011
+} VBLObjectHeaderBaseLOGG;     /* 32 */VBLObjectHeaderBaseLOGG91,3072
+  VBLObjectHeader mHeader;     /*  0: header */mHeader94,3162
+  uint16_t        mChannel;    /* 32: channel*/mChannel95,3211
+  uint8_t         mFlags;      /* 34: flags */mFlags96,3260
+  uint8_t         mDLC;        /* 35: DLC */mDLC97,3308
+  uint32_t        mID;         /* 36: message ID*/mID98,3354
+  uint8_t         mData[8];    /* 40 */mData99,3406
+} VBLCANMessage;VBLCANMessage100,3447
+typedef struct VBLFileStatistics_t {VBLFileStatistics_t102,3467
+  uint32_t  mStatisticsSize;                   /* sizeof (VBLFileStatistics) */mStatisticsSize103,3505
+  uint8_t   mApplicationID;                    /* application ID */mApplicationID104,3586
+  uint8_t   mApplicationMajor;                 /* application major number */mApplicationMajor105,3655
+  uint8_t   mApplicationMinor;                 /* application minor number */mApplicationMinor106,3734
+  uint8_t   mApplicationBuild;                 /* application build number */mApplicationBuild107,3813
+  uint64_t  mFileSize;                         /* file size in bytes */mFileSize108,3892
+  uint64_t  mUncompressedFileSize;             /* uncompressed file size in bytes */mUncompressedFileSize109,3965
+  uint32_t  mObjectCount;                      /* number of objects */mObjectCount110,4051
+  uint32_t  mObVBLFileStatisticsjectsRead;     /* number of objects read */mObVBLFileStatisticsjectsRead111,4123
+} VBLFileStatistics;VBLFileStatistics112,4200
+typedef struct VBLFileStatisticsEx_t {VBLFileStatisticsEx_t114,4224
+  uint32_t      mStatisticsSize;               /* sizeof (VBLFileStatisticsEx) */mStatisticsSize115,4264
+  uint8_t       mApplicationID;                /* application ID */mApplicationID116,4347
+  uint8_t       mApplicationMajor;             /* application major number */mApplicationMajor117,4416
+  uint8_t       mApplicationMinor;             /* application minor number */mApplicationMinor118,4495
+  uint8_t       mApplicationBuild;             /* application build number */mApplicationBuild119,4574
+  uint64_t      mFileSize;                     /* file size in bytes */mFileSize120,4653
+  uint64_t      mUncompressedFileSize;         /* uncompressed file size in bytes */mUncompressedFileSize121,4726
+  uint32_t      mObjectCount;                  /* number of objects */mObjectCount122,4812
+  uint32_t      mObjectsRead;                  /* number of objects read */mObjectsRead123,4884
+  SYSTEMTIME    mMeasurementStartTime;         /* measurement start time */mMeasurementStartTime124,4961
+  SYSTEMTIME    mLastObjectTime;               /* last object time */mLastObjectTime125,5038
+  uint32_t      mReserved[18];                 /* reserved */mReserved126,5109
+} VBLFileStatisticsEx;VBLFileStatisticsEx127,5172
+  uint32_t            magic;magic130,5216
+  LOGG_t              mLOGG;mLOGG131,5246
+  DualStream          mDualStream;mDualStream132,5276
+  uint32_t            mPeekFlag;mPeekFlag133,5312
+  VBLFileStatisticsEx mStatistics;mStatistics134,5346
+  uint32_t            mCANMessageFormat_v1;mCANMessageFormat_v1135,5382
+} *BLFHANDLE;BLFHANDLE136,5427
+
+src/libcanblf/blfparser.c,1673
+blfMemZero(uint8_t *mem, const size_t n)blfMemZero34,1019
+blfMemUncompress(uint8_t  *next_out,blfMemUncompress41,1150
+blfSystemTimeInit(SYSTEMTIME *const s)blfSystemTimeInit73,1934
+blfLOGGInit(LOGG l)blfLOGGInit87,2181
+blfStatisticsInit(VBLFileStatisticsEx *const s)blfStatisticsInit106,2605
+blfHandleReadOrSkip(BLFHANDLE h, uint8_t *dest,blfHandleReadOrSkip129,3238
+blfHandleRead(BLFHANDLE h, char fileOnlyBit, uint8_t *dest_ptr,blfHandleRead192,5079
+blfHandleSkipPadding(BLFHANDLE h, uint32_t nBytes)blfHandleSkipPadding209,5593
+blfLOGGUncompress(VBLObjectHeaderBaseLOGG* hbaselogg,blfLOGGUncompress216,5806
+blfHandleReadLOGG(VBLObjectHeaderBaseLOGG *hbaselogg, BLFHANDLE h)blfHandleReadLOGG252,6750
+blfHeaderBaseDump(VBLObjectHeaderBase *b)blfHeaderBaseDump297,8294
+blfVBLObjectHeaderBaseInit(VBLObjectHeaderBase *pBase,blfVBLObjectHeaderBaseInit312,8781
+blfPeekObjectInternal(BLFHANDLE hFile, VBLObjectHeaderBase *pBase)blfPeekObjectInternal325,9135
+blfStatisticsFromLOGG(VBLFileStatisticsEx *const s, const LOGG_t *const l)blfStatisticsFromLOGG354,9903
+blfCheckEndian(void)blfCheckEndian369,10507
+blfCheckStructures(void)blfCheckStructures379,10748
+blfHandleInit(BLFHANDLE this)blfHandleInit392,11130
+blfHandleIsInitialized(BLFHANDLE h)blfHandleIsInitialized409,11496
+blfHandleClose(BLFHANDLE h)blfHandleClose416,11628
+blfHandleSkip(BLFHANDLE h, uint32_t nBytes)blfHandleSkip423,11750
+blfHandleOpen(BLFHANDLE h, FILE *fp)blfHandleOpen441,12216
+blfVBLObjectHeaderBaseCopy(      VBLObjectHeaderBase *const dest,blfVBLObjectHeaderBaseCopy490,13534
+blfFreeHeader(BLFHANDLE hFile, VBLObjectHeader *pBase)blfFreeHeader498,13737
+
+src/libcanblf/blfparser.h,202
+#define INCLUDE_BLFPARSER_HINCLUDE_BLFPARSER_H2,29
+#define BLHANDLE_MAGIC BLHANDLE_MAGIC30,954
+#define BL_OBJ_SIGNATURE BL_OBJ_SIGNATURE32,994
+#define BL_LOGG_SIGNATURE BL_LOGG_SIGNATURE33,1051
+
+src/libcanblf/blfreader.c,444
+blfSystemTimePrint(SYSTEMTIME *const s)blfSystemTimePrint33,1003
+blfCANMessageDump(const canMessage_t* canMessage)blfCANMessageDump50,1365
+blfCANMessageFromVBLCANMessage (canMessage_t* canMessage,blfCANMessageFromVBLCANMessage67,1756
+blfVBLCANMessageParseTime(const VBLCANMessage* message, time_t *sec,blfVBLCANMessageParseTime78,2102
+void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)blfReader_processFile107,3087
+
+src/libcanblf/blfreader.h,53
+#define INCLUDE_BLFREADER_HINCLUDE_BLFREADER_H2,29
+
+src/libcanblf/blfstream.c,1713
+blfFileReadOrSkip(FILE *fp, void *dest, size_t nBytes)blfFileReadOrSkip30,1046
+blfFileGetRemainingFileSize(FILE *fp, uint32_t *remainingSizePtr)blfFileGetRemainingFileSize41,1314
+blfSizedStreamInit(SizedStream *s)blfSizedStreamInit64,2000
+blfSizedStreamIsEmpty(const SizedStream *const s)blfSizedStreamIsEmpty72,2105
+blfSizedStreamIsOpen(const SizedStream *const s)blfSizedStreamIsOpen78,2195
+blfSizedStreamBytesLeft(const SizedStream *const s)blfSizedStreamBytesLeft85,2295
+blfSizedStreamReadOrSkip(const SizedStream *const s, void *const dest, const size_t nBytes)blfSizedStreamReadOrSkip91,2393
+blfSizedStreamInitFromMem(SizedStream *const s, void *const buffer, const size_t size)blfSizedStreamInitFromMem97,2552
+blfSizedStreamClose(SizedStream * const s)blfSizedStreamClose112,2868
+blfSizedStreamUpdateBytesLeft(SizedStream *s, const uint32_t offset)blfSizedStreamUpdateBytesLeft126,3093
+blfSizedStreamDetermineBytesLeft(SizedStream *const s)blfSizedStreamDetermineBytesLeft146,3434
+blfSizedStreamInitFromFile(SizedStream *const s, FILE *const fp)blfSizedStreamInitFromFile152,3568
+blfDualStreamInit (DualStream *const ds)blfDualStreamInit175,4388
+blfDualStreamClose(DualStream *ds)blfDualStreamClose182,4521
+blfDualStreamIsEmpty(const DualStream *const ds)blfDualStreamIsEmpty192,4715
+blfDualStreamGetSizedStream(DualStream *ds, const int fileOnly)blfDualStreamGetSizedStream199,4962
+blfDualStreamBytesLeft(DualStream *ds)blfDualStreamBytesLeft209,5168
+blfDualStreamReduceBytesLeft(DualStream *ds, const uint32_t offset)blfDualStreamReduceBytesLeft215,5292
+blfDualStreamReadOrSkip(DualStream *ds, void *dest, size_t nBytes, int fileOnly)blfDualStreamReadOrSkip221,5459
+
+src/libcanblf/blfstream.h,517
+#define INCLUDE_BLFSTREAM_HINCLUDE_BLFSTREAM_H2,28
+typedef int success_t;success_t27,881
+#define BLFMIN(BLFMIN29,905
+  FILE      *mFile;      /* FILE pointer to associated stream */mFile36,1055
+  uint32_t   mBytesLeft; /* number of bytes left in stream */mBytesLeft37,1120
+  uint8_t   *mBuffer;    /* pointer to allocated memory for amBuffer38,1182
+} SizedStream;SizedStream40,1295
+  SizedStream fileStream;fileStream48,1495
+  SizedStream memStream;memStream49,1521
+} DualStream;DualStream50,1546
+
+src/libcanclg/clgreader.c,100
+void clgReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)clgReader_processFile34,1092
+
+src/libcanclg/clgreader.h,593
+#define INCLUDE_CLGREADER_HINCLUDE_CLGREADER_H2,29
+  uint8_t  log_time_array[4];   /* time */log_time_array27,954
+  uint8_t  id_channel_array[4]; /* id and channel */id_channel_array28,998
+  uint8_t  data_array[8];       /* data */data_array29,1052
+} clg_message_t;clg_message_t30,1096
+  char identifier[4];identifier34,1164
+  uint8_t unknown[8];unknown35,1187
+  uint8_t channel_type1;channel_type136,1210
+  uint8_t channel_type2;channel_type237,1236
+  uint8_t unknown2[6];unknown238,1262
+  clg_message_t unknown3[16];unknown339,1286
+} clg_header_t;clg_header_t40,1317
+
+src/libcandbc/dbcmodel.c,1548
+typedef struct yy_buffer_state *YY_BUFFER_STATE;YY_BUFFER_STATE19,811
+void trace(char *str)trace23,888
+void string_free(string_t string)string_free31,1000
+void attribute_value_free(attribute_value_t *attribute_value)attribute_value_free36,1079
+static void attribute_free(attribute_t *attribute)attribute_free53,1470
+static void attribute_definition_free(attribute_definition_free62,1664
+static void signal_free(signal_t *signal)signal_free89,2405
+void message_free(message_t *message)message_free105,2824
+static void node_free(node_t *node)node_free118,3171
+static void attribute_rel_free(attribute_rel_t *attribute_rel)attribute_rel_free132,3543
+static void val_map_entry_free(val_map_entry_t *val_map_entry)val_map_entry_free140,3773
+void valtable_free(valtable_t *valtable)valtable_free150,3993
+void envvar_free(envvar_t *envvar)envvar_free161,4230
+static void signal_group_free(signal_group_t *signal_group)signal_group_free175,4549
+static void network_free(network_t *network)network_free186,4833
+void dbc_free(dbc_t *dbc)dbc_free195,5024
+string_t string_dup(string_t orig)string_dup216,5617
+attribute_value_t * attribute_value_dup(attribute_value_t *orig)attribute_value_dup225,5744
+attribute_t * attribute_dup(attribute_t *orig)attribute_dup253,6478
+DEFINE_PLIST_DUP(attribute_list, attribute)DEFINE_PLIST_DUP265,6739
+signal_t *signal_dup(signal_t *orig)signal_dup283,7126
+DEFINE_PLIST_DUP(signal_list, signal)DEFINE_PLIST_DUP310,8124
+char *string_merge(char *in, char *app)string_merge332,8792
+
+src/libcandbc/dbcmodel.h,6832
+#define INCLUDE_DBCMODEL_HINCLUDE_DBCMODEL_H2,28
+#define DECLARE_LIST(DECLARE_LIST32,976
+#define DECLARE_LIST_FREE(DECLARE_LIST_FREE39,1154
+#define DEFINE_LIST_FREE(DEFINE_LIST_FREE42,1241
+#define DECLARE_PLIST(DECLARE_PLIST53,1609
+#define DEFINE_PLIST_FREE(DEFINE_PLIST_FREE60,1787
+#define DECLARE_PLIST_FREE(DECLARE_PLIST_FREE71,2157
+#define DEFINE_PLIST_DUP(DEFINE_PLIST_DUP74,2244
+#define CREATE(CREATE90,3013
+typedef char *        string_t;string_t93,3103
+#define STR0(STR095,3172
+  uint32          id;id99,3248
+  string_t        name;name100,3271
+  string_list_t  *signal_name_list;signal_name_list101,3296
+} signal_group_t;signal_group_t102,3333
+  aoc_undefined,aoc_undefined109,3476
+  aoc_object,aoc_object110,3494
+  aoc_relation,aoc_relation111,3509
+} attribute_object_class_t;attribute_object_class_t112,3526
+  m_signal,m_signal116,3595
+  m_multiplexor,m_multiplexor117,3608
+  m_multiplexedm_multiplexed118,3626
+} mux_t;mux_t119,3643
+  mux_t  mux_type;mux_type123,3695
+  uint32 mux_value;mux_value124,3715
+} mux_info_t;mux_info_t125,3736
+  svt_integer,svt_integer129,3792
+  svt_float,svt_float130,3808
+  svt_doublesvt_double131,3822
+} signal_val_type_t;signal_val_type_t132,3836
+  vt_integer,vt_integer136,3904
+  vt_float,vt_float137,3919
+  vt_string,vt_string138,3932
+  vt_enum,vt_enum139,3946
+  vt_hexvt_hex140,3958
+} value_type_t;value_type_t141,3968
+  sint32       int_val;int_val145,4033
+  double       double_val;double_val146,4058
+  string_t     string_val;string_val147,4086
+  string_t     enum_val;enum_val148,4114
+  uint32       hex_val;hex_val149,4140
+} value_union_t;value_union_t150,4165
+  value_type_t  value_type;value_type154,4226
+  value_union_t value;value155,4255
+} attribute_value_t;attribute_value_t156,4279
+  string_t           name;name160,4338
+  attribute_value_t *value;value161,4366
+} attribute_t;attribute_t162,4395
+  string_t          name;name169,4510
+  string_t          comment;comment170,4537
+  attribute_list_t *attribute_list;attribute_list171,4567
+} node_t;node_t172,4604
+  uint32   index;index179,4710
+  string_t value;value180,4729
+} val_map_entry_t;val_map_entry_t181,4748
+  string_t   name;name187,4849
+  string_t   comment;comment188,4869
+  val_map_t *val_map;val_map189,4892
+} valtable_t;valtable_t190,4915
+  string_t          name;name196,5007
+  mux_t             mux_type;mux_type197,5034
+  uint32            mux_value;mux_value198,5065
+  uint8             bit_start;bit_start199,5097
+  uint8             bit_len;bit_len200,5129
+  uint8             endianess;endianess201,5159
+  uint8             signedness;signedness202,5191
+  double            scale;scale203,5224
+  double            offset;offset204,5252
+  double            min;min205,5281
+  double            max;max206,5307
+  signal_val_type_t signal_val_type;signal_val_type207,5333
+  string_t          unit;unit208,5371
+  string_list_t    *receiver_list;receiver_list209,5398
+  string_t          comment;comment210,5434
+  attribute_list_t *attribute_list;attribute_list211,5464
+  val_map_t        *val_map;val_map212,5501
+} signal_t;signal_t213,5531
+  uint32            id;id219,5618
+  string_t          name;name220,5643
+  uint8             len;len221,5670
+  string_t          sender;sender222,5696
+  signal_list_t    *signal_list;signal_list223,5725
+  string_t          comment;comment224,5759
+  attribute_list_t *attribute_list;attribute_list225,5789
+  string_list_t    *transmitter_list;transmitter_list226,5826
+} message_t;message_t227,5865
+  string_t           name;name234,5988
+  attribute_value_t *attribute_value;attribute_value235,6016
+  node_t            *node;node236,6055
+  message_t         *message;message237,6083
+  signal_t          *signal;signal238,6114
+} attribute_rel_t;attribute_rel_t239,6144
+  ot_network,ot_network246,6297
+  ot_node,ot_node247,6312
+  ot_message,ot_message248,6324
+  ot_signal,ot_signal249,6339
+  ot_envvar,ot_envvar250,6353
+  ot_node_signal,ot_node_signal251,6367
+  ot_node_message,ot_node_message252,6386
+  ot_integer,ot_integer253,6406
+  ot_float,ot_float254,6421
+  ot_string,ot_string255,6434
+  ot_enum,ot_enum256,6448
+  ot_hexot_hex257,6460
+} object_type_t;object_type_t258,6470
+  sint32 min;min262,6529
+  sint32 max;max263,6544
+} int_range_t;int_range_t264,6559
+  double min;min268,6615
+  double max;max269,6630
+} double_range_t;double_range_t270,6645
+  uint32 min;min274,6701
+  uint32 max;max275,6716
+} hex_range_t;hex_range_t276,6731
+  object_type_t   object_type;object_type280,6795
+  string_t        name;name281,6827
+  value_type_t    value_type;value_type283,6854
+    int_range_t     int_range;int_range287,6913
+    double_range_t  double_range;double_range288,6945
+    hex_range_t     hex_range;hex_range289,6980
+    string_list_t  *enum_list;enum_list290,7012
+  } range;range291,7044
+  value_union_t default_value;default_value294,7081
+} attribute_definition_t;attribute_definition_t296,7115
+  attribute_list_t *attribute_list;attribute_list303,7277
+  string_t          comment;comment304,7314
+} network_t;network_t305,7344
+  at_unrestricted = 0,at_unrestricted309,7396
+  at_readonly     = 1,at_readonly310,7420
+  at_writeonly    = 2,at_writeonly311,7444
+  at_readwrite    = 3,at_readwrite312,7468
+} accesstype_t;accesstype_t313,7492
+  et_integer   = 0,et_integer316,7527
+  et_float     = 1,et_float317,7548
+  et_string    = 2,et_string318,7569
+  et_data      = 3,et_data319,7590
+} envtype_t;envtype_t320,7611
+  string_t       name;name323,7645
+  envtype_t      envtype;envtype324,7669
+  accesstype_t   access;access325,7696
+  uint32         min;min326,7722
+  uint32         max;max327,7745
+  string_t       unit;unit328,7768
+  uint32         initial;initial329,7792
+  uint32         index;index330,7819
+  string_list_t *node_list;node_list331,7844
+  val_map_t     *val_map;val_map332,7873
+  string_t       comment;comment333,7900
+ } envvar_t;envvar_t334,7927
+  string_t                     filename;filename341,8030
+  string_t                     version;version342,8072
+  node_list_t                 *node_list;node_list343,8113
+  valtable_list_t             *valtable_list;valtable_list344,8156
+  message_list_t              *message_list;message_list345,8203
+  envvar_list_t               *envvar_list;envvar_list346,8249
+  attribute_rel_list_t        *attribute_rel_list;attribute_rel_list347,8294
+  attribute_definition_list_t *attribute_definition_list;attribute_definition_list348,8346
+  signal_group_list_t         *signal_group_list;signal_group_list349,8405
+  network_t                   *network;network350,8456
+} dbc_t;dbc_t351,8497
+
+src/libcandbc/dbcreader.c,130
+typedef struct yy_buffer_state *YY_BUFFER_STATE;YY_BUFFER_STATE20,805
+dbc_t *dbc_read_file(char *filename)dbc_read_file25,906
+
+src/libcandbc/dbcreader.h,53
+#define INCLUDE_DBCREADER_HINCLUDE_DBCREADER_H2,29
+
+src/libcandbc/dbctypes.h,513
+#define INCLUDE_DBCTYPES_HINCLUDE_DBCTYPES_H2,28
+typedef unsigned char  uint8;uint821,840
+typedef char           sint8;sint822,871
+typedef unsigned short uint16;uint1623,902
+typedef short          sint16;sint1624,934
+typedef unsigned long  uint32;uint3225,966
+typedef long           sint32;sint3226,998
+typedef long long      number_t;number_t27,1030
+typedef unsigned long long uint64;uint6428,1064
+typedef float          float32;float3229,1100
+typedef double         float64;float6430,1133
+
+src/libcandbc/dbcwriter.c,4040
+typedef struct yy_buffer_state *YY_BUFFER_STATE;YY_BUFFER_STATE20,835
+#define PLIST_ITER(PLIST_ITER25,936
+#define NEWLINE NEWLINE28,1007
+#define newline(newline30,1033
+static void string_write(FILE *out, string_t string)string_write32,1078
+static void identifier_write(FILE *out, string_t string)identifier_write41,1241
+static void comma_identifier_list_write(FILE *out, string_list_t *string_list)comma_identifier_list_write48,1361
+static void comma_string_list_write(FILE *out, string_list_t *string_list)comma_string_list_write56,1576
+static void space_identifier_list_write(FILE *out, string_list_t *string_list)space_identifier_list_write64,1783
+static void version_write(FILE *out, string_t version)version_write72,1998
+static void symbol_write(FILE *out)symbol_write79,2137
+static void message_section_write(FILE *out)message_section_write114,2946
+static void node_list_write(FILE *out, node_list_t *node_list)node_list_write119,3033
+static void val_map_entry_write(FILE *out, val_map_entry_t *val_map_entry)val_map_entry_write130,3275
+static void val_map_write(FILE *out, val_map_t *val_map)val_map_write137,3443
+static void valtable_write(FILE *out, valtable_t *valtable)valtable_write144,3594
+static void valtable_list_write(FILE *out, valtable_list_t *valtable_list)valtable_list_write153,3825
+static void mux_info_write(FILE *out, signal_t *signal)mux_info_write161,4013
+static void signal_write(FILE *out, signal_t *signal)signal_write176,4295
+static void signal_list_write(FILE *out, signal_list_t *signal_list)signal_list_write195,4799
+static void message_write(FILE *out, message_t *message)message_write203,4973
+static void message_list_write(FILE *out, message_list_t *message_list)message_list_write213,5209
+static void envvar_comment_write(FILE *out, envvar_t *envvar)envvar_comment_write220,5373
+static void node_comment_write(FILE *out, node_t *node)node_comment_write231,5646
+static void message_comment_write(FILE *out, message_t *message)message_comment_write238,5823
+static void signal_comment_write(FILE *out, uint32 id, signal_t *signal)signal_comment_write245,6017
+static void comment_list_write(FILE *out, dbc_t *dbc)comment_list_write256,6310
+static void attribute_definition_write(attribute_definition_write295,7295
+static void attribute_definition_list_write(attribute_definition_list_write340,8726
+static void value_write(value_write348,8990
+static void attribute_definition_default_write(attribute_definition_default_write372,9474
+static attribute_object_class_t attribute_definition_getObjectClass(attribute_definition_getObjectClass394,10004
+static void attribute_definition_default_list_write(attribute_definition_default_list_write411,10361
+static void attribute_value_write(FILE *out, attribute_value_t *attribute_value)attribute_value_write428,10840
+static void attribute_write(FILE *out, attribute_t *attribute, string_t target)attribute_write435,11020
+static void attribute_list_write(attribute_list_write448,11343
+static void node_attribute_list_write(FILE *out, node_list_t *node_list)node_attribute_list_write458,11556
+static void message_attribute_list_write(FILE *out, message_list_t *message_list)message_attribute_list_write469,11904
+static void signal_attribute_list_write(FILE *out, message_list_t *message_list)signal_attribute_list_write480,12248
+static void attribute_rel_write(attribute_rel_write499,12849
+static void attribute_rel_list_write(attribute_rel_list_write514,13319
+static void signal_val_map_write(FILE *out, message_list_t *message_list)signal_val_map_write523,13532
+static void message_transmitter_list_write(message_transmitter_list_write542,14066
+static void signal_group_write(FILE *out, signal_group_t *signal_group)signal_group_write557,14467
+static void signal_group_list_write(signal_group_list_write566,14733
+static void signal_valtype_write(FILE *out, message_list_t *message_list)signal_valtype_write575,14939
+void dbc_write(FILE *out, dbc_t *dbc)dbc_write593,15533
+
+src/libcandbc/dbcwriter.h,53
+#define INCLUDE_DBCWRITER_HINCLUDE_DBCWRITER_H2,29
+
+src/libcandbc/lexer.c,9318
+#define  YY_INT_ALIGNED YY_INT_ALIGNED4,34
+#define FLEX_SCANNERFLEX_SCANNER8,112
+#define YY_FLEX_MAJOR_VERSION YY_FLEX_MAJOR_VERSION9,133
+#define YY_FLEX_MINOR_VERSION YY_FLEX_MINOR_VERSION10,165
+#define YY_FLEX_SUBMINOR_VERSION YY_FLEX_SUBMINOR_VERSION11,197
+#define FLEX_BETAFLEX_BETA13,265
+#define FLEXINT_HFLEXINT_H29,563
+#define __STDC_LIMIT_MACROS __STDC_LIMIT_MACROS39,874
+typedef int8_t flex_int8_t;flex_int8_t43,934
+typedef uint8_t flex_uint8_t;flex_uint8_t44,962
+typedef int16_t flex_int16_t;flex_int16_t45,992
+typedef uint16_t flex_uint16_t;flex_uint16_t46,1022
+typedef int32_t flex_int32_t;flex_int32_t47,1054
+typedef uint32_t flex_uint32_t;flex_uint32_t48,1084
+typedef signed char flex_int8_t;flex_int8_t50,1122
+typedef short int flex_int16_t;flex_int16_t51,1155
+typedef int flex_int32_t;flex_int32_t52,1187
+typedef unsigned char flex_uint8_t; flex_uint8_t53,1213
+typedef unsigned short int flex_uint16_t;flex_uint16_t54,1250
+typedef unsigned int flex_uint32_t;flex_uint32_t55,1292
+#define INT8_MIN INT8_MIN59,1378
+#define INT16_MIN INT16_MIN62,1441
+#define INT32_MIN INT32_MIN65,1508
+#define INT8_MAX INT8_MAX68,1579
+#define INT16_MAX INT16_MAX71,1641
+#define INT32_MAX INT32_MAX74,1705
+#define UINT8_MAX UINT8_MAX77,1774
+#define UINT16_MAX UINT16_MAX80,1838
+#define UINT32_MAX UINT32_MAX83,1904
+#define yyconst yyconst91,2052
+#define yynoreturn yynoreturn94,2114
+#define yynoreturnyynoreturn96,2169
+#define YY_NULL YY_NULL100,2229
+#define YY_SC_TO_UI(YY_SC_TO_UI107,2476
+#define BEGIN BEGIN113,2707
+#define YY_START YY_START119,2906
+#define YYSTATE YYSTATE120,2946
+#define YY_STATE_EOF(YY_STATE_EOF123,3029
+#define YY_NEW_FILE YY_NEW_FILE126,3149
+#define YY_END_OF_BUFFER_CHAR YY_END_OF_BUFFER_CHAR128,3188
+#define YY_BUF_SIZE YY_BUF_SIZE137,3454
+#define YY_BUF_SIZE YY_BUF_SIZE139,3486
+#define YY_STATE_BUF_SIZE YY_STATE_BUF_SIZE145,3636
+#define YY_TYPEDEF_YY_BUFFER_STATEYY_TYPEDEF_YY_BUFFER_STATE148,3744
+typedef struct yy_buffer_state *YY_BUFFER_STATE;YY_BUFFER_STATE149,3779
+#define YY_TYPEDEF_YY_SIZE_TYY_TYPEDEF_YY_SIZE_T153,3865
+typedef size_t yy_size_t;yy_size_t154,3894
+#define EOB_ACT_CONTINUE_SCAN EOB_ACT_CONTINUE_SCAN161,3976
+#define EOB_ACT_END_OF_FILE EOB_ACT_END_OF_FILE162,4008
+#define EOB_ACT_LAST_MATCH EOB_ACT_LAST_MATCH163,4038
+    #define  YY_LESS_LINENO(YY_LESS_LINENO172,4570
+    #define YY_LINENO_REWIND_TO(YY_LINENO_REWIND_TO179,4809
+#define yyless(yyless188,5134
+#define unput(unput201,5489
+#define YY_STRUCT_YY_BUFFER_STATEYY_STRUCT_YY_BUFFER_STATE204,5569
+struct yy_buffer_stateyy_buffer_state205,5603
+	FILE *yy_input_file;yy_input_file207,5629
+	char *yy_ch_buf;		/* input buffer */yy_ch_buf209,5652
+	char *yy_buf_pos;		/* current position in input buffer */yy_buf_pos210,5690
+	int yy_buf_size;yy_buf_size215,5833
+	int yy_n_chars;yy_n_chars220,5937
+	int yy_is_our_buffer;yy_is_our_buffer226,6099
+	int yy_is_interactive;yy_is_interactive233,6337
+	int yy_at_bol;yy_at_bol239,6504
+    int yy_bs_lineno; /**< The line count. */yy_bs_lineno241,6521
+    int yy_bs_column; /**< The column count. */yy_bs_column242,6567
+	int yy_fill_buffer;yy_fill_buffer247,6702
+	int yy_buffer_status;yy_buffer_status249,6724
+#define YY_BUFFER_NEW YY_BUFFER_NEW251,6748
+#define YY_BUFFER_NORMAL YY_BUFFER_NORMAL252,6772
+#define YY_BUFFER_EOF_PENDING YY_BUFFER_EOF_PENDING263,7270
+static size_t yy_buffer_stack_top = 0; /**< index of top of stack. */yy_buffer_stack_top269,7378
+static size_t yy_buffer_stack_max = 0; /**< capacity of stack. */yy_buffer_stack_max270,7448
+static YY_BUFFER_STATE * yy_buffer_stack = NULL; /**< Stack as an array. */yy_buffer_stack271,7514
+#define YY_CURRENT_BUFFER YY_CURRENT_BUFFER279,7785
+#define YY_CURRENT_BUFFER_LVALUE YY_CURRENT_BUFFER_LVALUE286,8081
+static char yy_hold_char;yy_hold_char289,8223
+static int yy_n_chars;		/* number of characters read into yy_ch_buf */yy_n_chars290,8249
+int yyleng;yyleng291,8320
+static char *yy_c_buf_p = NULL;yy_c_buf_p294,8378
+static int yy_init = 0;		/* whether we need to initialize */yy_init295,8410
+static int yy_start = 0;	/* start state number */yy_start296,8471
+static int yy_did_buffer_switch_on_eof;yy_did_buffer_switch_on_eof301,8650
+#define YY_FLUSH_BUFFER YY_FLUSH_BUFFER315,9170
+#define yy_new_buffer yy_new_buffer325,9506
+#define yy_set_interactive(yy_set_interactive327,9546
+#define yy_set_bol(yy_set_bol337,9822
+#define YY_AT_BOL(YY_AT_BOL347,10065
+typedef unsigned char YY_CHAR;YY_CHAR351,10148
+FILE *yyin = NULL, *yyout = NULL;yyin353,10180
+FILE *yyin = NULL, *yyout = NULL;yyout353,10180
+typedef int yy_state_type;yy_state_type355,10215
+int yylineno = 1;yylineno359,10265
+#undef yytext_ptryytext_ptr363,10323
+#define yytext_ptr yytext_ptr365,10348
+#define YY_DO_BEFORE_ACTION YY_DO_BEFORE_ACTION375,10711
+#define YY_NUM_RULES YY_NUM_RULES382,10871
+#define YY_END_OF_BUFFER YY_END_OF_BUFFER383,10895
+struct yy_trans_infoyy_trans_info386,11004
+	flex_int32_t yy_verify;yy_verify388,11028
+	flex_int32_t yy_nxt;yy_nxt389,11053
+static yyconst flex_int16_t yy_accept[265] =yy_accept391,11079
+static yyconst YY_CHAR yy_ec[256] =yy_ec424,12864
+static yyconst YY_CHAR yy_meta[49] =yy_meta456,14581
+static yyconst flex_uint16_t yy_base[269] =yy_base465,14950
+static yyconst flex_int16_t yy_def[269] =yy_def498,16758
+static yyconst flex_uint16_t yy_nxt[377] =yy_nxt531,18564
+static yyconst flex_int16_t yy_chk[377] =yy_chk576,21075
+static yyconst flex_int32_t yy_rule_can_match_eol[64] =yy_rule_can_match_eol622,23640
+static yy_state_type yy_last_accepting_state;yy_last_accepting_state629,23919
+static char *yy_last_accepting_cpos;yy_last_accepting_cpos630,23965
+int yy_flex_debug = 0;yy_flex_debug633,24029
+#define REJECT REJECT638,24155
+#define yymore(yymore639,24199
+#define YY_MORE_ADJ YY_MORE_ADJ640,24245
+#define YY_RESTORE_YY_MORE_OFFSETYY_RESTORE_YY_MORE_OFFSET641,24267
+char *yytext;yytext642,24301
+#define INITIAL INITIAL668,25246
+#define YY_EXTRA_TYPE YY_EXTRA_TYPE679,25548
+#define YY_READ_BUF_SIZE YY_READ_BUF_SIZE753,26866
+#define YY_READ_BUF_SIZE YY_READ_BUF_SIZE755,26903
+#define ECHO ECHO764,27143
+#define YY_INPUT(YY_INPUT771,27362
+#define yyterminate(yyterminate808,28282
+#define YY_START_STACK_INCR YY_START_STACK_INCR813,28417
+#define YY_FATAL_ERROR(YY_FATAL_ERROR818,28507
+#define YY_DECL_IS_OURS YY_DECL_IS_OURS827,28740
+#define YY_DECL YY_DECL831,28793
+#define YY_USER_ACTIONYY_USER_ACTION838,28969
+#define YY_BREAK YY_BREAK843,29062
+#define YY_RULE_SETUP YY_RULE_SETUP846,29104
+static int yy_get_next_buffer (void)yy_get_next_buffer1439,41978
+    static yy_state_type yy_get_previous_state (void)yy_get_previous_state1573,45541
+    static yy_state_type yy_try_NUL_trans  (yy_state_type yy_current_state )yy_try_NUL_trans1605,46416
+    static void yyunput (int c, char * yy_bp )yyunput1630,47083
+    static int yyinput (void)yyinput1675,48161
+    void yyrestart  (FILE * input_file )yyrestart1757,49963
+    void yy_switch_to_buffer  (YY_BUFFER_STATE  new_buffer )yy_switch_to_buffer1774,50324
+static void yy_load_buffer_state  (void)yy_load_buffer_state1805,51167
+    YY_BUFFER_STATE yy_create_buffer  (FILE * file, int  size )yy_create_buffer1819,51640
+    void yy_delete_buffer (YY_BUFFER_STATE  b )yy_delete_buffer1847,52342
+    static void yy_init_buffer  (YY_BUFFER_STATE  b, FILE * file )yy_init_buffer1866,52791
+    void yy_flush_buffer (YY_BUFFER_STATE  b )yy_flush_buffer1894,53524
+void yypush_buffer_state (YY_BUFFER_STATE new_buffer )yypush_buffer_state1923,54210
+void yypop_buffer_state (void)yypop_buffer_state1953,54975
+static void yyensure_buffer_stack (void)yyensure_buffer_stack1972,55370
+YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size )yy_scan_buffer2021,57052
+YY_BUFFER_STATE yy_scan_string (yyconst char * yystr )yy_scan_string2058,58131
+YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, int  _yybytes_len )yy_scan_bytes2071,58554
+#define YY_EXIT_FAILURE YY_EXIT_FAILURE2102,59295
+static void yynoreturn yy_fatal_error (yyconst char* msg )yy_fatal_error2105,59329
+#undef yylessyyless2113,59517
+#define yyless(yyless2114,59531
+int yyget_lineno  (void)yyget_lineno2133,59990
+FILE *yyget_in  (void)yyget_in2142,60084
+FILE *yyget_out  (void)yyget_out2150,60168
+int yyget_leng  (void)yyget_leng2158,60268
+char *yyget_text  (void)yyget_text2167,60355
+void yyset_lineno (int  _line_number )yyset_lineno2176,60484
+void yyset_in (FILE *  _in_str )yyset_in2188,60712
+void yyset_out (FILE *  _out_str )yyset_out2193,60775
+int yyget_debug  (void)yyget_debug2198,60842
+void yyset_debug (int  _bdebug )yyset_debug2203,60901
+static int yy_init_globals (void)yy_init_globals2208,60973
+int yylex_destroy  (void)yylex_destroy2240,61729
+static void yy_flex_strncpy (char* s1, yyconst char * s2, int n )yy_flex_strncpy2266,62283
+static int yy_flex_strlen (yyconst char * s )yy_flex_strlen2276,62438
+void *yyalloc (yy_size_t  size )yyalloc2286,62546
+void *yyrealloc  (void * ptr, yy_size_t  size )yyrealloc2291,62608
+void yyfree (void * ptr )yyfree2304,63047
+#define YYTABLES_NAME YYTABLES_NAME2309,63143
+yywrap()yywrap2316,63218
+
+src/libcandbc/parser.c,13860
+#define YYBISON YYBISON44,2037
+#define YYBISON_VERSION YYBISON_VERSION47,2078
+#define YYSKELETON_NAME YYSKELETON_NAME50,2133
+#define YYPURE YYPURE53,2188
+#define YYPUSH YYPUSH56,2227
+#define YYPULL YYPULL59,2266
+#define YYMAXDEPTH YYMAXDEPTH77,2599
+#   define YY_NULLPTR YY_NULLPTR84,2751
+#   define YY_NULLPTR YY_NULLPTR86,2789
+# undef YYERROR_VERBOSEYYERROR_VERBOSE92,2894
+# define YYERROR_VERBOSE YYERROR_VERBOSE93,2918
+# define YYERROR_VERBOSE YYERROR_VERBOSE95,2951
+# define YY_YY_SRC_LIBCANDBC_PARSER_H_INCLUDEDYY_YY_SRC_LIBCANDBC_PARSER_H_INCLUDED101,3125
+# define YYDEBUG YYDEBUG104,3209
+# define YYTOKENTYPEYYTOKENTYPE112,3314
+  enum yytokentypeyytokentype113,3335
+    T_COLON = 258,T_COLON115,3358
+    T_SEMICOLON = 259,T_SEMICOLON116,3377
+    T_SEP = 260,T_SEP117,3400
+    T_AT = 261,T_AT118,3417
+    T_PLUS = 262,T_PLUS119,3433
+    T_MINUS = 263,T_MINUS120,3451
+    T_BOX_OPEN = 264,T_BOX_OPEN121,3470
+    T_BOX_CLOSE = 265,T_BOX_CLOSE122,3492
+    T_PAR_OPEN = 266,T_PAR_OPEN123,3515
+    T_PAR_CLOSE = 267,T_PAR_CLOSE124,3537
+    T_COMMA = 268,T_COMMA125,3560
+    T_ID = 269,T_ID126,3579
+    T_STRING_VAL = 270,T_STRING_VAL127,3595
+    T_INT_VAL = 271,T_INT_VAL128,3619
+    T_DOUBLE_VAL = 272,T_DOUBLE_VAL129,3640
+    T_VERSION = 273,T_VERSION130,3664
+    T_INT = 274,T_INT131,3685
+    T_FLOAT = 275,T_FLOAT132,3702
+    T_STRING = 276,T_STRING133,3721
+    T_ENUM = 277,T_ENUM134,3741
+    T_HEX = 278,T_HEX135,3759
+    T_BO = 279,T_BO136,3776
+    T_BS = 280,T_BS137,3792
+    T_BU = 281,T_BU138,3808
+    T_SG = 282,T_SG139,3824
+    T_EV = 283,T_EV140,3840
+    T_NS = 284,T_NS141,3856
+    T_NS_DESC = 285,T_NS_DESC142,3872
+    T_CM = 286,T_CM143,3893
+    T_BA_DEF = 287,T_BA_DEF144,3909
+    T_BA = 288,T_BA145,3929
+    T_VAL = 289,T_VAL146,3945
+    T_CAT_DEF = 290,T_CAT_DEF147,3962
+    T_CAT = 291,T_CAT148,3983
+    T_FILTE = 292,T_FILTE149,4000
+    T_BA_DEF_DEF = 293,T_BA_DEF_DEF150,4019
+    T_EV_DATA = 294,T_EV_DATA151,4043
+    T_ENVVAR_DATA = 295,T_ENVVAR_DATA152,4064
+    T_SGTYPE = 296,T_SGTYPE153,4089
+    T_SGTYPE_VAL = 297,T_SGTYPE_VAL154,4109
+    T_BA_DEF_SGTYPE = 298,T_BA_DEF_SGTYPE155,4133
+    T_BA_SGTYPE = 299,T_BA_SGTYPE156,4160
+    T_SIG_TYPE_REF = 300,T_SIG_TYPE_REF157,4183
+    T_VAL_TABLE = 301,T_VAL_TABLE158,4209
+    T_SIG_GROUP = 302,T_SIG_GROUP159,4232
+    T_SIG_VALTYPE = 303,T_SIG_VALTYPE160,4255
+    T_SIGTYPE_VALTYPE = 304,T_SIGTYPE_VALTYPE161,4280
+    T_BO_TX_BU = 305,T_BO_TX_BU162,4309
+    T_BA_DEF_REL = 306,T_BA_DEF_REL163,4331
+    T_BA_REL = 307,T_BA_REL164,4355
+    T_BA_DEF_DEF_REL = 308,T_BA_DEF_DEF_REL165,4375
+    T_BU_SG_REL = 309,T_BU_SG_REL166,4403
+    T_BU_EV_REL = 310,T_BU_EV_REL167,4426
+    T_BU_BO_REL = 311,T_BU_BO_REL168,4449
+    T_SG_MUL_VAL = 312,T_SG_MUL_VAL169,4472
+    T_DUMMY_NODE_VECTOR = 313,T_DUMMY_NODE_VECTOR170,4496
+    T_NAN = 314T_NAN171,4527
+#define T_COLON T_COLON175,4570
+#define T_SEMICOLON T_SEMICOLON176,4590
+#define T_SEP T_SEP177,4614
+#define T_AT T_AT178,4632
+#define T_PLUS T_PLUS179,4649
+#define T_MINUS T_MINUS180,4668
+#define T_BOX_OPEN T_BOX_OPEN181,4688
+#define T_BOX_CLOSE T_BOX_CLOSE182,4711
+#define T_PAR_OPEN T_PAR_OPEN183,4735
+#define T_PAR_CLOSE T_PAR_CLOSE184,4758
+#define T_COMMA T_COMMA185,4782
+#define T_ID T_ID186,4802
+#define T_STRING_VAL T_STRING_VAL187,4819
+#define T_INT_VAL T_INT_VAL188,4844
+#define T_DOUBLE_VAL T_DOUBLE_VAL189,4866
+#define T_VERSION T_VERSION190,4891
+#define T_INT T_INT191,4913
+#define T_FLOAT T_FLOAT192,4931
+#define T_STRING T_STRING193,4951
+#define T_ENUM T_ENUM194,4972
+#define T_HEX T_HEX195,4991
+#define T_BO T_BO196,5009
+#define T_BS T_BS197,5026
+#define T_BU T_BU198,5043
+#define T_SG T_SG199,5060
+#define T_EV T_EV200,5077
+#define T_NS T_NS201,5094
+#define T_NS_DESC T_NS_DESC202,5111
+#define T_CM T_CM203,5133
+#define T_BA_DEF T_BA_DEF204,5150
+#define T_BA T_BA205,5171
+#define T_VAL T_VAL206,5188
+#define T_CAT_DEF T_CAT_DEF207,5206
+#define T_CAT T_CAT208,5228
+#define T_FILTE T_FILTE209,5246
+#define T_BA_DEF_DEF T_BA_DEF_DEF210,5266
+#define T_EV_DATA T_EV_DATA211,5291
+#define T_ENVVAR_DATA T_ENVVAR_DATA212,5313
+#define T_SGTYPE T_SGTYPE213,5339
+#define T_SGTYPE_VAL T_SGTYPE_VAL214,5360
+#define T_BA_DEF_SGTYPE T_BA_DEF_SGTYPE215,5385
+#define T_BA_SGTYPE T_BA_SGTYPE216,5413
+#define T_SIG_TYPE_REF T_SIG_TYPE_REF217,5437
+#define T_VAL_TABLE T_VAL_TABLE218,5464
+#define T_SIG_GROUP T_SIG_GROUP219,5488
+#define T_SIG_VALTYPE T_SIG_VALTYPE220,5512
+#define T_SIGTYPE_VALTYPE T_SIGTYPE_VALTYPE221,5538
+#define T_BO_TX_BU T_BO_TX_BU222,5568
+#define T_BA_DEF_REL T_BA_DEF_REL223,5591
+#define T_BA_REL T_BA_REL224,5616
+#define T_BA_DEF_DEF_REL T_BA_DEF_DEF_REL225,5637
+#define T_BU_SG_REL T_BU_SG_REL226,5666
+#define T_BU_EV_REL T_BU_EV_REL227,5690
+#define T_BU_BO_REL T_BU_BO_REL228,5714
+#define T_SG_MUL_VAL T_SG_MUL_VAL229,5738
+#define T_DUMMY_NODE_VECTOR T_DUMMY_NODE_VECTOR230,5763
+#define T_NAN T_NAN231,5795
+union YYSTYPEYYSTYPE236,5889
+  number_t                     number;number240,5958
+  double                       double_val;double_val241,5997
+  string_t                     string;string242,6040
+  object_type_t                object_type;object_type243,6079
+  signal_t                    *signal;signal244,6123
+  node_list_t                 *node_list;node_list245,6162
+  string_list_t               *string_list;string_list246,6204
+  mux_info_t                   mux_info;mux_info247,6248
+  signal_list_t               *signal_list;signal_list248,6289
+  string_t                     signal_name;signal_name249,6333
+  string_list_t               *signal_name_list;signal_name_list250,6377
+  signal_group_t              *signal_group;signal_group251,6426
+  signal_group_list_t         *signal_group_list;signal_group_list252,6471
+  message_t                   *message;message253,6521
+  message_list_t              *message_list;message_list254,6561
+  attribute_value_t           *attribute_value;attribute_value255,6606
+  attribute_object_class_t     attribute_object_class;attribute_object_class256,6654
+  attribute_rel_t             *attribute_rel;attribute_rel257,6709
+  attribute_rel_list_t        *attribute_rel_list;attribute_rel_list258,6755
+  attribute_definition_t      *attribute_definition;attribute_definition259,6806
+  attribute_definition_list_t *attribute_definition_list;attribute_definition_list260,6859
+  dbc_t                       *dbc;dbc261,6917
+  envvar_t                    *envvar;envvar262,6953
+  envvar_list_t               *envvar_list;envvar_list263,6992
+  val_map_entry_t             *val_map_entry;val_map_entry264,7036
+  val_map_t                   *val_map;val_map265,7082
+  valtable_list_t             *valtable_list;valtable_list266,7122
+  valtable_t                  *valtable;valtable267,7168
+typedef union YYSTYPE YYSTYPE;YYSTYPE272,7267
+# define YYSTYPE_IS_TRIVIAL YYSTYPE_IS_TRIVIAL273,7298
+# define YYSTYPE_IS_DECLARED YYSTYPE_IS_DECLARED274,7328
+yyerror (void* dbcptr, char* msg)yyerror292,7653
+char *current_yacc_file;current_yacc_file299,7852
+dbc_t *current_dbc;current_dbc300,7877
+string_t current_attribute;current_attribute301,7897
+attribute_definition_find(string_t name, attribute_object_class_t aoc)attribute_definition_find304,7958
+static node_t *node_find(string_t name)node_find339,8783
+static message_t *message_find(uint32 id)message_find353,9045
+static signal_t *signal_find(uint32 id, string_t name)signal_find364,9252
+static envvar_t *envvar_find(string_t name)envvar_find378,9647
+void attribute_append(attribute_append399,10198
+# undef shortshort476,12453
+typedef YYTYPE_UINT8 yytype_uint8;yytype_uint8480,12495
+typedef unsigned char yytype_uint8;yytype_uint8482,12536
+typedef YYTYPE_INT8 yytype_int8;yytype_int8486,12599
+typedef signed char yytype_int8;yytype_int8488,12638
+typedef YYTYPE_UINT16 yytype_uint16;yytype_uint16492,12700
+typedef unsigned short int yytype_uint16;yytype_uint16494,12743
+typedef YYTYPE_INT16 yytype_int16;yytype_int16498,12813
+typedef short int yytype_int16;yytype_int16500,12854
+#  define YYSIZE_T YYSIZE_T505,12933
+#  define YYSIZE_T YYSIZE_T507,12988
+#  define YYSIZE_T YYSIZE_T510,13097
+#  define YYSIZE_T YYSIZE_T512,13130
+#define YYSIZE_MAXIMUM YYSIZE_MAXIMUM516,13178
+#   define YY_(YY_522,13348
+#  define YY_(YY_526,13434
+#  define YY_ATTRIBUTE(YY_ATTRIBUTE534,13691
+#  define YY_ATTRIBUTE(YY_ATTRIBUTE536,13747
+# define YY_ATTRIBUTE_PURE YY_ATTRIBUTE_PURE541,13830
+# define YY_ATTRIBUTE_UNUSED YY_ATTRIBUTE_UNUSED545,13921
+#  define _Noreturn _Noreturn551,14118
+#  define _Noreturn _Noreturn553,14167
+# define YYUSE(YYUSE559,14327
+# define YYUSE(YYUSE561,14364
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN566,14539
+# define YY_IGNORE_MAYBE_UNINITIALIZED_END YY_IGNORE_MAYBE_UNINITIALIZED_END570,14749
+# define YY_INITIAL_VALUE(YY_INITIAL_VALUE573,14835
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGINYY_IGNORE_MAYBE_UNINITIALIZED_BEGIN576,14925
+# define YY_IGNORE_MAYBE_UNINITIALIZED_ENDYY_IGNORE_MAYBE_UNINITIALIZED_END577,14970
+# define YY_INITIAL_VALUE(YY_INITIAL_VALUE580,15045
+#    define YYSTACK_ALLOC YYSTACK_ALLOC591,15293
+#    define YYSTACK_ALLOC YYSTACK_ALLOC595,15456
+#    define alloca alloca598,15576
+#    define YYSTACK_ALLOC YYSTACK_ALLOC600,15612
+#      define EXIT_SUCCESS EXIT_SUCCESS605,15842
+#  define YYSTACK_FREE(YYSTACK_FREE614,15992
+#   define YYSTACK_ALLOC_MAXIMUM YYSTACK_ALLOC_MAXIMUM620,16382
+#  define YYSTACK_ALLOC YYSTACK_ALLOC623,16464
+#  define YYSTACK_FREE YYSTACK_FREE624,16497
+#   define YYSTACK_ALLOC_MAXIMUM YYSTACK_ALLOC_MAXIMUM626,16559
+#    define EXIT_SUCCESS EXIT_SUCCESS633,16856
+#   define YYMALLOC YYMALLOC637,16921
+#   define YYFREE YYFREE643,17094
+union yyallocyyalloc657,17490
+  yytype_int16 yyss_alloc;yyss_alloc659,17506
+  YYSTYPE yyvs_alloc;yyvs_alloc660,17533
+# define YYSTACK_GAP_MAXIMUM YYSTACK_GAP_MAXIMUM664,17634
+# define YYSTACK_BYTES(YYSTACK_BYTES668,17782
+# define YYCOPY_NEEDED YYCOPY_NEEDED672,17897
+# define YYSTACK_RELOCATE(YYSTACK_RELOCATE679,18206
+#   define YYCOPY(YYCOPY697,19085
+#   define YYCOPY(YYCOPY700,19191
+#define YYFINAL YYFINAL713,19660
+#define YYLAST YYLAST715,19719
+#define YYNTOKENS YYNTOKENS718,19782
+#define YYNNTS YYNNTS720,19845
+#define YYNRULES YYNRULES722,19900
+#define YYNSTATES YYNSTATES724,19960
+#define YYUNDEFTOK YYUNDEFTOK728,20100
+#define YYMAXUTOK YYMAXUTOK729,20122
+#define YYTRANSLATE(YYTRANSLATE731,20147
+static const yytype_uint8 yytranslate[] =yytranslate736,20423
+static const yytype_uint16 yyrline[] =yyrline774,22855
+static const char *const yytname[] =yytname796,24093
+static const yytype_uint16 yytoknum[] =yytoknum830,26116
+#define YYPACT_NINF YYPACT_NINF841,26607
+#define yypact_value_is_default(yypact_value_is_default843,26633
+#define YYTABLE_NINF YYTABLE_NINF846,26705
+#define yytable_value_is_error(yytable_value_is_error848,26730
+static const yytype_int16 yypact[] =yypact853,26872
+static const yytype_uint8 yydefact[] =yydefact889,29203
+static const yytype_int16 yypgoto[] =yypgoto923,31379
+static const yytype_int16 yydefgoto[] =yydefgoto935,31915
+static const yytype_uint16 yytable[] =yytable949,32626
+static const yytype_int16 yycheck[] =yycheck982,34724
+static const yytype_uint8 yystos[] =yystos1017,36922
+static const yytype_uint8 yyr1[] =yyr11051,39136
+static const yytype_uint8 yyr2[] =yyr21070,40267
+#define yyerrok yyerrok1089,41323
+#define yyclearin yyclearin1090,41365
+#define YYEMPTY YYEMPTY1091,41408
+#define YYEOF YYEOF1092,41437
+#define YYACCEPT YYACCEPT1094,41464
+#define YYABORT YYABORT1095,41505
+#define YYERROR YYERROR1096,41545
+#define YYRECOVERING(YYRECOVERING1099,41587
+#define YYBACKUP(YYBACKUP1101,41628
+#define YYTERROR YYTERROR1119,42651
+#define YYERRCODE YYERRCODE1120,42677
+#  define YYFPRINTF YYFPRINTF1129,42834
+# define YYDPRINTF(YYDPRINTF1132,42871
+# define YY_LOCATION_PRINT(YY_LOCATION_PRINT1140,43167
+# define YY_SYMBOL_PRINT(YY_SYMBOL_PRINT1144,43225
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, void* dbcptr)yy_symbol_value_print1161,44034
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, void* dbcptr)yy_symbol_print1181,44465
+yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)yy_stack_print1196,45051
+# define YY_STACK_PRINT(YY_STACK_PRINT1207,45301
+yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule, void* dbcptr)yy_reduce_print1219,45748
+# define YY_REDUCE_PRINT(YY_REDUCE_PRINT1238,46378
+int yydebug;yydebug1246,46676
+# define YYDPRINTF(YYDPRINTF1248,46710
+# define YY_SYMBOL_PRINT(YY_SYMBOL_PRINT1249,46735
+# define YY_STACK_PRINT(YY_STACK_PRINT1250,46790
+# define YY_REDUCE_PRINT(YY_REDUCE_PRINT1251,46827
+# define YYINITDEPTH YYINITDEPTH1257,46961
+# define YYMAXDEPTH YYMAXDEPTH1268,47317
+#   define yystrlen yystrlen1276,47436
+yystrlen (const char *yystr)yystrlen1280,47522
+#   define yystpcpy yystpcpy1292,47748
+yystpcpy (char *yydest, const char *yysrc)yystpcpy1297,47886
+yytnamerr (char *yyres, const char *yystr)yytnamerr1319,48534
+yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,yysyntax_error1367,49696
+# define YYCASE_(YYCASE_1443,53082
+# undef YYCASE_YYCASE_1453,53633
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, void* dbcptr)yydestruct1499,54757
+int yychar;yychar1516,55097
+YYSTYPE yylval;yylval1519,55161
+int yynerrs;yynerrs1521,55216
+yyparse (void* dbcptr)yyparse1529,55278
+#define YYPOPSTACK(YYPOPSTACK1569,56296
+
+src/libcandbc/parser.h,6609
+# define YY_YY_SRC_LIBCANDBC_PARSER_H_INCLUDEDYY_YY_SRC_LIBCANDBC_PARSER_H_INCLUDED34,1560
+# define YYDEBUG YYDEBUG37,1644
+# define YYTOKENTYPEYYTOKENTYPE45,1749
+  enum yytokentypeyytokentype46,1770
+    T_COLON = 258,T_COLON48,1793
+    T_SEMICOLON = 259,T_SEMICOLON49,1812
+    T_SEP = 260,T_SEP50,1835
+    T_AT = 261,T_AT51,1852
+    T_PLUS = 262,T_PLUS52,1868
+    T_MINUS = 263,T_MINUS53,1886
+    T_BOX_OPEN = 264,T_BOX_OPEN54,1905
+    T_BOX_CLOSE = 265,T_BOX_CLOSE55,1927
+    T_PAR_OPEN = 266,T_PAR_OPEN56,1950
+    T_PAR_CLOSE = 267,T_PAR_CLOSE57,1972
+    T_COMMA = 268,T_COMMA58,1995
+    T_ID = 269,T_ID59,2014
+    T_STRING_VAL = 270,T_STRING_VAL60,2030
+    T_INT_VAL = 271,T_INT_VAL61,2054
+    T_DOUBLE_VAL = 272,T_DOUBLE_VAL62,2075
+    T_VERSION = 273,T_VERSION63,2099
+    T_INT = 274,T_INT64,2120
+    T_FLOAT = 275,T_FLOAT65,2137
+    T_STRING = 276,T_STRING66,2156
+    T_ENUM = 277,T_ENUM67,2176
+    T_HEX = 278,T_HEX68,2194
+    T_BO = 279,T_BO69,2211
+    T_BS = 280,T_BS70,2227
+    T_BU = 281,T_BU71,2243
+    T_SG = 282,T_SG72,2259
+    T_EV = 283,T_EV73,2275
+    T_NS = 284,T_NS74,2291
+    T_NS_DESC = 285,T_NS_DESC75,2307
+    T_CM = 286,T_CM76,2328
+    T_BA_DEF = 287,T_BA_DEF77,2344
+    T_BA = 288,T_BA78,2364
+    T_VAL = 289,T_VAL79,2380
+    T_CAT_DEF = 290,T_CAT_DEF80,2397
+    T_CAT = 291,T_CAT81,2418
+    T_FILTE = 292,T_FILTE82,2435
+    T_BA_DEF_DEF = 293,T_BA_DEF_DEF83,2454
+    T_EV_DATA = 294,T_EV_DATA84,2478
+    T_ENVVAR_DATA = 295,T_ENVVAR_DATA85,2499
+    T_SGTYPE = 296,T_SGTYPE86,2524
+    T_SGTYPE_VAL = 297,T_SGTYPE_VAL87,2544
+    T_BA_DEF_SGTYPE = 298,T_BA_DEF_SGTYPE88,2568
+    T_BA_SGTYPE = 299,T_BA_SGTYPE89,2595
+    T_SIG_TYPE_REF = 300,T_SIG_TYPE_REF90,2618
+    T_VAL_TABLE = 301,T_VAL_TABLE91,2644
+    T_SIG_GROUP = 302,T_SIG_GROUP92,2667
+    T_SIG_VALTYPE = 303,T_SIG_VALTYPE93,2690
+    T_SIGTYPE_VALTYPE = 304,T_SIGTYPE_VALTYPE94,2715
+    T_BO_TX_BU = 305,T_BO_TX_BU95,2744
+    T_BA_DEF_REL = 306,T_BA_DEF_REL96,2766
+    T_BA_REL = 307,T_BA_REL97,2790
+    T_BA_DEF_DEF_REL = 308,T_BA_DEF_DEF_REL98,2810
+    T_BU_SG_REL = 309,T_BU_SG_REL99,2838
+    T_BU_EV_REL = 310,T_BU_EV_REL100,2861
+    T_BU_BO_REL = 311,T_BU_BO_REL101,2884
+    T_SG_MUL_VAL = 312,T_SG_MUL_VAL102,2907
+    T_DUMMY_NODE_VECTOR = 313,T_DUMMY_NODE_VECTOR103,2931
+    T_NAN = 314T_NAN104,2962
+#define T_COLON T_COLON108,3005
+#define T_SEMICOLON T_SEMICOLON109,3025
+#define T_SEP T_SEP110,3049
+#define T_AT T_AT111,3067
+#define T_PLUS T_PLUS112,3084
+#define T_MINUS T_MINUS113,3103
+#define T_BOX_OPEN T_BOX_OPEN114,3123
+#define T_BOX_CLOSE T_BOX_CLOSE115,3146
+#define T_PAR_OPEN T_PAR_OPEN116,3170
+#define T_PAR_CLOSE T_PAR_CLOSE117,3193
+#define T_COMMA T_COMMA118,3217
+#define T_ID T_ID119,3237
+#define T_STRING_VAL T_STRING_VAL120,3254
+#define T_INT_VAL T_INT_VAL121,3279
+#define T_DOUBLE_VAL T_DOUBLE_VAL122,3301
+#define T_VERSION T_VERSION123,3326
+#define T_INT T_INT124,3348
+#define T_FLOAT T_FLOAT125,3366
+#define T_STRING T_STRING126,3386
+#define T_ENUM T_ENUM127,3407
+#define T_HEX T_HEX128,3426
+#define T_BO T_BO129,3444
+#define T_BS T_BS130,3461
+#define T_BU T_BU131,3478
+#define T_SG T_SG132,3495
+#define T_EV T_EV133,3512
+#define T_NS T_NS134,3529
+#define T_NS_DESC T_NS_DESC135,3546
+#define T_CM T_CM136,3568
+#define T_BA_DEF T_BA_DEF137,3585
+#define T_BA T_BA138,3606
+#define T_VAL T_VAL139,3623
+#define T_CAT_DEF T_CAT_DEF140,3641
+#define T_CAT T_CAT141,3663
+#define T_FILTE T_FILTE142,3681
+#define T_BA_DEF_DEF T_BA_DEF_DEF143,3701
+#define T_EV_DATA T_EV_DATA144,3726
+#define T_ENVVAR_DATA T_ENVVAR_DATA145,3748
+#define T_SGTYPE T_SGTYPE146,3774
+#define T_SGTYPE_VAL T_SGTYPE_VAL147,3795
+#define T_BA_DEF_SGTYPE T_BA_DEF_SGTYPE148,3820
+#define T_BA_SGTYPE T_BA_SGTYPE149,3848
+#define T_SIG_TYPE_REF T_SIG_TYPE_REF150,3872
+#define T_VAL_TABLE T_VAL_TABLE151,3899
+#define T_SIG_GROUP T_SIG_GROUP152,3923
+#define T_SIG_VALTYPE T_SIG_VALTYPE153,3947
+#define T_SIGTYPE_VALTYPE T_SIGTYPE_VALTYPE154,3973
+#define T_BO_TX_BU T_BO_TX_BU155,4003
+#define T_BA_DEF_REL T_BA_DEF_REL156,4026
+#define T_BA_REL T_BA_REL157,4051
+#define T_BA_DEF_DEF_REL T_BA_DEF_DEF_REL158,4072
+#define T_BU_SG_REL T_BU_SG_REL159,4101
+#define T_BU_EV_REL T_BU_EV_REL160,4125
+#define T_BU_BO_REL T_BU_BO_REL161,4149
+#define T_SG_MUL_VAL T_SG_MUL_VAL162,4173
+#define T_DUMMY_NODE_VECTOR T_DUMMY_NODE_VECTOR163,4198
+#define T_NAN T_NAN164,4230
+union YYSTYPEYYSTYPE169,4324
+  number_t                     number;number173,4394
+  double                       double_val;double_val174,4433
+  string_t                     string;string175,4476
+  object_type_t                object_type;object_type176,4515
+  signal_t                    *signal;signal177,4559
+  node_list_t                 *node_list;node_list178,4598
+  string_list_t               *string_list;string_list179,4640
+  mux_info_t                   mux_info;mux_info180,4684
+  signal_list_t               *signal_list;signal_list181,4725
+  string_t                     signal_name;signal_name182,4769
+  string_list_t               *signal_name_list;signal_name_list183,4813
+  signal_group_t              *signal_group;signal_group184,4862
+  signal_group_list_t         *signal_group_list;signal_group_list185,4907
+  message_t                   *message;message186,4957
+  message_list_t              *message_list;message_list187,4997
+  attribute_value_t           *attribute_value;attribute_value188,5042
+  attribute_object_class_t     attribute_object_class;attribute_object_class189,5090
+  attribute_rel_t             *attribute_rel;attribute_rel190,5145
+  attribute_rel_list_t        *attribute_rel_list;attribute_rel_list191,5191
+  attribute_definition_t      *attribute_definition;attribute_definition192,5242
+  attribute_definition_list_t *attribute_definition_list;attribute_definition_list193,5295
+  dbc_t                       *dbc;dbc194,5353
+  envvar_t                    *envvar;envvar195,5389
+  envvar_list_t               *envvar_list;envvar_list196,5428
+  val_map_entry_t             *val_map_entry;val_map_entry197,5472
+  val_map_t                   *val_map;val_map198,5518
+  valtable_list_t             *valtable_list;valtable_list199,5558
+  valtable_t                  *valtable;valtable200,5604
+typedef union YYSTYPE YYSTYPE;YYSTYPE205,5704
+# define YYSTYPE_IS_TRIVIAL YYSTYPE_IS_TRIVIAL206,5735
+# define YYSTYPE_IS_DECLARED YYSTYPE_IS_DECLARED207,5765
+
+src/libcanmdf/mdfcg.c,345
+find_time_channel(mdf_t *mdf, cg_block_t *cg_block)find_time_channel38,1315
+mdfProcessChannelGroup(const mdf_t *const mdf,mdfProcessChannelGroup56,1746
+mdfProcessChannelGroupsUnsorted(const mdf_t *const mdf,mdfProcessChannelGroupsUnsorted91,2930
+mdfProcessChannelGroupsSorted(const mdf_t *const mdf,mdfProcessChannelGroupsSorted224,7501
+
+src/libcanmdf/mdfcg.h,47
+#define INCLUDE_MDFCG_HINCLUDE_MDFCG_H18,768
+
+src/libcanmdf/mdfcn.c,149
+mdfProcessChannel(const mdf_t *const mdf,mdfProcessChannel29,931
+mdfProcessChannelsSorted(const mdf_t *const mdf,mdfProcessChannelsSorted77,2580
+
+src/libcanmdf/mdfcn.h,59
+#define INCLUDE_MDFUNSORTED_HINCLUDE_MDFUNSORTED_H18,797
+
+src/libcanmdf/mdfdg.c,103
+mdfProcessDataGroups(const mdf_t *const mdf, const filter_t *const filter,mdfProcessDataGroups25,851
+
+src/libcanmdf/mdfdg.h,45
+#define INCLUDE_MDFDG_HINCLUDE_MDFDG_H2,24
+
+src/libcanmdf/mdffile.c,118
+mdf_attach(char *filename, int verbose_level)mdf_attach29,948
+mdf_detach(const mdf_t *const mdf)mdf_detach56,1576
+
+src/libcanmdf/mdffile.h,49
+#define INCLUDE_MDFFILE_HINCLUDE_MDFFILE_H2,26
+
+src/libcanmdf/mdffilter.c,616
+static const filter_element_t *filter_match(const filter_element_t *const fe,filter_match29,1084
+standard_name(const char *message, const char *signal)standard_name45,1552
+filter_apply(const filter_t *filter, const uint32_t channel,filter_apply69,2037
+filter_test_channel(const mdf_t *const mdf,filter_test_channel93,2729
+filter_test_channel_group(const mdf_t *const mdf,filter_test_channel_group115,3300
+mdf_filter_create(const char *filename)mdf_filter_create132,3729
+filter_element_free(filter_element_t *filter_element)filter_element_free243,6650
+filter_free(filter_t *filter)filter_free255,7046
+
+src/libcanmdf/mdffilter.h,514
+#define INCLUDE_MDFFILTER_HINCLUDE_MDFFILTER_H2,29
+struct filter_element_s {filter_element_s27,927
+  struct filter_element_s *next;next28,954
+  char operation;operation29,988
+  uint32_t channel;channel30,1007
+  uint8_t channel_wildcard;channel_wildcard31,1028
+  char *message;message32,1057
+  char *signal;signal33,1075
+  char *newname;newname34,1092
+typedef struct filter_element_s filter_element_t;filter_element_t37,1116
+  filter_element_t *first;first40,1187
+} filter_t;filter_t41,1215
+
+src/libcanmdf/mdfmodel.c,1069
+id_block_get(const mdf_t *const mdf)id_block_get25,877
+hd_block_get(const mdf_t *const mdf)hd_block_get31,972
+dg_block_get(const mdf_t *const mdf, const link_t lnk)dg_block_get37,1072
+cg_block_get(const mdf_t *const mdf, const link_t lnk)cg_block_get44,1220
+cn_block_get(const mdf_t *const mdf, const link_t lnk)cn_block_get51,1368
+ce_block_get(const mdf_t *const mdf, const link_t lnk)ce_block_get58,1516
+tx_block_get(const mdf_t *const mdf, const link_t lnk)tx_block_get65,1664
+tx_block_get_text(const mdf_t *const mdf, link_t lnk)tx_block_get_text72,1814
+pr_block_get(const mdf_t *const mdf, const link_t lnk)pr_block_get79,1973
+dr_block_get(const mdf_t *const mdf, const link_t lnk)dr_block_get86,2123
+cc_block_get(const mdf_t *const mdf, const link_t lnk)cc_block_get93,2273
+cn_get_long_name(const mdf_t *const mdf, const cn_block_t *const cn_block)cn_get_long_name100,2417
+ce_get_message_name(const ce_block_t *const ce_block)ce_get_message_name120,2923
+ce_get_message_info(const ce_block_t *const ce_block,ce_get_message_info148,3608
+
+src/libcanmdf/mdfmodel.h,9524
+#define INCLUDE_MDFMODEL_HINCLUDE_MDFMODEL_H2,28
+#define CREATE(CREATE28,953
+  int fd;fd33,1070
+  uint8_t *base;base34,1081
+  off_t size;size35,1099
+  int verbose_level;   /* verbose level: 0=none, 1=brief, 2=verbose */verbose_level36,1114
+} mdf_t;mdf_t37,1186
+  char_t   file_identifier[8];file_identifier40,1216
+  char_t   format_identifier[8];format_identifier41,1248
+  char_t   program_identifier[8];program_identifier42,1282
+  uint16_t byte_order;            /* 0 = little endian */byte_order43,1317
+  uint16_t floating_point_format; /* 0 = IEEE754 */floating_point_format44,1376
+  uint16_t version_number;version_number45,1429
+  uint16_t code_page_number;code_page_number47,1492
+  char_t   reserved1[2];reserved148,1522
+  char_t   reserved2[26];reserved249,1548
+  uint16_t standard_flags;standard_flags50,1575
+  uint16_t custom_flags;custom_flags51,1603
+} id_block_t;id_block_t52,1629
+  id_block_standard_flags_update_of_record_counters_required = 1,id_block_standard_flags_update_of_record_counters_required55,1662
+  id_block_standard_flags_update_of_reduces_samples_counters_required = 2,id_block_standard_flags_update_of_reduces_samples_counters_required56,1729
+} id_block_standard_flags_t;id_block_standard_flags_t57,1805
+  char_t   block_identifier[2];block_identifier60,1855
+  uint16_t block_size;block_size61,1888
+  link_t   link_dg_block;link_dg_block62,1912
+  link_t   link_tx_block;link_tx_block63,1939
+  link_t   link_pr_block;link_pr_block64,1966
+  uint16_t number_data_groups;number_data_groups65,1993
+  char_t   recording_date[10];recording_date66,2025
+  char_t   recording_time[8];recording_time67,2057
+  char_t   author[32];author68,2088
+  char_t   organization[32];organization69,2112
+  char_t   project[32];project70,2142
+  char_t   measurement_id[32];measurement_id71,2167
+} hd_block_t;hd_block_t72,2199
+  char_t   block_identifier[2];block_identifier75,2234
+  uint16_t block_size;block_size76,2267
+  char_t   text1;text177,2291
+} tx_block_t;tx_block_t78,2310
+  char_t   block_identifier[2];block_identifier81,2345
+  uint16_t block_size;block_size82,2378
+  char_t    data1;data183,2402
+} pr_block_t;pr_block_t84,2422
+typedef uint8_t dr_block_t;dr_block_t86,2439
+  char_t   block_identifier[2];block_identifier89,2488
+  uint16_t block_size;block_size90,2521
+  link_t   link_next_dg_block;link_next_dg_block91,2545
+  link_t   link_cg_block;link_cg_block92,2577
+  link_t   link_reserved;link_reserved93,2604
+  link_t   link_dr_block;link_dr_block94,2631
+  uint16_t number_channel_groups;number_channel_groups95,2658
+  uint16_t number_record_ids;number_record_ids96,2693
+} dg_block_t;dg_block_t97,2724
+  /* 000 */ char_t   block_identifier[2];block_identifier100,2759
+  /* 002 */ uint16_t block_size;block_size101,2802
+  /* 004 */ link_t   link_next_cg_block;link_next_cg_block102,2836
+  /* 008 */ link_t   link_cn_block;link_cn_block103,2878
+  /* 012 */ link_t   link_comment;link_comment104,2915
+  /* 016 */ uint16_t record_id;record_id105,2951
+  /* 018 */ uint16_t number_channels;number_channels106,2984
+  /* 020 */ uint16_t record_size;record_size107,3023
+  /* 022 */ uint32_t number_of_records;number_of_records108,3058
+  /* 026 */ link_t   sample_reduction_block;sample_reduction_block110,3134
+} cg_block_t;cg_block_t111,3180
+  /* 000 */ char_t   block_identifier[2];block_identifier114,3215
+  /* 002 */ uint16_t block_size;block_size115,3258
+  /* 004 */ mdf_bool_t value_range_valid;value_range_valid116,3292
+  /* 006 */ real_t   value_min;value_min117,3335
+  /* 014 */ real_t   value_max;value_max118,3368
+  /* 022 */ char_t   physical_unit[20];physical_unit119,3401
+  /* 042 */ uint16_t conversion_type;conversion_type120,3442
+  /* 044 */ uint16_t size_information;size_information121,3481
+      /* 046 */ real_t   p1;p1125,3582
+      /* 054 */ real_t   p2;p2126,3612
+    } linear;linear127,3642
+      real_t   p1;p1129,3671
+      real_t   p2;p2130,3691
+      real_t   p3;p3131,3711
+      real_t   p4;p4132,3731
+      real_t   p5;p5133,3751
+      real_t   p6;p6134,3771
+    } polynomial;polynomial135,3791
+        real_t   int_value;int_value138,3840
+        real_t   phys_value;phys_value139,3869
+      } array[1];       /* n times */array140,3899
+    } tabular;tabular141,3938
+      real_t   p1;p1143,3968
+      real_t   p2;p2144,3988
+      real_t   p3;p3145,4008
+      real_t   p4;p4146,4028
+      real_t   p5;p5147,4048
+      real_t   p6;p6148,4068
+      real_t   p7;p7149,4088
+    } exponential;exponential150,4108
+      real_t   p1;p1152,4142
+      real_t   p2;p2153,4162
+      real_t   p3;p3154,4182
+      real_t   p4;p4155,4202
+      real_t   p5;p5156,4222
+      real_t   p6;p6157,4242
+      real_t   p7;p7158,4262
+    } logarithmic;logarithmic159,4282
+      real_t   p1;p1161,4316
+      real_t   p2;p2162,4336
+      real_t   p3;p3163,4356
+      real_t   p4;p4164,4376
+      real_t   p5;p5165,4396
+      real_t   p6;p6166,4416
+    } rational;rational167,4436
+      char_t   text_formula[256];text_formula169,4467
+    } asam_mcd2_formula;asam_mcd2_formula170,4502
+        real_t   int_value;int_value173,4558
+        char_t   assigned_text[32];assigned_text174,4587
+      } array[1];       /* n times */array175,4624
+    } asam_mcd2_text_table;asam_mcd2_text_table176,4663
+      real_t   undef1;undef1178,4706
+      real_t   undef2;undef2179,4730
+      link_t   default_text;default_text180,4754
+        real_t   lower_range;lower_range182,4800
+        real_t   upper_range;upper_range183,4831
+        link_t   text;text184,4862
+      } array[1];       /* n times */array185,4886
+    } asam_mcd2_text_range_table;asam_mcd2_text_range_table186,4925
+      uint16_t   ms;ms188,4974
+      uint8_t    min;min189,4996
+      uint8_t    hour;hour190,5019
+      uint8_t    day;day191,5043
+      uint8_t    month;month192,5066
+      uint8_t    year;year193,5091
+    } date;date194,5115
+      uint32_t   ms;ms196,5142
+      uint16_t   days;days197,5164
+    } time;time198,5188
+  } supplement;supplement199,5201
+} cc_block_t;cc_block_t200,5218
+  sdt_unsigned_int_default   = 0,sdt_unsigned_int_default203,5251
+  sdt_signed_int_default     = 1,sdt_signed_int_default204,5286
+  sdt_ieee754_float_default  = 2,sdt_ieee754_float_default205,5321
+  sdt_ieee754_double_default = 3,sdt_ieee754_double_default206,5356
+  sdt_vax_f_float    = 4,sdt_vax_f_float207,5391
+  sdt_vax_g_float    = 5,sdt_vax_g_float208,5418
+  sdt_vax_d_float    = 6,sdt_vax_d_float209,5445
+  sdt_string         = 7,sdt_string210,5472
+  sdt_byte_array     = 8,sdt_byte_array211,5499
+  sdt_unsigned_int_big_endian   = 9,sdt_unsigned_int_big_endian212,5526
+  sdt_signed_int_big_endian     = 10,sdt_signed_int_big_endian213,5564
+  sdt_ieee754_float_big_endian  = 11,sdt_ieee754_float_big_endian214,5603
+  sdt_ieee754_double_big_endian = 12,sdt_ieee754_double_big_endian215,5642
+  sdt_unsigned_int_little_endian   = 13,sdt_unsigned_int_little_endian216,5681
+  sdt_signed_int_little_endian     = 14,sdt_signed_int_little_endian217,5723
+  sdt_ieee754_float_little_endian  = 15,sdt_ieee754_float_little_endian218,5765
+  sdt_ieee754_double_little_endian = 16,sdt_ieee754_double_little_endian219,5807
+} signal_data_type_t;signal_data_type_t220,5849
+  /* 000 */ char_t   block_identifier[2];block_identifier223,5892
+  /* 002 */ uint16_t block_size;block_size224,5935
+  /* 004 */ link_t   link_next_cn_block;link_next_cn_block225,5969
+  /* 008 */ link_t   link_conversion_formula;link_conversion_formula226,6011
+  /* 012 */ link_t   link_extensions;link_extensions227,6058
+  /* 016 */ link_t   link_dependency;link_dependency228,6097
+  /* 020 */ link_t   link_channel_comment;link_channel_comment229,6136
+  /* 024 */ uint16_t channel_type;            /* 0=data, 1=time */channel_type230,6180
+  /* 026 */ char32_t signal_name;signal_name231,6248
+  /* 058 */ char128_t signal_description;signal_description232,6283
+  /* 186 */ uint16_t first_bit;               /* 0..7 */first_bit233,6326
+  /* 188 */ uint16_t number_bits;number_bits234,6384
+  /* 190 */ uint16_t signal_data_type;signal_data_type235,6419
+  /* 192 */ mdf_bool_t value_range_valid;value_range_valid236,6459
+  /* 194 */ real_t   value_min;value_min237,6502
+  /* 202 */ real_t   value_max;value_max238,6535
+  /* 210 */ real_t   sample_rate;sample_rate239,6568
+  /* 218 */ link_t   link_asam_mcd_name;link_asam_mcd_name241,6638
+  /* 222 */ link_t   link_display_identifier;link_display_identifier243,6715
+  /* 226 */ uint16_t additional_byte_offset;additional_byte_offset245,6797
+} cn_block_t;cn_block_t246,6843
+  /* 000 */ char_t   block_identifier[2];block_identifier249,6878
+  /* 002 */ uint16_t block_size;block_size250,6921
+  /* 004 */ uint16_t extension_type;extension_type255,7069
+      uint16_t module_number;module_number258,7145
+      uint32_t address;address259,7176
+      char80_t description[80];description260,7201
+      char32_t ecu_identification[32];ecu_identification261,7234
+    } dim;dim262,7274
+      uint32_t can_id;can_id264,7314
+      uint32_t can_channel;can_channel265,7338
+      char36_t message_name[36];message_name266,7367
+      char36_t sender_name[36];sender_name267,7401
+    } vector_can;vector_can268,7434
+  } supplement;supplement269,7453
+} ce_block_t;ce_block_t270,7470
+
+src/libcanmdf/mdfsg.c,152
+static double dataToDouble(signal_data_type_t sdt,dataToDouble27,894
+mdf_signal_convert(const uint8_t *const data_int_ptr,mdf_signal_convert59,1661
+
+src/libcanmdf/mdfsg.h,125
+#define INCLUDE_MDFSG_HINCLUDE_MDFSG_H18,766
+typedef void (* mdfSignalCb_t)(const mdf_t *const mdf, mdfSignalCb_t31,1057
+
+src/libcanmdf/mdfswap.h,262
+#define MDF_SWAP_HMDF_SWAP_H33,1478
+#define mdf_bswap_32 mdf_bswap_3244,1725
+#define mdf_bswap_64 mdf_bswap_6445,1764
+mdf_bswap_16(uint16_t v)mdf_bswap_1650,1884
+mdf_bswap_32(uint32_t v)mdf_bswap_3256,1978
+mdf_bswap_64(uint64_t v)mdf_bswap_6465,2153
+
+src/libcanmdf/mdftypes.h,605
+#define INCLUDE_MDFTYPES_HINCLUDE_MDFTYPES_H2,28
+typedef int8_t         sint8_t;sint8_t23,865
+typedef int16_t        sint16_t;sint16_t24,898
+typedef int32_t        sint32_t;sint32_t25,932
+typedef double         real_t;real_t26,966
+typedef char           char_t;char_t27,998
+typedef char           char32_t[32];char32_t28,1030
+typedef char           char36_t[36];char36_t29,1068
+typedef char           char80_t[80];char80_t30,1106
+typedef char           char128_t[128];char128_t31,1144
+typedef int32_t        link_t;link_t32,1184
+typedef uint16_t       mdf_bool_t;mdf_bool_t33,1216
+
+src/libcanvsb/vsbreader.c,100
+void vsbReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)vsbReader_processFile34,1087
+
+src/libcanvsb/vsbreader.h,1589
+#define INCLUDE_VSBREAD_HINCLUDE_VSBREAD_H2,27
+  uint8_t text_identifier[6];text_identifier35,1191
+  uint16_t file_version;file_version36,1222
+  uint16_t unknown;unknown37,1248
+} vsb_header_t;vsb_header_t38,1269
+  uint32_t StatusBitField;StatusBitField44,1406
+  uint32_t StatusBitField2;StatusBitField245,1434
+  uint32_t TimeHardware;TimeHardware46,1463
+  uint32_t TimeHardware2;TimeHardware247,1489
+  uint32_t TimeSystem;TimeSystem48,1516
+  uint32_t TimeSystem2;TimeSystem249,1540
+  uint8_t  TimeStampHardwareID;TimeStampHardwareID50,1565
+  uint8_t  TimeStampSystemID;TimeStampSystemID51,1598
+  uint8_t  NetworkID;NetworkID52,1629
+  uint8_t  NodeID;NodeID53,1652
+  uint8_t  Protocol; Protocol54,1672
+  uint8_t  MessagePieceID;MessagePieceID55,1695
+  uint8_t  ExtraDataPtrEnabled;ExtraDataPtrEnabled56,1723
+  uint8_t  NumberBytesHeader;NumberBytesHeader57,1756
+  uint8_t  NumberBytesData;NumberBytesData58,1787
+  int16_t  DescriptionID;DescriptionID59,1816
+  int32_t  ArbIDOrHeader;ArbIDOrHeader60,1843
+  uint8_t  Data[8]; Data61,1870
+  uint8_t  AckBytes[8]; AckBytes62,1892
+  float    ExtraDataPtr;ExtraDataPtr63,1918
+  uint8_t  MiscData;MiscData64,1944
+} icsSpyMessage_t;icsSpyMessage_t65,1966
+  uint32_t SystemTimeStampID;SystemTimeStampID69,2007
+  uint32_t SystemTime1;SystemTime170,2038
+  uint32_t SystemTime2;SystemTime271,2063
+  uint32_t HardwareTimeStampID;HardwareTimeStampID72,2088
+  uint32_t HardwareTime1;HardwareTime173,2121
+  uint32_t HardwareTime2;HardwareTime274,2148
+} icsSpyMsgTime;icsSpyMsgTime75,2175
+
+src/matdump/matdump.c,599
+static int mode = 0; /* short dump */mode29,953
+static int verbose_level = 0;verbose_level30,992
+#   define SIZE_T_FMTSTR SIZE_T_FMTSTR33,1072
+#   define SIZE_T_FMTSTR SIZE_T_FMTSTR35,1110
+Mat_PrintNumber(enum matio_types type, void *data)Mat_PrintNumber39,1164
+full_dump(matvar_t *matvar)full_dump98,2922
+var_dump(matvar_t *matvar)var_dump181,5523
+mat_dump(mat_t *mat, int nvar, char **varnames)mat_dump204,5881
+static void usage_error(const char *program_name)usage_error224,6332
+static void help(const char *program_name)help230,6490
+main(int argc, char **argv)main246,7056
+
+src/matdump/matdump.h,159
+#define INCLUDE_MDFTOMAT_HINCLUDE_MDFTOMAT_H2,28
+  mat_t *mat;mat25,924
+  enum matio_compression compress;compress26,939
+} mdftomat_t;mdftomat_t27,975
+
+src/mdftomat/mdftomat.c,744
+sanitize_name(const char *in)sanitize_name39,1205
+mat_write_signal(const mdf_t *const mdf, mat_write_signal78,1900
+static void usage_error(const char *program_name)usage_error153,4470
+static void help(const char *program_name)help159,4628
+string_from_array(const char *input, const size_t len)string_from_array195,6121
+#define FIELD_PRINT(FIELD_PRINT205,6345
+mdfPrintHeaderInfo(const mdf_t *const mdf)mdfPrintHeaderInfo215,6567
+mdfProcess(const mdf_t *const mdf, const mdftomat_t *const mdftomat,mdfProcess239,7571
+static int verbose_level = 0;verbose_level255,7989
+static mdftomat_t mdftomat = {mdftomat256,8020
+static int mat_file_ver = (int)MAT_FT_DEFAULT;mat_file_ver261,8091
+main(int argc, char **argv)main264,8146
+
+src/mdftomat/mdftomat.h,159
+#define INCLUDE_MDFTOMAT_HINCLUDE_MDFTOMAT_H2,28
+  mat_t *mat;mat25,924
+  enum matio_compression compress;compress26,939
+} mdftomat_t;mdftomat_t27,975

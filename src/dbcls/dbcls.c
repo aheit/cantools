@@ -1,5 +1,5 @@
 /*  dbcls -- list contents of a DBC file 
-    Copyright (C) 2007-2011 Andreas Heitmann
+    Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
 #endif
 
 #include <stdio.h>
@@ -164,65 +164,65 @@ static void show_network(dbc_t *dbc)
 static void show_message_header(void)
 {
   fputs("message_id;"
-	"message_name;"
-	"message_len;"
-	"message_sender;"
-	"message_comment;"
-	"message_attribute_list;"
-	"message_transmitter_list;",stdout);
+        "message_name;"
+        "message_len;"
+        "message_sender;"
+        "message_comment;"
+        "message_attribute_list;"
+        "message_transmitter_list;",stdout);
 }
 
 static void show_signal_header(void)
 {
   fputs("signal_name;"
-	"signal_mux_type;"
-	"signal_mux_value;"
-	"signal_bit_start;"
-	"signal_bit_len;"
-	"signal_endianess;"
-	"signal_signedness;"
-	"signal_scale;"
-	"signal_offset;"
-	"signal_min;"
-	"signal_max;"
-	"signal_val_type;"
-	"signal_unit;"
-	"signal_receiver_list;"
-	"signal_comment;"
-	"signal_attribute_list;"
-	"signal_val_map\n",stdout);
+        "signal_mux_type;"
+        "signal_mux_value;"
+        "signal_bit_start;"
+        "signal_bit_len;"
+        "signal_endianess;"
+        "signal_signedness;"
+        "signal_scale;"
+        "signal_offset;"
+        "signal_min;"
+        "signal_max;"
+        "signal_val_type;"
+        "signal_unit;"
+        "signal_receiver_list;"
+        "signal_comment;"
+        "signal_attribute_list;"
+        "signal_val_map\n",stdout);
 }
 
 static void show_signal(signal_list_t *sl)
 {
   printf("%s;"       /* signal name */
-	 "%s;"       /* mux type */
-	 "%ld;"      /* mux value */
-	 "%d;"       /* bit start */
-	 "%d;"       /* bit len */
-	 "%d;"       /* endianess */
-	 "%d;"       /* signedness */
-	 "%f;"       /* scale */
-	 "%f;"      /* offset */
-	 "%f;"       /* min */
-	 "%f;"      /* max */
-	 "%s;"      /* signal val type */
-	 "\"%s\";"   /* unit */             
-	 ,
-	 /* Signal */
-	 sl->signal->name,
-	 decode_mux_type(sl->signal->mux_type),
-	 sl->signal->mux_value,
-	 sl->signal->bit_start,
-	 sl->signal->bit_len,
-	 sl->signal->endianess,
-	 sl->signal->signedness,
-	 sl->signal->scale,
-	 sl->signal->offset,
-	 sl->signal->min,
-	 sl->signal->max,
-	 decode_signal_val_type(sl->signal->signal_val_type),
-	 sl->signal->unit?sl->signal->unit:"");
+         "%s;"       /* mux type */
+         "%ld;"      /* mux value */
+         "%d;"       /* bit start */
+         "%d;"       /* bit len */
+         "%d;"       /* endianess */
+         "%d;"       /* signedness */
+         "%f;"       /* scale */
+         "%f;"      /* offset */
+         "%f;"       /* min */
+         "%f;"      /* max */
+         "%s;"      /* signal val type */
+         "\"%s\";"   /* unit */             
+         ,
+         /* Signal */
+         sl->signal->name,
+         decode_mux_type(sl->signal->mux_type),
+         sl->signal->mux_value,
+         sl->signal->bit_start,
+         sl->signal->bit_len,
+         sl->signal->endianess,
+         sl->signal->signedness,
+         sl->signal->scale,
+         sl->signal->offset,
+         sl->signal->min,
+         sl->signal->max,
+         decode_signal_val_type(sl->signal->signal_val_type),
+         sl->signal->unit?sl->signal->unit:"");
   show_string_list(sl->signal->receiver_list);
   putchar(';');
   printf("\"%s\";",sl->signal->comment?sl->signal->comment:"");
@@ -242,14 +242,14 @@ static void show_string(string_t string)
 static void show_message(message_list_t *ml)
 {
   printf("$%lX;"     /* message id */
-	 "%s;"       /* message name */
-	 "%d;"       /* message len */
-	 "%s"       /* sender */
-	 ,
-	 ml->message->id,
-	 ml->message->name,
-	 ml->message->len,
-	 ml->message->sender);
+         "%s;"       /* message name */
+         "%d;"       /* message len */
+         "%s"       /* sender */
+         ,
+         ml->message->id,
+         ml->message->name,
+         ml->message->len,
+         ml->message->sender);
   putchar(';');
   show_string(ml->message->comment);
   putchar(';');

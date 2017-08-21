@@ -1,5 +1,5 @@
 /*  cantomat -- convert CAN log files to MAT files
-    Copyright (C) 2007-2016 Andreas Heitmann
+    Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
 #endif
 
 #include <stdio.h>
@@ -213,21 +213,24 @@ main(int argc, char **argv)
   }
   
   /* parse DBC files */
-  busAssignment_parseDBC(busAssignment);
+  if(busAssignment_parseDBC(busAssignment)) {
+    fprintf(stderr, "error: parsing DBC file failed\n");
+    exit(1);
+  }
   
   /* parse input file */
   if(verbose_flag) {
     if(inputFilename != NULL) {
       fprintf(stderr,
-	      "Parsing input file %s\n",
-	      inputFilename?inputFilename:"<stdin>");
+              "Parsing input file %s\n",
+              inputFilename?inputFilename:"<stdin>");
     }
   }
   measurement = measurement_read(busAssignment,
-				 inputFilename,
-				 signalFormat,
-				 timeResolution,
-				 parserFunction);
+                                 inputFilename,
+                                 signalFormat,
+                                 timeResolution,
+                                 parserFunction);
   if(measurement != NULL) {
 
     /* write MAT file */

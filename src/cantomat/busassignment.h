@@ -1,7 +1,7 @@
 #ifndef INCLUDE_BUSASSIGNMENT
 #define INCLUDE_BUSASSIGNMENT
 
-/*  busassignment.h --  declarations for busassignment
+/*  busassignment.h -- declarations for busassignment
     Copyright (C) 2016-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
 #endif
 
 #include "messagehash.h"

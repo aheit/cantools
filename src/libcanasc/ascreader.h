@@ -1,8 +1,8 @@
-#ifndef INCLUDE_ASCREAD_H
-#define INCLUDE_ASCREAD_H
+#ifndef INCLUDE_ASCREADER_H
+#define INCLUDE_ASCREADER_H
 
-/*  ascReader.h --  declarations for ascReader
-    Copyright (C) 2007-2016 Andreas Heitmann
+/*  ascreader.h --  declarations for ascreader
+    Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <stdio.h>
 #include "dbctypes.h"
@@ -27,7 +30,6 @@
 extern "C" {
 #endif
 
-/* ascRead function */
 void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
 
 #ifdef __cplusplus

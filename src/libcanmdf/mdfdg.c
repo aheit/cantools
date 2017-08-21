@@ -1,5 +1,5 @@
 /*  mdfdg.c --  access MDF data groups
-    Copyright (C) 2012-2015 Andreas Heitmann
+    Copyright (C) 2012-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,7 +14,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
 
 #include <stdio.h>
 #include "mdfmodel.h"
@@ -23,8 +25,8 @@
 
 void
 mdfProcessDataGroups(const mdf_t *const mdf, const filter_t *const filter,
-		     link_t lnk, mdfSignalCb_t const mdfSignalCb,
-		     const void *const cbData)
+                     link_t lnk, mdfSignalCb_t const mdfSignalCb,
+                     const void *const cbData)
 {
   dg_block_t *dg_block;
   dr_block_t *dr_block;
@@ -36,10 +38,10 @@ mdfProcessDataGroups(const mdf_t *const mdf, const filter_t *const filter,
        dg_block = dg_block_get(mdf, dg_block->link_next_dg_block), idg++) {
     if(mdf->verbose_level >= 2) {
       printf("DGBLOCK %d, nCG = %hu, nRec = %hu, offset=0x%lx\n",
-	     idg,
-	     (unsigned short)dg_block->number_channel_groups,
-	     (unsigned short)dg_block->number_record_ids,
-	     (unsigned long)dg_block->link_dr_block );
+             idg,
+             (unsigned short)dg_block->number_channel_groups,
+             (unsigned short)dg_block->number_record_ids,
+             (unsigned long)dg_block->link_dr_block );
     }
     dr_block = dr_block_get(mdf, dg_block->link_dr_block);
     data = dr_block;
@@ -47,18 +49,18 @@ mdfProcessDataGroups(const mdf_t *const mdf, const filter_t *const filter,
     switch(dg_block->number_record_ids) {
     case 0: /* sorted records */
       mdfProcessChannelGroupsSorted(mdf, filter, dg_block->link_cg_block,
-				    dg_block->number_record_ids, data,
-				    mdfSignalCb, cbData);
+                                    dg_block->number_record_ids, data,
+                                    mdfSignalCb, cbData);
       break;
     case 1: /* unsorted records */
     case 2:
       mdfProcessChannelGroupsUnsorted(mdf, filter, dg_block->link_cg_block,
-				      dg_block->number_record_ids, data,
-				      mdfSignalCb, cbData);
+                                      dg_block->number_record_ids, data,
+                                      mdfSignalCb, cbData);
       break;
     default:
       fprintf(stderr,"number_record_ids %hu not implemented\n",
-	      (unsigned short)dg_block->number_record_ids);
+              (unsigned short)dg_block->number_record_ids);
       exit(EXIT_FAILURE);
     }
   }

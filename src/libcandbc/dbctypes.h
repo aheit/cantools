@@ -2,7 +2,7 @@
 #define INCLUDE_DBCTYPES_H
 
 /*  dbctypes.h --  declarations for libcandbc
-    Copyright (C) 2007-2016 Andreas Heitmann
+    Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,15 +17,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-/* base types */
-typedef unsigned char  uint8;
-typedef char           sint8;
-typedef unsigned short uint16;
-typedef short          sint16;
-typedef unsigned long  uint32;
-typedef long           sint32;
-typedef long long      number_t;
-typedef unsigned long long uint64;
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#ifdef HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+#ifdef HAVE_STDINT_H
+# include <stdint.h>
+#endif
+
+/* dbc base types */
+typedef uint8_t        uint8;
+typedef int8_t         sint8;
+typedef uint16_t       uint16;
+typedef int16_t        sint16;
+typedef uint32_t       uint32;
+typedef int32_t        sint32;
+typedef int64_t        number_t;
+typedef uint64_t       uint64;
 typedef float          float32;
 typedef double         float64;
 

@@ -1,8 +1,8 @@
-#ifndef INCLUDE_VSBREAD_H
-#define INCLUDE_VSBREAD_H
+#ifndef INCLUDE_VSBREADER_H
+#define INCLUDE_VSBREADER_H
 
-/*  vsbReader.h --  declarations for vsbReader
-    Copyright (C) 2007-2011 Andreas Heitmann
+/*  vsbReader.h -- declarations for vsbReader
+    Copyright (C) 2011-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,9 +17,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#ifdef HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+#ifdef HAVE_STDINT_H
+# include <stdint.h>
+#endif
 
 #include <stdio.h>
-#include <stdint.h>
 #include <time.h>
 #include "dbctypes.h"
 #include "measurement.h"

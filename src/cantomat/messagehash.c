@@ -1,5 +1,5 @@
-/*  messageHash.c --  map message id to message structure
-    Copyright (C) 2007-2011 Andreas Heitmann
+/*  messageHash.c -- map message id to message structure
+    Copyright (C) 2007-2017 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
 #endif
 
 #include <stdio.h>
@@ -80,7 +80,7 @@ struct hashtable *messageHash_create(message_list_t *message_list)
   h = create_hashtable(16, hash_from_canid, canids_equal);
 
   if(h != NULL) {
-    for(message_list = message_list;
+    for(;
         message_list != NULL;
         message_list = message_list->next) {
       message_t *message = message_dup(message_list->message);
