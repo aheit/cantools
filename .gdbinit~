@@ -1,2 +1,0 @@
-b mdf_signal_convert
-r -v -f myfilter.txt ../../TESTDATA/201704Markus/HSLSFOHSLSFOBUS_2017-04-12_13-13-45.MDF a.mat 
