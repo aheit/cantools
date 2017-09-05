@@ -172,7 +172,6 @@ fi
 # Configure check for unit testing
 #
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.0])
-PKG_CHECK_MODULES([GLIB],  [glib-2.0 >= 2.0])
 AS_IF([test "x$enable_matlab" != "xno"], [
     PKG_CHECK_MODULES([MATIO], [matio >= 1.5])
 ])
