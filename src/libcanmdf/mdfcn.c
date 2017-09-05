@@ -22,7 +22,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <matio.h>
 
 #include "mdfcn.h"
 #include "mdfsg.h"

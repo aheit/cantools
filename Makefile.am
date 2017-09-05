@@ -31,7 +31,10 @@ YACC=@YACC@
 lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
 	          libcanclg.la libcanblf.la
 
-bin_PROGRAMS	= dbccopy dbcls cantomat mdftomat matdump
+bin_PROGRAMS	= dbccopy dbcls
+if MATLAB
+bin_PROGRAMS	+= cantomat mdftomat matdump
+endif
 
 #
 # dbcls
