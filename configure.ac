@@ -30,6 +30,12 @@ dnl common library version
 version_info='0:24:0'
 AC_SUBST(version_info)
 
+# custom options
+
+AC_ARG_ENABLE([matlab],
+    AS_HELP_STRING([--disable-matlab], [Disable matlab MAT file support]))
+AM_CONDITIONAL([MATLAB], [test "x$enable_matlab" != "xno"])
+
 # Checks for programs.
  	
 # Turn off shared libraries during beta-testing, since they
@@ -140,7 +146,10 @@ AC_DEFUN([AX_C_ARITHMETIC_RSHIFT], [
 AX_C_ARITHMETIC_RSHIFT
 
 # Checks for libraries
-AC_CHECK_LIB([hdf5], [H5Fcreate], AC_SUBST([HDF5_LIB], [-lhdf5]), ,-lz)
+
+AS_IF([test "x$enable_matlab" != "xno"], [
+    AC_CHECK_LIB([hdf5], [H5Fcreate], AC_SUBST([HDF5_LIB], [-lhdf5]), ,-lz)
+])
 AC_CHECK_LIB([m], [floor], AC_SUBST([Z_LIB], [-lz]))
 AC_CHECK_LIB([z], [deflate])
 
@@ -164,7 +173,9 @@ fi
 #
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.0])
 PKG_CHECK_MODULES([GLIB],  [glib-2.0 >= 2.0])
-PKG_CHECK_MODULES([MATIO], [matio >= 1.5])
+AS_IF([test "x$enable_matlab" != "xno"], [
+    PKG_CHECK_MODULES([MATIO], [matio >= 1.5])
+])
 PKG_CHECK_MODULES([ZLIB],  [zlib >= 1.2])
 #PKG_CHECK_MODULES([HDF5], [hdf5 >= 1.8])
  

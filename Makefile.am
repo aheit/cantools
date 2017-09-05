@@ -28,10 +28,16 @@ YACC=@YACC@
 #	
 # What to build and install
 #
-lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
+lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanvsb.la \
 	          libcanclg.la libcanblf.la
+if MATLAB
+lib_LTLIBRARIES += libcanmdf.la
+endif
 
-bin_PROGRAMS	= dbccopy dbcls cantomat mdftomat matdump
+bin_PROGRAMS	= dbccopy dbcls
+if MATLAB
+bin_PROGRAMS	+= cantomat mdftomat matdump
+endif
 
 #
 # dbcls
