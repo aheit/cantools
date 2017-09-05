@@ -130,7 +130,8 @@ include_HEADERS= src/libcandbc/dbcmodel.h \
 		 src/cantomat/messagedecoder.h \
 		 src/libcanmdf/mdfcn.h \
 		 src/libcanmdf/mdfswap.h \
-		 src/libcanmdf/mdftypes.h
+		 src/libcanmdf/mdftypes.h \
+		 cantools_config.h
 
 libcandbc_la_SOURCES= \
 	src/libcandbc/dbcmodel.c \
