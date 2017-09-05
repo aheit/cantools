@@ -18,9 +18,7 @@
 
 /* written by Jim Meyering and Bruno Haible */
 
-#if HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <cantools_config.h>
 
 /* Only the AC_FUNC_MALLOC macro defines 'malloc' already in config.h.  */
 #ifdef malloc

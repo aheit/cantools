@@ -20,7 +20,7 @@
 AC_PREREQ(2.69)
 AC_INIT(cantools, 0.24, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
-AC_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADER(cantools_config.h)
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_MACRO_DIR([m4])
 AC_LIBTOOL_WIN32_DLL
