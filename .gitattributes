@@ -1,0 +1,10 @@
+configure		text eol=lf
+Makefile		text eol=lf
+missing			text eol=lf
+libtool			text eol=lf
+ylwrap			text eol=lf
+*.ac			text eol=lf
+*.am			text eol=lf
+*.sh			text eol=lf
+*.in			text eol=lf
+*.m4			text eol=lf
