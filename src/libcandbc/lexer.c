@@ -649,9 +649,7 @@ char *yytext;
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #line 18 "src/libcandbc/lexer.l"
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
+#include "cantools_config.h"
 
 #include <stdio.h>
 #include <string.h>

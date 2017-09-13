@@ -16,9 +16,7 @@
 
 %{
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
+#include "cantools_config.h"
 
 #include <stdio.h>
 #include <string.h>

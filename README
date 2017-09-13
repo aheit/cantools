@@ -17,8 +17,16 @@ Some tools are available for testing of converters:
 * matdump displays the content of a MAT file as ASCII text
 * dbccopy copies a DBC file
 
-The tools 'asctomat' and 'mdftomat' require the package matio, which
-needs to be compiled and installed first (see instructions below).
+The tools 'asctomat' and 'mdftomat' require the package matio,
+which in turn requires the package hdf5. Support for these
+tools is optional; either disable them with '--disable-matlab'
+configure option or make sure hdf5 and matio dependencies are
+installed first (see instructions below).
+
+Since hdf5 is intended only for native builds,
+it is recommended to disable the optional tools on cross-compile
+builds of cantools in order to avoid this dependency
+https://support.hdfgroup.org/HDF5/faq/compile.html#cross
 
 Shared libraries for parsing and accessing these files are also
 provided:
@@ -78,7 +86,7 @@ make install
 Compilation of cantools on Windows Subsystem for Linux (WSL)
 ====================
 sudo apt-get install gcc libz-dev libmatio-dev pkg-config flex bison check libglib2.0 subversion automake
-svn checkout https://svn.code.sf.net/p/cantools/code/trunk cantools-code
+git clone https://github.com/aheit/cantools cantools-code
 cd cantools-code
 ./configure
 make
