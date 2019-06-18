@@ -656,8 +656,8 @@ char *yytext;
 #include "dbcmodel.h"
 #include "parser.h"
 
-#line 661 "src/libcandbc/lexer.c"
-#line 662 "src/libcandbc/lexer.c"
+#line 659 "src/libcandbc/lexer.c"
+#line 660 "src/libcandbc/lexer.c"
 
 #define INITIAL 0
 
@@ -874,10 +874,10 @@ YY_DECL
 		}
 
 	{
-#line 40 "src/libcandbc/lexer.l"
+#line 38 "src/libcandbc/lexer.l"
 
 
-#line 882 "src/libcandbc/lexer.c"
+#line 880 "src/libcandbc/lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -946,217 +946,217 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 42 "src/libcandbc/lexer.l"
+#line 40 "src/libcandbc/lexer.l"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 44 "src/libcandbc/lexer.l"
+#line 42 "src/libcandbc/lexer.l"
 { return T_VERSION;         }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 45 "src/libcandbc/lexer.l"
+#line 43 "src/libcandbc/lexer.l"
 { return T_BO;              }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 46 "src/libcandbc/lexer.l"
+#line 44 "src/libcandbc/lexer.l"
 { return T_BS;              }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 47 "src/libcandbc/lexer.l"
+#line 45 "src/libcandbc/lexer.l"
 { return T_BU;              }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 48 "src/libcandbc/lexer.l"
+#line 46 "src/libcandbc/lexer.l"
 { return T_SG;              }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 49 "src/libcandbc/lexer.l"
+#line 47 "src/libcandbc/lexer.l"
 { return T_EV;              }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 50 "src/libcandbc/lexer.l"
+#line 48 "src/libcandbc/lexer.l"
 { return T_SIG_VALTYPE;     }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 51 "src/libcandbc/lexer.l"
+#line 49 "src/libcandbc/lexer.l"
 { return T_NS;              }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 52 "src/libcandbc/lexer.l"
+#line 50 "src/libcandbc/lexer.l"
 { return T_INT;             }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 53 "src/libcandbc/lexer.l"
+#line 51 "src/libcandbc/lexer.l"
 { return T_FLOAT;           }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 54 "src/libcandbc/lexer.l"
+#line 52 "src/libcandbc/lexer.l"
 { return T_NAN;             }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 55 "src/libcandbc/lexer.l"
+#line 53 "src/libcandbc/lexer.l"
 { return T_STRING;          }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 56 "src/libcandbc/lexer.l"
+#line 54 "src/libcandbc/lexer.l"
 { return T_ENUM;            }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 57 "src/libcandbc/lexer.l"
+#line 55 "src/libcandbc/lexer.l"
 { return T_HEX;             }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 59 "src/libcandbc/lexer.l"
+#line 57 "src/libcandbc/lexer.l"
 { return T_NS_DESC;         }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 60 "src/libcandbc/lexer.l"
+#line 58 "src/libcandbc/lexer.l"
 { return T_CM;              }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 61 "src/libcandbc/lexer.l"
+#line 59 "src/libcandbc/lexer.l"
 { return T_BA_DEF;          }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 62 "src/libcandbc/lexer.l"
+#line 60 "src/libcandbc/lexer.l"
 { return T_BA;              }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 63 "src/libcandbc/lexer.l"
+#line 61 "src/libcandbc/lexer.l"
 { return T_VAL;             }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 64 "src/libcandbc/lexer.l"
+#line 62 "src/libcandbc/lexer.l"
 { return T_CAT_DEF;         }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 65 "src/libcandbc/lexer.l"
+#line 63 "src/libcandbc/lexer.l"
 { return T_CAT;             }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 66 "src/libcandbc/lexer.l"
+#line 64 "src/libcandbc/lexer.l"
 { return T_FILTE;           }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 67 "src/libcandbc/lexer.l"
+#line 65 "src/libcandbc/lexer.l"
 { return T_BA_DEF_DEF;      }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 68 "src/libcandbc/lexer.l"
+#line 66 "src/libcandbc/lexer.l"
 { return T_EV_DATA;         }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 69 "src/libcandbc/lexer.l"
+#line 67 "src/libcandbc/lexer.l"
 { return T_ENVVAR_DATA;     }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 70 "src/libcandbc/lexer.l"
+#line 68 "src/libcandbc/lexer.l"
 { return T_SGTYPE;          }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 71 "src/libcandbc/lexer.l"
+#line 69 "src/libcandbc/lexer.l"
 { return T_SGTYPE_VAL;      }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 72 "src/libcandbc/lexer.l"
+#line 70 "src/libcandbc/lexer.l"
 { return T_BA_DEF_SGTYPE;   }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 73 "src/libcandbc/lexer.l"
+#line 71 "src/libcandbc/lexer.l"
 { return T_BA_SGTYPE;       }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 74 "src/libcandbc/lexer.l"
+#line 72 "src/libcandbc/lexer.l"
 { return T_SIG_TYPE_REF;    }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 75 "src/libcandbc/lexer.l"
+#line 73 "src/libcandbc/lexer.l"
 { return T_VAL_TABLE;       }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 76 "src/libcandbc/lexer.l"
+#line 74 "src/libcandbc/lexer.l"
 { return T_SIG_GROUP;       }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 77 "src/libcandbc/lexer.l"
+#line 75 "src/libcandbc/lexer.l"
 { return T_SIGTYPE_VALTYPE; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 78 "src/libcandbc/lexer.l"
+#line 76 "src/libcandbc/lexer.l"
 { return T_BO_TX_BU;        }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 79 "src/libcandbc/lexer.l"
+#line 77 "src/libcandbc/lexer.l"
 { return T_BA_DEF_REL;      }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 80 "src/libcandbc/lexer.l"
+#line 78 "src/libcandbc/lexer.l"
 { return T_BA_REL;          }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 81 "src/libcandbc/lexer.l"
+#line 79 "src/libcandbc/lexer.l"
 { return T_BA_DEF_DEF_REL;  }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 82 "src/libcandbc/lexer.l"
+#line 80 "src/libcandbc/lexer.l"
 { return T_BU_SG_REL;       }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 83 "src/libcandbc/lexer.l"
+#line 81 "src/libcandbc/lexer.l"
 { return T_BU_EV_REL;       }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 84 "src/libcandbc/lexer.l"
+#line 82 "src/libcandbc/lexer.l"
 { return T_BU_BO_REL;       }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 85 "src/libcandbc/lexer.l"
+#line 83 "src/libcandbc/lexer.l"
 { return T_SG_MUL_VAL;      }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 86 "src/libcandbc/lexer.l"
+#line 84 "src/libcandbc/lexer.l"
 {
    yylval.number = yytext[17]-'0';
    return T_DUMMY_NODE_VECTOR;
@@ -1165,17 +1165,17 @@ YY_RULE_SETUP
 case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
-#line 91 "src/libcandbc/lexer.l"
+#line 89 "src/libcandbc/lexer.l"
 ;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 92 "src/libcandbc/lexer.l"
+#line 90 "src/libcandbc/lexer.l"
 ;
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 94 "src/libcandbc/lexer.l"
+#line 92 "src/libcandbc/lexer.l"
 {
                    yylval.string = strdup(yytext);
                    return T_ID;
@@ -1184,7 +1184,7 @@ YY_RULE_SETUP
 case 47:
 /* rule 47 can match eol */
 YY_RULE_SETUP
-#line 99 "src/libcandbc/lexer.l"
+#line 97 "src/libcandbc/lexer.l"
 {
                    int len = strlen(yytext);
                    if(len>2) {
@@ -1199,7 +1199,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 111 "src/libcandbc/lexer.l"
+#line 109 "src/libcandbc/lexer.l"
 {
                    yylval.number = atoll(yytext);
                    return T_INT_VAL;
@@ -1207,7 +1207,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 116 "src/libcandbc/lexer.l"
+#line 114 "src/libcandbc/lexer.l"
 {
                    yylval.number = strtol(yytext,NULL,16);
                    return T_INT_VAL;
@@ -1215,7 +1215,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 121 "src/libcandbc/lexer.l"
+#line 119 "src/libcandbc/lexer.l"
 {
                    yylval.double_val = strtod(yytext, NULL);
                    return T_DOUBLE_VAL;
@@ -1223,74 +1223,74 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 126 "src/libcandbc/lexer.l"
+#line 124 "src/libcandbc/lexer.l"
 { return T_COLON; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 127 "src/libcandbc/lexer.l"
+#line 125 "src/libcandbc/lexer.l"
 { return T_SEMICOLON; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 128 "src/libcandbc/lexer.l"
+#line 126 "src/libcandbc/lexer.l"
 { return T_SEP; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 129 "src/libcandbc/lexer.l"
+#line 127 "src/libcandbc/lexer.l"
 { return T_COMMA; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 130 "src/libcandbc/lexer.l"
+#line 128 "src/libcandbc/lexer.l"
 { return T_AT; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 131 "src/libcandbc/lexer.l"
+#line 129 "src/libcandbc/lexer.l"
 { return T_PLUS; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 132 "src/libcandbc/lexer.l"
+#line 130 "src/libcandbc/lexer.l"
 { return T_MINUS; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 133 "src/libcandbc/lexer.l"
+#line 131 "src/libcandbc/lexer.l"
 { return T_BOX_OPEN; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 134 "src/libcandbc/lexer.l"
+#line 132 "src/libcandbc/lexer.l"
 { return T_BOX_CLOSE; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 135 "src/libcandbc/lexer.l"
+#line 133 "src/libcandbc/lexer.l"
 { return T_PAR_OPEN; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 136 "src/libcandbc/lexer.l"
+#line 134 "src/libcandbc/lexer.l"
 { return T_PAR_CLOSE; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 138 "src/libcandbc/lexer.l"
+#line 136 "src/libcandbc/lexer.l"
 { yyterminate(); }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 139 "src/libcandbc/lexer.l"
+#line 137 "src/libcandbc/lexer.l"
 { return yytext[0]; }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 141 "src/libcandbc/lexer.l"
+#line 139 "src/libcandbc/lexer.l"
 ECHO;
 	YY_BREAK
-#line 1295 "src/libcandbc/lexer.c"
+#line 1293 "src/libcandbc/lexer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2305,7 +2305,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 141 "src/libcandbc/lexer.l"
+#line 139 "src/libcandbc/lexer.l"
 
 
 int

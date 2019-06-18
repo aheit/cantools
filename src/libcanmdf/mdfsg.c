@@ -251,7 +251,7 @@ mdf_signal_convert(const uint8_t *const data_int_ptr,
       converted_double = (double)data_int64;
       break;
     case 65535: /* 65535 = 1:1 conversion formula (Int = Phys) */
-      converted_double = (double)data_int64;
+      converted_double = dataToDouble(sdt, data_int64, data_ieee754);
       break;
     default:
       converted_double = 0.0;
@@ -260,24 +260,7 @@ mdf_signal_convert(const uint8_t *const data_int_ptr,
       exit(EXIT_FAILURE);
     }
   } else {
-    switch(sdt) {
-      case sdt_unsigned_int_default:
-      case sdt_unsigned_int_big_endian:
-      case sdt_string:
-        converted_double = (double)(uint64_t)data_int64;
-        break;
-      case sdt_signed_int_default:
-      case sdt_signed_int_big_endian:
-        converted_double = (double)data_int64;
-        break;
-    case sdt_ieee754_float_default:
-    case sdt_ieee754_double_default:
-    case sdt_ieee754_float_big_endian:
-      converted_double = data_ieee754;
-      break;
-    default:
-      assert(1);
-    }
+    converted_double = dataToDouble(sdt, data_int64, data_ieee754);
   }
   return converted_double;
 }

@@ -640,8 +640,6 @@ ZLIB_LIBS
 ZLIB_CFLAGS
 MATIO_LIBS
 MATIO_CFLAGS
-GLIB_LIBS
-GLIB_CFLAGS
 CHECK_LIBS
 CHECK_CFLAGS
 PKG_CONFIG_LIBDIR
@@ -683,6 +681,8 @@ LD
 FGREP
 SED
 LIBTOOL
+MATLAB_FALSE
+MATLAB_TRUE
 version_info
 EGREP
 GREP
@@ -761,6 +761,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -785,6 +786,7 @@ ac_user_opts='
 enable_option_checking
 enable_silent_rules
 enable_dependency_tracking
+enable_matlab
 enable_shared
 enable_static
 with_pic
@@ -818,8 +820,6 @@ PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
 CHECK_CFLAGS
 CHECK_LIBS
-GLIB_CFLAGS
-GLIB_LIBS
 MATIO_CFLAGS
 MATIO_LIBS
 ZLIB_CFLAGS
@@ -862,6 +862,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1114,6 +1115,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1251,7 +1261,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1404,6 +1414,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1448,6 +1459,7 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking
                           speeds up one-time build
+  --disable-matlab        Disable matlab MAT file support
   --enable-shared[=PKGS]  build shared libraries [default=no]
   --enable-static[=PKGS]  build static libraries [default=yes]
   --enable-fast-install[=PKGS]
@@ -1497,8 +1509,6 @@ Some influential environment variables:
   CHECK_CFLAGS
               C compiler flags for CHECK, overriding pkg-config
   CHECK_LIBS  linker flags for CHECK, overriding pkg-config
-  GLIB_CFLAGS C compiler flags for GLIB, overriding pkg-config
-  GLIB_LIBS   linker flags for GLIB, overriding pkg-config
   MATIO_CFLAGS
               C compiler flags for MATIO, overriding pkg-config
   MATIO_LIBS  linker flags for MATIO, overriding pkg-config
@@ -2643,7 +2653,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-ac_config_headers="$ac_config_headers config.h"
+ac_config_headers="$ac_config_headers cantools_config.h"
 
 am__api_version='1.15'
 
@@ -5128,6 +5138,22 @@ $as_echo "$ac_cv_safe_to_define___extensions__" >&6; }
 
 
 version_info='0:24:0'
+
+
+# custom options
+
+# Check whether --enable-matlab was given.
+if test "${enable_matlab+set}" = set; then :
+  enableval=$enable_matlab;
+fi
+
+ if test "x$enable_matlab" != "xno"; then
+  MATLAB_TRUE=
+  MATLAB_FALSE='#'
+else
+  MATLAB_TRUE='#'
+  MATLAB_FALSE=
+fi
 
 
 # Checks for programs.
@@ -18911,7 +18937,10 @@ $as_echo "#define HAVE_ARITHMETIC_RSHIFT 1" >>confdefs.h
 
 
 # Checks for libraries
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for H5Fcreate in -lhdf5" >&5
+
+if test "x$enable_matlab" != "xno"; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for H5Fcreate in -lhdf5" >&5
 $as_echo_n "checking for H5Fcreate in -lhdf5... " >&6; }
 if ${ac_cv_lib_hdf5_H5Fcreate+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -18952,6 +18981,8 @@ if test "x$ac_cv_lib_hdf5_H5Fcreate" = xyes; then :
 
 fi
 
+
+fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for floor in -lm" >&5
 $as_echo_n "checking for floor in -lm... " >&6; }
 if ${ac_cv_lib_m_floor+:} false; then :
@@ -19338,97 +19369,8 @@ else
 $as_echo "yes" >&6; }
 
 fi
+if test "x$enable_matlab" != "xno"; then :
 
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GLIB" >&5
-$as_echo_n "checking for GLIB... " >&6; }
-
-if test -n "$GLIB_CFLAGS"; then
-    pkg_cv_GLIB_CFLAGS="$GLIB_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GLIB_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.0" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GLIB_LIBS"; then
-    pkg_cv_GLIB_LIBS="$GLIB_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GLIB_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.0" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GLIB_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "glib-2.0 >= 2.0" 2>&1`
-        else
-	        GLIB_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "glib-2.0 >= 2.0" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GLIB_PKG_ERRORS" >&5
-
-	as_fn_error $? "Package requirements (glib-2.0 >= 2.0) were not met:
-
-$GLIB_PKG_ERRORS
-
-Consider adjusting the PKG_CONFIG_PATH environment variable if you
-installed software in a non-standard prefix.
-
-Alternatively, you may set the environment variables GLIB_CFLAGS
-and GLIB_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
-elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
-is in your PATH or set the PKG_CONFIG environment variable to the full
-path to pkg-config.
-
-Alternatively, you may set the environment variables GLIB_CFLAGS
-and GLIB_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details.
-
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
-See \`config.log' for more details" "$LINENO" 5; }
-else
-	GLIB_CFLAGS=$pkg_cv_GLIB_CFLAGS
-	GLIB_LIBS=$pkg_cv_GLIB_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
-fi
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for MATIO" >&5
@@ -19518,6 +19460,8 @@ else
 	MATIO_LIBS=$pkg_cv_MATIO_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
+
+fi
 
 fi
 
@@ -19983,6 +19927,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${MATLAB_TRUE}" && test -z "${MATLAB_FALSE}"; then
+  as_fn_error $? "conditional \"MATLAB\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
@@ -20969,7 +20917,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
 for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
-    "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
+    "cantools_config.h") CONFIG_HEADERS="$CONFIG_HEADERS cantools_config.h" ;;
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;

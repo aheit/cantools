@@ -1,5 +1,5 @@
 #! /bin/sh
-## DO NOT EDIT - This file generated from /usr/src/ports/libtool/libtool-2.4.6-2.x86_64/src/libtool-2.4.6/build-aux/ltmain.in
+## DO NOT EDIT - This file generated from /usr/src/ports/libtool/libtool-2.4.6-6.x86_64/src/libtool-2.4.6/build-aux/ltmain.in
 ##               by inline-source v2014-01-03.01
 
 # libtool (GNU libtool) 2.4.6
@@ -7276,6 +7276,8 @@ func_mode_link ()
       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
       -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
+      -fopenacc|-fopenmp|-ftree-parallelize-loops=*|-fcilkplus|-fgnu-tm| \
+      -ffast-math|-funsafe-math-optimizations|-fvtable-verify*| \
       -shared-libgcc|-static-libgcc|-static-libgfortran|-static-libstdc++)
         func_quote_for_eval "$arg"
 	arg=$func_quote_for_eval_result

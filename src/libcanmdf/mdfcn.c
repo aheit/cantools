@@ -114,6 +114,8 @@ mdfProcessChannelsSorted(const mdf_t *const mdf,
    */
   if(number_of_records > 0) {
     for(i_channel_type = 1; i_channel_type >=0; i_channel_type --) {
+      /* 0: data, 1: time. Start with time to reuse it for signal data
+         of all channels of the channel group */ 
       for( cn_block = cn_block_get(mdf, link)                        , icn=0;
            cn_block;
            cn_block = cn_block_get(mdf, cn_block->link_next_cn_block), icn++) {
@@ -122,7 +124,7 @@ mdfProcessChannelsSorted(const mdf_t *const mdf,
         char* message;
         char *signal_name = cn_get_long_name(mdf, cn_block);
 
-        /* check channel type */
+        /* match channel type. start with time channel per outer loop */
         if(cn_block->channel_type != (uint32_t)i_channel_type) continue;
 
         /* target array */
