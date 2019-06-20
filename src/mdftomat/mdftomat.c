@@ -116,7 +116,7 @@ mat_write_signal(const mdf_t *const mdf,
                                    filter_message_name_in,
                                    filter_signal_name_in);
     if(mdf->verbose_level >= 2) {
-      printf("    CNBLOCK can_ch=%lu\n"
+      printf("    CNBLOCK can_ch       = %lu\n"
              "            message      = %s\n"
              "            signal_name  = %s\n"
              "            filter_input = %s\n"

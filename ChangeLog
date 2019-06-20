@@ -1,10 +1,15 @@
+2019-06-20  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+	* libcanmdf: added channel number to mdf signal name to
+	  distinguish equally named signals on multiple channels
+
 2019-06-16  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
 	* all: version 0.25. This is the first version which only appears
 	  on github. The sourceforge archive is no longer maintained.
-	* mdfsg: corrected 1:1 conversion for float/double values. This
-	  bug showed as uninitialized/random time axis values in some MDF
-	  files (Thanks for reporting, zhuimengqq!)
+	* libcanmdf: corrected 1:1 conversion for float/double
+	  values. This bug showed as uninitialized/random time axis values
+	  in some MDF files (Thanks for reporting, zhuimengqq!)
 
 2017-08-21  Andreas Heitmann  <andreas.heitmann@gmail.com>
 

@@ -45,19 +45,35 @@ static const filter_element_t *filter_match(const filter_element_t *const fe,
 }
 
 static char *
-standard_name(const char *message, const char *signal)
+standard_name(const uint32_t channel, const char *message, const char *signal)
 {
   /* create matlab signal name */
   const char *src;
+
+  /* allocate matlab name string */
+  const int message_len = strlen(message);
   char *dst;
-  char *mat_name = malloc(strlen(message)+1+strlen(signal)+1);
+  char *mat_name;
+  int slen;
+
+  slen = 2 + 10 + 1;          /* "CH" + <channel> + "_" */
+  slen += message_len;        /* <message> */
+  if(message_len > 0) slen++; /* "_"  (only if message is non-empty) */
+  slen += strlen(signal)+1;   /* <signal> + \0 */
+  mat_name = malloc(slen);
   dst=mat_name;
-        
+
+  /* channel name */
+  /* TODO: check for negative return value of sprintf (error) */
+  dst += snprintf(dst, 2+10+1, "CN%u_", channel);
+
   /* message name */
   for(src=message; *src; src++, dst++) {
     *dst=*src;
   }
-  *dst++ ='_';
+
+  /* add separator char */
+  if(message_len > 0) *dst++ ='_';
         
   /* signal long name */
   for(src=signal; *src; src++, dst++) {
@@ -65,6 +81,10 @@ standard_name(const char *message, const char *signal)
     else *dst=*src;
   }
   *dst='\0';
+
+  /* printf("standard_name: message=%s, signal=%s, mat_name=%s\n",
+     message,signal,mat_name); */
+
   return mat_name;
 }
 
@@ -82,12 +102,12 @@ filter_apply(const filter_t *filter, const uint32_t channel,
         if(el->newname) {        /* new name given? */
           mat_name = strdup(el->newname);
         } else {                 /* no new name given */
-          mat_name = standard_name(message, signal);
+          mat_name = standard_name(channel, message, signal);
         }
       }
     }
   } else {                       /* no filter */
-    mat_name = standard_name(message, signal);
+    mat_name = standard_name(channel, message, signal);
   }
   return mat_name;
 }
