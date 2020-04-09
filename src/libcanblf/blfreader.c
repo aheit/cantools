@@ -1,5 +1,5 @@
 /*  blfReader.c -- parse BLF files
-    Copyright (C) 2017 Andreas Heitmann
+    Copyright (C) 2016-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -62,33 +62,22 @@ blfCANMessageDump(const canMessage_t* canMessage)
 }
 
 static void
-blfCANMessageFromVBLCANMessage (canMessage_t* canMessage,
-                                const VBLCANMessage* message)
-{
-  /* copy data */
-  canMessage->bus = message->mChannel;
-  canMessage->dlc = message->mDLC;
-  memcpy(canMessage->byte_arr, message->mData, canMessage->dlc);
-  canMessage->id = (uint32)message->mID;
-}
-
-static void
-blfVBLCANMessageParseTime(const VBLCANMessage* message, time_t *sec,
+blfVBLCANMessageParseTime(const VBLObjectHeader* header, time_t *sec,
                           uint32 *nsec)
 {
   const uint64_t C_1E9  = 1000000000ULL;
   const uint64_t C_1E5  =     100000ULL;
   const uint64_t C_1E4  =      10000ULL;
-  const uint32_t flags = message->mHeader.mObjectFlags;
+  const uint32_t flags = header->mObjectFlags;
   
   if (flags & BL_OBJ_FLAG_TIME_TEN_MICS) {
     /* 10 microsecond increments */
-    *sec   = message->mHeader.mObjectTimeStamp / C_1E5;
-    *nsec = (message->mHeader.mObjectTimeStamp % C_1E5) * C_1E4;
+    *sec   = header->mObjectTimeStamp / C_1E5;
+    *nsec = (header->mObjectTimeStamp % C_1E5) * C_1E4;
   } else if (flags & BL_OBJ_FLAG_TIME_ONE_NANS) {
     /* 1 nanosecond increments */
-    *sec  = message->mHeader.mObjectTimeStamp / C_1E9;
-    *nsec = message->mHeader.mObjectTimeStamp % C_1E9;
+    *sec  = header->mObjectTimeStamp / C_1E9;
+    *nsec = header->mObjectTimeStamp % C_1E9;
   } else { /* unknown time format - emit zero time stamp */
     *sec = 0;
     *nsec = 0;
@@ -105,9 +94,7 @@ blfVBLCANMessageParseTime(const VBLCANMessage* message, time_t *sec,
 void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
 {
   VBLObjectHeaderBase base;
-  VBLCANMessage message;
   VBLFileStatisticsEx statistics = { sizeof(statistics) };
-  canMessage_t canMessage;
   BLFHANDLE h;
   success_t success;
 
@@ -133,40 +120,132 @@ void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
   success = 1;
   while(success && blfPeekObject(h, &base)) {
     switch(base.mObjectType) {
-      case BL_OBJ_TYPE_CAN_MESSAGE:
-        message.mHeader.mBase = base;
-        success = blfReadObjectSecure(h, &message.mHeader.mBase,
-                                      sizeof(message));
+    case BL_OBJ_TYPE_CAN_MESSAGE:
+    case BL_OBJ_TYPE_CAN_MESSAGE2:
+    case BL_OBJ_TYPE_CAN_FD_MESSAGE:
+    case BL_OBJ_TYPE_CAN_FD_MESSAGE_64:
+      {
+        canMessage_t canMessage;
+
+	/* select type-dependent data structure and setup pointers to
+	   the relevant elements for further processing */
+        VBLCANMessage message;
+        VBLCANMessage2 message2;
+	VBLCANFDMessage fdmessage;
+	VBLCANFDMessage64 fdmessage64;
+
+	size_t messageSize;
+	VBLObjectHeaderBase *headerBase;
+	uint8_t  *data;
+	VBLObjectHeader *header;
+	uint8_t  *dlc;
+	void     *channel;
+	size_t    channelSize;
+	uint8_t   maxDLC;
+
+	switch(base.mObjectType)
+	  {
+	  case BL_OBJ_TYPE_CAN_MESSAGE:
+	    messageSize = sizeof(message);
+	    headerBase = &message.mHeader.mBase;
+	    data = message.mData;
+	    header = &message.mHeader;
+	    dlc = &message.mDLC;
+	    channel = &message.mChannel;
+	    channelSize = sizeof(message.mChannel);
+	    maxDLC = 8;
+	    break;
+	  case BL_OBJ_TYPE_CAN_MESSAGE2:
+	    messageSize = sizeof(message2);
+	    headerBase = &message2.mHeader.mBase;
+	    data = message2.mData;
+	    header = &message2.mHeader;
+	    dlc = &message2.mDLC;
+	    channel = &message2.mChannel;
+	    channelSize = sizeof(message2.mChannel);
+	    maxDLC = 8;
+	    break;
+	  case BL_OBJ_TYPE_CAN_FD_MESSAGE:
+	    messageSize = sizeof(fdmessage);
+	    headerBase = &fdmessage.mHeader.mBase;
+	    data = fdmessage.mData;
+	    header = &fdmessage.mHeader;
+	    dlc = &fdmessage.mDLC;
+	    channel = &fdmessage.mChannel;
+	    channelSize = sizeof(fdmessage.mChannel);
+	    maxDLC = 64;
+	    break;
+	  case BL_OBJ_TYPE_CAN_FD_MESSAGE_64:
+	    messageSize = sizeof(fdmessage64);
+	    headerBase = &fdmessage64.mHeader.mBase;
+	    data = fdmessage64.mData;
+	    header = &fdmessage64.mHeader;
+	    dlc = &fdmessage64.mDLC;
+	    channel = &fdmessage64.mChannel;
+	    channelSize = sizeof(fdmessage64.mChannel);
+	    maxDLC = 64;
+	    break;
+	  }
+	  
+        *headerBase = base;
+        success = blfReadObjectSecure(h, headerBase, messageSize);
+	
         if(success) {
           /* diagnose data */
-          if(message.mDLC > 8) {
+          if(*dlc > maxDLC) {
             fprintf(stderr, "invalid CAN message: DLC > 8\n");
             goto read_error;
           }
 
-          /* translate VBLCANMessage to message structure */
-          blfCANMessageFromVBLCANMessage(&canMessage, &message);
-          blfVBLCANMessageParseTime(&message, &canMessage.t.tv_sec,
-                                    &canMessage.t.tv_nsec);
+	  /* copy data */
+	  if(channelSize == 2) {
+	    canMessage.bus = *(uint16_t *)channel;
+	  } else {
+	    canMessage.bus = *(uint8_t *)channel;
+	  }
+	  canMessage.dlc = *dlc;
+	  memcpy(canMessage.byte_arr, data, *dlc);
 
-          if(debug_flag) {
-            blfCANMessageDump(&canMessage);
-          }
+	  /* direct copy of message id required due to packed alignment */
+	  switch(base.mObjectType) {
+	  case BL_OBJ_TYPE_CAN_MESSAGE:
+	    canMessage.id = message.mID;
+	    break;
+	  case BL_OBJ_TYPE_CAN_MESSAGE2:
+	    canMessage.id = message2.mID;
+	    break;
+	  case BL_OBJ_TYPE_CAN_FD_MESSAGE:
+	    canMessage.id = fdmessage.mID;
+	    break;
+	  case BL_OBJ_TYPE_CAN_FD_MESSAGE_64:
+	    canMessage.id = fdmessage64.mID;
+	    break;
+	  }
 
+	  /* parse time */
+	  blfVBLCANMessageParseTime(header, &(canMessage.t.tv_sec),
+				    &(canMessage.t.tv_nsec));
+
+	  /* debug: dump message */
+	  if(debug_flag) {
+	    blfCANMessageDump(&canMessage);
+	  }
+	  
           /* invoke canMessage receive callback function */
           msgRxCb(&canMessage, cbData);
 
           /* free allocated memory */
-          blfFreeObject(h, &message.mHeader.mBase);
+          blfFreeObject(h, headerBase);
         }
-        break;
-      default:
-        /* skip all other objects */
-        success = blfSkipObject(h, &base);
-        if(debug_flag) {
-          printf("skipping object type = %d\n", base.mObjectType);
-        }
-        break;
+      }
+      break;
+    default:
+      /* skip all other objects */
+      success = blfSkipObject(h, &base);
+      if(debug_flag) {
+        printf("skipping object type = %d\n", base.mObjectType);
+      }
+      break;
     }
   }
   blfCloseHandle(h);

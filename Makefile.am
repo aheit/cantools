@@ -107,7 +107,7 @@ DEFS = $(YYDEBUG) @DEFS@
 AM_YFLAGS = -d
 
 ## Uncomment to enable debugging of linker script parser
-YYDEBUG = -DYYDEBUG=1
+YYDEBUG = -DYYDEBUG=0
 
 #
 # library headers, source, etc.

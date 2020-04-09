@@ -1,5 +1,5 @@
 /*  messageDecoder.c --  decode CAN messages
-    Copyright (C) 2007-2017 Andreas Heitmann
+    Copyright (C) 2007-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -128,13 +128,13 @@ void canMessage_decode(message_t      *dbcMessage,
 
       for(work_byte = end_byte; work_byte >= start_byte; work_byte--) {
         data = canMessage->byte_arr[work_byte];
-        if(work_byte == end_byte && end_offset != 7) {
+        if((work_byte == end_byte) && (end_offset != 7)) {
           data &= (uint8)~0 >> (7 - end_offset);
           shift = end_offset + 1;
         } else {
           shift = 8;
         }
-        if(work_byte == start_byte && start_offset != 0) {
+        if((work_byte == start_byte) && (start_offset != 0)) {
           data >>= start_offset;
           shift -= start_offset;
         }
@@ -174,7 +174,7 @@ void canMessage_decode(message_t      *dbcMessage,
 #if 0
       fprintf(stderr,"   %s\t=%f ~ raw=%ld\t~ %d|%d@%d%c (%f,%f)"
              " [%f|%f] %d %ul \"%s\"\n",
-             outputSignalName,
+             "outputSignalName",
              physicalValue,
              rawValue,
              s->bit_start,

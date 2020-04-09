@@ -74,7 +74,7 @@
 #include "dbcmodel.h"
 
 /* Tell Bison how much stack space is needed. */
-#define YYMAXDEPTH 20000
+#define YYMAXDEPTH 40000
 
 
 #line 81 "src/libcandbc/parser.c" /* yacc.c:339  */

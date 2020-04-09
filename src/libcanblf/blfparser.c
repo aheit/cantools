@@ -1,5 +1,5 @@
 /*  blfparser.c --  parse BLF files
-    Copyright (C) 2016-2017 Andreas Heitmann
+    Copyright (C) 2016-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -294,7 +294,6 @@ fail:
 void
 blfHeaderBaseDump(VBLObjectHeaderBase *b)
 {
-/*
   printf("header.base.mSignature = %c%c%c%c\n",
       ((uint8_t *)&b->mSignature)[0],
       ((uint8_t *)&b->mSignature)[1],
@@ -302,8 +301,18 @@ blfHeaderBaseDump(VBLObjectHeaderBase *b)
       ((uint8_t *)&b->mSignature)[3]);
   printf("header.base.mHeaderSize    = %d\n",b->mHeaderSize);
   printf("header.base.mHeaderVersion = %d\n",b->mHeaderVersion);
-*/
 }
+
+void
+bldHeaderDump(VBLObjectHeaderBaseLOGG *h)
+{
+  blfHeaderBaseDump(&(h->base));
+  printf("compressedflag = %u\n",h->compressedflag);
+  printf("reserved1      = %u\n",h->reserved1);
+  printf("defl.buffer.sz = %u\n",h->deflatebuffersize);
+  printf("reserved2      = %u\n",h->reserved2);
+}
+
 
 /* copy VBLObjectHeaderBase structure and change CAN message version, if requested */
 void
@@ -328,7 +337,11 @@ blfPeekObjectInternal(BLFHANDLE hFile, VBLObjectHeaderBase *pBase)
   if(!blfHandleRead(hFile, 0, (uint8_t *)&header, 8u)) goto fail;
 
   /* check signature */
-  if(header.base.mSignature != BL_OBJ_SIGNATURE)       goto fail;
+  if(header.base.mSignature != BL_OBJ_SIGNATURE) {
+    printf("incorrect BL_OBJ_SIGNATURE = %08lx\n",header.base.mSignature);
+    bldHeaderDump(&header);
+    goto fail;
+  }
 
   /* read size and type */
   if(!blfHandleRead(hFile, 0,
@@ -501,6 +514,7 @@ blfFreeHeader(BLFHANDLE hFile, VBLObjectHeader *pBase)
     case BL_OBJ_TYPE_CAN_DRIVER_ERROR:
     case BL_OBJ_TYPE_CAN_ERROR_EXT:
     case BL_OBJ_TYPE_CAN_MESSAGE2:
+    case BL_OBJ_TYPE_CAN_FD_MESSAGE_64:
       /* no additional memory to be freed */
       break;
     default:

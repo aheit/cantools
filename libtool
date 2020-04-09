@@ -1,5 +1,5 @@
 #! /bin/sh
-# Generated automatically by config.status (cantools) 0.24
+# Generated automatically by config.status (cantools) 0.26
 # Libtool was configured on host EUCLID:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
@@ -76,12 +76,12 @@ PATH_SEPARATOR=":"
 
 # The host system.
 host_alias=
-host=x86_64-unknown-cygwin
+host=x86_64-pc-cygwin
 host_os=cygwin
 
 # The build system.
 build_alias=
-build=x86_64-unknown-cygwin
+build=x86_64-pc-cygwin
 build_os=cygwin
 
 # A sed program that does not truncate output.
@@ -165,7 +165,7 @@ old_postuninstall_cmds=""
 lock_old_archive_extraction=no
 
 # A C compiler.
-LTCC="gcc"
+LTCC="/usr/bin/../libexec/ccc-analyzer"
 
 # LTCC compiler flags.
 LTCFLAGS="-g -O2"
@@ -295,7 +295,7 @@ finish_eval=""
 hardcode_into_libs=no
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/usr/lib/gcc/x86_64-pc-cygwin/7.4.0 /usr/x86_64-pc-cygwin/lib /usr/lib /lib  /usr/lib/w32api"
+sys_lib_search_path_spec="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0 /usr/x86_64-pc-cygwin/lib /usr/lib /lib  /usr/lib/w32api"
 
 # Detected run-time system search path for libraries.
 sys_lib_dlsearch_path_spec="/lib /usr/lib"
@@ -328,7 +328,7 @@ reload_cmds="\$LD\$reload_flag -o \$output\$reload_objs"
 old_archive_cmds="\$AR \$AR_FLAGS \$oldlib\$oldobjs~\$RANLIB \$tool_oldlib"
 
 # A language specific compiler.
-CC="gcc"
+CC="/usr/bin/../libexec/ccc-analyzer"
 
 # Is the compiler the GNU compiler?
 with_gcc=yes
@@ -527,7 +527,7 @@ func_cc_basename ()
 # ### END FUNCTIONS SHARED WITH CONFIGURE
 
 #! /bin/sh
-## DO NOT EDIT - This file generated from /usr/src/ports/libtool/libtool-2.4.6-6.x86_64/src/libtool-2.4.6/build-aux/ltmain.in
+## DO NOT EDIT - This file generated from /usr/src/ports/libtool/libtool-2.4.6-7.x86_64/src/libtool-2.4.6/build-aux/ltmain.in
 ##               by inline-source v2014-01-03.01
 
 # libtool (GNU libtool) 2.4.6
@@ -11690,7 +11690,7 @@ reload_cmds="\$LD\$reload_flag -o \$output\$reload_objs"
 old_archive_cmds="\$AR \$AR_FLAGS \$oldlib\$oldobjs~\$RANLIB \$tool_oldlib"
 
 # A language specific compiler.
-CC="g++"
+CC="/usr/bin/../libexec/c++-analyzer"
 
 # Is the compiler the GNU compiler?
 with_gcc=yes
@@ -11817,17 +11817,17 @@ file_list_spec=""
 hardcode_action=immediate
 
 # The directories searched by this compiler when creating a shared library.
-compiler_lib_search_dirs="/usr/lib/gcc/x86_64-pc-cygwin/7.4.0 /usr/lib/gcc/x86_64-pc-cygwin/7.4.0/../../../../x86_64-pc-cygwin/lib/../lib /usr/lib/gcc/x86_64-pc-cygwin/7.4.0/../../../../lib /lib/../lib /usr/lib/../lib /usr/lib/gcc/x86_64-pc-cygwin/7.4.0/../../../../x86_64-pc-cygwin/lib /usr/lib/gcc/x86_64-pc-cygwin/7.4.0/../../.."
+compiler_lib_search_dirs="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0 /usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../../../x86_64-pc-cygwin/lib/../lib /usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../../../lib /lib/../lib /usr/lib/../lib /usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../../../x86_64-pc-cygwin/lib /usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../.."
 
 # Dependencies to place before and after the objects being linked to
 # create a shared library.
-predep_objects="/usr/lib/gcc/x86_64-pc-cygwin/7.4.0/crtbeginS.o"
-postdep_objects="/usr/lib/gcc/x86_64-pc-cygwin/7.4.0/crtend.o"
+predep_objects="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/crtbeginS.o"
+postdep_objects="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/crtend.o"
 predeps=""
 postdeps="-lstdc++ -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc"
 
 # The library search path used internally by the compiler when linking
 # a shared library.
-compiler_lib_search_path="-L/usr/lib/gcc/x86_64-pc-cygwin/7.4.0 -L/usr/lib/gcc/x86_64-pc-cygwin/7.4.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.4.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.4.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.4.0/../../.."
+compiler_lib_search_path="-L/usr/lib/gcc/x86_64-pc-cygwin/9.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../.."
 
 # ### END LIBTOOL TAG CONFIG: CXX

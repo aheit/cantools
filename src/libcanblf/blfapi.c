@@ -1,5 +1,5 @@
 /*  blfapi.c -- API for BLF access
-    Copyright (C) 2016-2017 Andreas Heitmann
+    Copyright (C) 2016-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -89,6 +89,7 @@ blfReadObject(BLFHANDLE hFile, VBLObjectHeaderBase *pBase)
     case BL_OBJ_TYPE_CAN_ERROR_EXT:
     case BL_OBJ_TYPE_CAN_MESSAGE:
     case BL_OBJ_TYPE_CAN_MESSAGE2:
+    case BL_OBJ_TYPE_CAN_FD_MESSAGE_64:
     case BL_OBJ_TYPE_LOG_CONTAINER:
       success = blfHandleRead(hFile, 0, (uint8_t *)&pBase[1],
           pBase->mObjectSize - sizeof(*pBase));

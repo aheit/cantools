@@ -1,63 +1,69 @@
+2020-04-09  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+        * all: version 0.26
+        * libcanblf: added support for BLF object types CAN_MESSAGE2,
+          CAN_FD_MESSAGE and CAN_FD_MESSAGE_64
+
 2019-06-20  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
-	* libcanmdf: added channel number to mdf signal name to
-	  distinguish equally named signals on multiple channels
+        * libcanmdf: added channel number to mdf signal name to
+          distinguish equally named signals on multiple channels
 
 2019-06-16  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
-	* all: version 0.25. This is the first version which only appears
-	  on github. The sourceforge archive is no longer maintained.
-	* libcanmdf: corrected 1:1 conversion for float/double
-	  values. This bug showed as uninitialized/random time axis values
-	  in some MDF files (Thanks for reporting, zhuimengqq!)
+        * all: version 0.25. This is the first version which only appears
+          on github. The sourceforge archive is no longer maintained.
+        * libcanmdf: corrected 1:1 conversion for float/double
+          values. This bug showed as uninitialized/random time axis values
+          in some MDF files (Thanks for reporting, zhuimengqq!)
 
 2017-08-21  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
-	* all: released version 0.24
-	* all: using stdint.h for defining 8 bit signed integers instead
+        * all: released version 0.24
+        * all: using stdint.h for defining 8 bit signed integers instead
           of char basic type due to its implementation defined signedness
-	(thanks, Rainer)
-	* all: cleanup of header files
-	* cantomat: added error message for failed dbc parsing
+        (thanks, Rainer)
+        * all: cleanup of header files
+        * cantomat: added error message for failed dbc parsing
 
 2017-05-01  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
-	* all: released version 0.23
-	* libcanmdf: fixed conversion of signed integer signals on hosts
-	  without arithmetic right shift
-	* matdump: new options to list all values of all or selected
-	  variables and to list all variable names
-	* libcanclg, libcanasc, libcanvsb, cantomat: duplicate closure of
-	  BLF input file, potentially leading to crash (Thanks, Andreas W!)
+        * all: released version 0.23
+        * libcanmdf: fixed conversion of signed integer signals on hosts
+          without arithmetic right shift
+        * matdump: new options to list all values of all or selected
+          variables and to list all variable names
+        * libcanclg, libcanasc, libcanvsb, cantomat: duplicate closure of
+          BLF input file, potentially leading to crash (Thanks, Andreas W!)
 
 2017-04-17  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
-	* all: released version 0.22
-	* Makefile: fixed duplicate header file
+        * all: released version 0.22
+        * Makefile: fixed duplicate header file
 
 2017-04-17  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
-	* all: fixed filenames for case-sensitive operating systems
-	* libcanblf: fixed crash on non-supported objects
-	* libcanblf: fixed premature abort of parsing
-	* libcanblf: fixed compiler warnings, missing data types
+        * all: fixed filenames for case-sensitive operating systems
+        * libcanblf: fixed crash on non-supported objects
+        * libcanblf: fixed premature abort of parsing
+        * libcanblf: fixed compiler warnings, missing data types
 
 2017-01-01  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
-	* all: released version 0.20
-	* libcanblf: decoder for BLF files. This is a first implementation
-	  which only handles CAN messages (but not CAN-FD or other object
-	  types)
-	* all: bug fix: an include file was incorrectly named, such that
+        * all: released version 0.20
+        * libcanblf: decoder for BLF files. This is a first implementation
+          which only handles CAN messages (but not CAN-FD or other object
+          types)
+        * all: bug fix: an include file was incorrectly named, such that
           the code didn't compiled on case-sensitive operating systems. I
-	  converted all filenames to lower-case to avoid this issue in the
+          converted all filenames to lower-case to avoid this issue in the
           future. (Thanks, Johan)
 
 2016-10-11  Andreas Heitmann  <andreas.heitmann@gmail.com>
         * all: released version 0.19
-	* Makefile.am: improved handling of include paths
-	* configure.ac: and string handling replacement functions added
-	* libcanclg: support for CLG2 format added
+        * Makefile.am: improved handling of include paths
+        * configure.ac: and string handling replacement functions added
+        * libcanclg: support for CLG2 format added
 
 2016-08-23  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
@@ -67,8 +73,8 @@
         * libcanmdf: added check and replacement for missing strndup()
           declaration/definition on some systems
         * libcanmdf: using more portable declaration of packed structures
-	* libcanmdf: removed dependency on byteswap.h (not available on
-	  all systems)
+        * libcanmdf: removed dependency on byteswap.h (not available on
+          all systems)
 
 2016-08-16  Andreas Heitmann  <andreas.heitmann@gmail.com>
 

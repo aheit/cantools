@@ -1,5 +1,5 @@
 /*  vsbReader.c --  parse VSB files
-    Copyright (C) 2014-2017 Andreas Heitmann
+    Copyright (C) 2014-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -111,7 +111,7 @@ void vsbReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
 
   /* dump busmap */
   {
-    uint8_t i;
+    uint8_t i=0;
     
     fputs("bus allocation: ",stdout);
     do {

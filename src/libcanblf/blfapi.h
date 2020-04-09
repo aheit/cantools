@@ -38,6 +38,8 @@ extern "C" {
 #define BL_OBJ_TYPE_CAN_DRIVER_ERROR      31
 #define BL_OBJ_TYPE_CAN_ERROR_EXT         73
 #define BL_OBJ_TYPE_CAN_MESSAGE2          86
+#define BL_OBJ_TYPE_CAN_FD_MESSAGE       100  
+#define BL_OBJ_TYPE_CAN_FD_MESSAGE_64    101
 
 #define BL_OBJ_FLAG_TIME_TEN_MICS 1
 #define BL_OBJ_FLAG_TIME_ONE_NANS       2
@@ -106,6 +108,54 @@ typedef struct __attribute__ ((__packed__)) {
   uint32_t        mID;         /* 36: message ID*/
   uint8_t         mData[8];    /* 40 */
 } VBLCANMessage;
+
+typedef struct __attribute__ ((__packed__)) {
+  VBLObjectHeader mHeader;
+  uint16_t        mChannel;
+  uint8_t         mFlags;
+  uint8_t         mDLC;
+  uint32_t        mID;
+  uint8_t         mData[8];
+  uint32_t        mFrameLength;
+  uint8_t         mBitCount;
+  uint8_t         mReserved1;
+  uint16_t        mReserved2;
+} VBLCANMessage2;
+
+typedef struct __attribute__ ((__packed__)) {
+  VBLObjectHeader mHeader;
+  uint16_t        mChannel;
+  uint8_t         mFlags;
+  uint8_t         mDLC;
+  uint32_t        mID;
+  uint32_t        mFrameLength;
+  uint8_t         mArbBitCount;
+  uint8_t         mCANFDFlags;
+  uint8_t         mValidDataBytes;
+  uint8_t         mReserved1;
+  uint32_t        mReserved2;
+  uint8_t         mData[64];
+} VBLCANFDMessage;
+
+typedef struct __attribute__ ((__packed__)) {
+  VBLObjectHeader mHeader;
+  uint8_t         mChannel;
+  uint8_t         mDLC;
+  uint8_t         mValidDataBytes;
+  uint8_t         mTxCount;
+  uint32_t        mID;
+  uint32_t        mFrameLength;
+  uint32_t        mFlags;
+  uint32_t        mBtrCfgArb;
+  uint32_t        mBtrCfgData;
+  uint32_t        mTimeOffsetBrsNs;
+  uint32_t        mTimeOffsetCrcDelNs;
+  uint16_t        mBitCount;
+  uint8_t         mDir;
+  uint8_t         mReserved1;                  
+  uint32_t        mReserved2; 
+  uint8_t         mData[64];
+} VBLCANFDMessage64;
 
 typedef struct VBLFileStatistics_t {
   uint32_t  mStatisticsSize;                   /* sizeof (VBLFileStatistics) */

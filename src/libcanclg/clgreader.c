@@ -1,5 +1,5 @@
 /*  clgreader.c --  parse CLG files
-    Copyright (C) 2014-2017 Andreas Heitmann
+    Copyright (C) 2014-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -80,10 +80,6 @@ void clgReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
     uint32_t message_id;
     uint8_t channel;
     uint32_t id_channel;
-    off_t off;
-
-    off = ftello(fp);
-    // printf("%lld\n", off);
 
     ret = fread(&msg, sizeof(msg), 1, fp);
     if(ret != 1) {

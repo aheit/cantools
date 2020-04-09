@@ -2,7 +2,7 @@
 #define INCLUDE_MEASUREMENT_H
 
 /*  measurement.h -- declarations for measurement
-    Copyright (C) 2016-2017 Andreas Heitmann
+    Copyright (C) 2016-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@
 typedef struct {
   struct {
     time_t tv_sec;
-    uint32 tv_nsec;
-  } t; /* time stamp */
-  uint8   bus;     /* can bus */
-  uint32  id;      /* numeric CAN-ID */
-  uint8   dlc;
-  uint8   byte_arr[8];
+    uint32_t tv_nsec;
+  } t;                  /* time stamp */
+  uint16_t  bus;          /* can bus */
+  uint32_t  id;           /* numeric CAN-ID */
+  uint8_t   dlc;          /* number of bytes */
+  uint8_t   byte_arr[64]; /* 64 bytes for CAN-FD messages */
 } canMessage_t;
 
 /* message received callback function */
@@ -55,7 +55,7 @@ typedef void (* parserFunction_t)(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
 measurement_t *measurement_read(busAssignment_t *busAssignment,
                                 const char *filename,
                                 signalFormat_t signalFormat,
-				sint32 timeResolution,
+				int32_t timeResolution,
 				parserFunction_t parserFunction);
 
 void measurement_free(measurement_t *m);

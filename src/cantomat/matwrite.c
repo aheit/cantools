@@ -1,5 +1,5 @@
 /*  matWrite.c -- write out MAT files
-    Copyright (C) 2007-2017 Andreas Heitmann
+    Copyright (C) 2007-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -67,6 +67,9 @@ int matWrite(measurement_t *measurement, const char *outFileName)
         dims[0] = timeSeries->n;
         dims[1] = 2;
 
+        /*
+        printf("writing %s (%d,2)\n",signalName,timeSeries->n);
+        */
         /* output signal to mat structure and free up temp array. */
         matvar = Mat_VarCreate(signalName, MAT_C_DOUBLE, MAT_T_DOUBLE,
                                2, dims, timeValue, 0);

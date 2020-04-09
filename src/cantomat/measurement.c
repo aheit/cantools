@@ -1,5 +1,5 @@
 /*  measurement.c -- process CAN trace file
-    Copyright (C) 2007-2017 Andreas Heitmann
+    Copyright (C) 2007-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -293,7 +293,6 @@ void measurement_free(measurement_t *m)
     if (hashtable_count(timeSeriesHash) > 0) {
       itr = hashtable_iterator(timeSeriesHash);
       do {
-        char         *signalName = hashtable_iterator_key(itr);
         timeSeries_t *timeSeries = hashtable_iterator_value(itr);
 
         free(timeSeries->time);
