@@ -40,7 +40,6 @@
 void vsbReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
 {
   uint8_t busmap[256];
-  char *cp;
   size_t ret;
   vsb_header_t header;
   icsSpyMessage_t msg;

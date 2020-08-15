@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <errno.h>
@@ -338,7 +339,8 @@ blfPeekObjectInternal(BLFHANDLE hFile, VBLObjectHeaderBase *pBase)
 
   /* check signature */
   if(header.base.mSignature != BL_OBJ_SIGNATURE) {
-    printf("incorrect BL_OBJ_SIGNATURE = %08lx\n",header.base.mSignature);
+    printf("incorrect BL_OBJ_SIGNATURE = %08" PRIx32 "\n",
+           header.base.mSignature);
     bldHeaderDump(&header);
     goto fail;
   }

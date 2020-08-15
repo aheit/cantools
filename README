@@ -42,12 +42,12 @@ Prerequisites: zlib-devel, bison, flex, make, gcc
 matio can be built with libhdf5, here is how to:
 
 1) download:
-   wget 'http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.16.tar.bz2'
+   wget https://support.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.5.tar.bz2
 2) unpack:
-   tar xjf hdf5-1.8.16.tar.bz2
+   tar xjf hdf5-1.10.5.tar.bz2
 3) build:
-   cd hdf5-1.8.16
-   ./configure --with-zlib=/usr/include,/lib --prefix=/usr
+   cd hdf5-1.10.5
+   ./configure --with-zlib=/usr/include,/lib --prefix=/usr --with-default-api-version=v110
    CFLAGS=-std=c99 make
    CFLAGS=-std=c99 make check
    
@@ -57,17 +57,17 @@ matio can be built with libhdf5, here is how to:
 
 Installation of matio
 =====================
-Prerequisites: autotools, zlib-devel, make, gcc
+Prerequisites: autotools, zlib, zlib-devel, make, gcc
 
-1) download matio-1.5.10.tar.gz:
-   wget 'http://downloads.sourceforge.net/matio/matio-1.5.10.tar.gz?use_mirror=' -O matio-1.5.10.tar.gz
+1) download matio-1.5.17.tar.gz:
+   wget 'http://downloads.sourceforge.net/matio/matio-1.5.17.tar.gz?use_mirror=' -O matio-1.5.17.tar.gz
    or
-   curl -o matio-1.5.10.tar.gz -L 'http://downloads.sourceforge.net/matio/matio-1.5.10.tar.gz?use_mirror='
+   curl -o matio-1.5.17.tar.gz -L 'http://downloads.sourceforge.net/matio/matio-1.5.17.tar.gz?use_mirror='
 2) unpack:
-   tar xzf matio-1.5.10.tar.gz
+   tar xzf matio-1.5.17.tar.gz
 3) configure:
-   cd matio-1.5.10
-   CFLAGS=-DZ_PREFIX ./configure --with-zlib=/ --with-hdf5=/ --prefix=/usr
+   cd matio-1.5.17
+   ./configure --with-zlib=/ --with-hdf5=/ --prefix=/usr
 4) build and install:
    make ; make install
 
@@ -83,9 +83,16 @@ autoreconf -f -i
 make
 make install
 
+Compilation of cantools with LLVM (or any other compiler toolchain)
+====================
+Prefix ./configure with your compiler frontend, e.g.
+
+CC=clang ./configure
+
+
 Compilation of cantools on Windows Subsystem for Linux (WSL)
 ====================
-sudo apt-get install gcc libz-dev libmatio-dev pkg-config flex bison check libglib2.0 subversion automake
+sudo apt-get install gcc libz-dev libmatio-dev pkg-config flex bison check libglib2.0 subversion automake check libtool
 git clone https://github.com/aheit/cantools cantools-code
 cd cantools-code
 ./configure

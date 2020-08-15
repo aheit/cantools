@@ -1,6 +1,6 @@
 # Make cantools.					-*-Makefile-*-
 
-# Copyright (C) 2007-2017 Andreas Heitmann
+# Copyright (C) 2007-2020 Andreas Heitmann
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@ YACC=@YACC@
 lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
 	          libcanclg.la libcanblf.la
 
-bin_PROGRAMS	= dbccopy dbcls
+bin_PROGRAMS	= dbccopy dbcls cantomat
 if MATLAB
-bin_PROGRAMS	+= cantomat mdftomat matdump
+bin_PROGRAMS	+= mdftomat matdump
 endif
 
 #
@@ -73,11 +73,11 @@ cantomat_SOURCES = src/cantomat/cantomat.c \
 cantomat_CPPFLAGS = @MATIO_CFLAGS@ \
 		   -I$(top_srcdir)/src/libcanasc \
 	   	   -I$(top_srcdir)/src/libcanblf \
-           -I$(top_srcdir)/src/libcanclg \
+		   -I$(top_srcdir)/src/libcanclg \
 		   -I$(top_srcdir)/src/libcandbc \
 		   -I$(top_srcdir)/src/libcanvsb \
-           -I$(top_srcdir)/src/cantomat \
-	  	   -I$(top_srcdir)/src/hashtable
+		   -I$(top_srcdir)/src/cantomat \
+		   -I$(top_srcdir)/src/hashtable
 cantomat_LDADD = libcandbc.la libcanasc.la libcanblf.la \
 	         libcanvsb.la libcanclg.la
 cantomat_LDADD += @MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@ -lm
@@ -89,7 +89,8 @@ mdftomat_SOURCES = src/mdftomat/mdftomat.c \
                    src/mdftomat/mdftomat.h
 mdftomat_CPPFLAGS  = @MATIO_CFLAGS@ \
 	   -I$(top_srcdir)/src/libcanmdf
-mdftomat_LDADD	   = libcanmdf.la @MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@
+mdftomat_LDADD	   = libcanmdf.la @MATIO_LIBS@ @ZLIB_LIBS@ \
+                     $(HDF5_LIB) @LIBOBJS@
 
 #
 # matdump
@@ -145,9 +146,9 @@ libcandbc_la_LIBADD= -lm
 libcanasc_la_SOURCES= src/libcanasc/ascreader.c
 
 libcanblf_la_SOURCES= src/libcanblf/blfreader.c \
-		              src/libcanblf/blfparser.c \
-				      src/libcanblf/blfstream.c \
-		     		  src/libcanblf/blfapi.c
+		      src/libcanblf/blfparser.c \
+		      src/libcanblf/blfstream.c \
+		      src/libcanblf/blfapi.c
 
 libcanvsb_la_SOURCES= src/libcanvsb/vsbreader.c
 
@@ -168,27 +169,27 @@ libcandbc_la_CPPFLAGS= -I$(top_builddir)/src/libcandbc \
 libcandbc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc \
-		      	       -I$(top_srcdir)/src/libcandbc \
-		    		   -I$(top_srcdir)/src/cantomat \
+		       -I$(top_srcdir)/src/libcandbc \
+		       -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable
 libcanasc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanblf_la_CPPFLAGS= -I$(top_builddir)/src/libcanblf \
-				       -I$(top_srcdir)/src/libcandbc \
+		       -I$(top_srcdir)/src/libcandbc \
                        -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable \
                        -Wunused -pedantic
 libcanblf_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanvsb_la_CPPFLAGS= -I$(top_builddir)/src/libcanvsb \
-					   -I$(top_srcdir)/src/libcandbc \
-				       -I$(top_srcdir)/src/cantomat \
+		       -I$(top_srcdir)/src/libcandbc \
+		       -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable
 libcanvsb_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanclg_la_CPPFLAGS= -I$(top_builddir)/src/libcanclg \
-				       -I$(top_srcdir)/src/libcandbc \
-	       		       -I$(top_srcdir)/src/cantomat \
+		       -I$(top_srcdir)/src/libcandbc \
+	       	       -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable
 libcanclg_la_LDFLAGS= -no-undefined -version-info @version_info@
 

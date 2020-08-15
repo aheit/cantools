@@ -1,5 +1,5 @@
 /*  matdump -- dump contents of .mat file
-    Copyright (C) 2015-2017 Andreas Heitmann
+    Copyright (C) 2015-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -116,7 +116,7 @@ full_dump(matvar_t *matvar)
     "Unicode UTF-16 Encoded Character Data",
     "Unicode UTF-32 Encoded Character Data","","String","Cell Array",
     "Structure"};
-  int i, j;
+  size_t i, j;
 
   if(matvar == 0) return 0;
   if(matvar->isComplex ) return 0;
@@ -141,8 +141,12 @@ full_dump(matvar_t *matvar)
     }
     printf("      Rank: %d\n", matvar->rank);
     printf("Dimensions: %" SIZE_T_FMTSTR,matvar->dims[0]);
-    for ( i = 1; i < matvar->rank; i++ ) {
-      printf(" x %" SIZE_T_FMTSTR, matvar->dims[i]);
+    {
+      int i;
+
+      for ( i = 1; i < matvar->rank; i++ ) {
+        printf(" x %" SIZE_T_FMTSTR, matvar->dims[i]);
+      }
     }
     printf("\n");
     printf("Class Type: %s",class_type_desc[matvar->class_type]);
@@ -159,6 +163,7 @@ full_dump(matvar_t *matvar)
     {
       size_t stride = Mat_SizeOf(matvar->data_type);
       char *data = (char*)matvar->data;
+
       for ( i = 0; i < matvar->dims[0]; i++ ) {
         for ( j = 0; j < matvar->dims[1]; j++ ) {
           size_t idx = matvar->dims[0]*j+i;

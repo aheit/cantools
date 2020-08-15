@@ -1,5 +1,5 @@
 /*  signalFormat.c -- format signal name
-    Copyright (C) 2007-2017 Andreas Heitmann
+    Copyright (C) 2007-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,7 +24,8 @@
 
 /* strapp - copies source string without \0 and returns pointer to
    next destination character */
-static char *strapp(char *dp, const char *sp)
+static char *
+strapp(char *dp, const char *sp)
 {
   while(*sp != '\0') {
     *dp++ = *sp++;
@@ -32,7 +33,8 @@ static char *strapp(char *dp, const char *sp)
   return dp;
 }
 
-char *signalFormat_stringAppend(const char *in, const char *app)
+char *
+signalFormat_stringAppend(const char *in, const char *app)
 {
   char *ret;
 
@@ -40,7 +42,6 @@ char *signalFormat_stringAppend(const char *in, const char *app)
     ret = strdup(app);
   } else {
     char *dp;
-    char *sp;
 
     ret = malloc(strlen(in) + 1 + strlen(app) + 1);
     dp = strapp(ret, in);

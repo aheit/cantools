@@ -1,5 +1,5 @@
 /*  dbcModel.c --  management of the DBC data model
-    Copyright (C) 2007-2017 Andreas Heitmann
+    Copyright (C) 2007-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
 void trace(char *str)
 {
-  fprintf(stderr,str);
+  fputs(str, stderr);
 }
 
 /****************

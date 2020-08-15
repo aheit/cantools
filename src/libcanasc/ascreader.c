@@ -1,5 +1,5 @@
 /*  ascReader.c -- parse ASC files
-    Copyright (C) 2007-2017 Andreas Heitmann
+    Copyright (C) 2007-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -105,7 +105,7 @@ void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
         int i;
         for(i = 0; i < 9; i++) {
           message.t.tv_nsec *= 10;
-          if(isdigit(*tp)) {
+          if(isdigit((int)*tp)) {
             message.t.tv_nsec += (*tp) - '0';
             tp++;
           }

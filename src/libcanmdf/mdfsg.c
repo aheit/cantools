@@ -1,5 +1,5 @@
 /*  mdfsg.c -- access MDF signal groups
-    Copyright (C) 2012-2017 Andreas Heitmann
+    Copyright (C) 2012-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 #include "cantools_config.h"
 
 #include <stdio.h>
+#include <inttypes.h>
 #include <assert.h>
 #include "mdfswap.h"
 #include "mdfsg.h"
@@ -47,6 +48,7 @@ static double dataToDouble(signal_data_type_t sdt,
     x = data_ieee754;
     break;
   default:
+    x = 0;
     assert(1);
   }
   return x;
@@ -195,49 +197,68 @@ mdf_signal_convert(const uint8_t *const data_int_ptr,
     switch(cc_block->conversion_type) {
     case 0: /* parametric, linear */
       {
-        double x = dataToDouble(sdt,data_int64,data_ieee754);
+        const double x = dataToDouble(sdt,data_int64,data_ieee754);
         converted_double = x
           * cc_block->supplement.linear.p2
           + cc_block->supplement.linear.p1;
       }
       break;
-    case 1: /* parametric, tabular */
+    case 1: /* 3.12.4 CCBLOCK – Tabular, with Interpolation */
       {
-        uint32_t i,n;
-        double x = dataToDouble(sdt, data_int64, data_ieee754);
-        n = cc_block->size_information;
-        if(x <= cc_block->supplement.tabular.array[0].int_value) {
+        const uint32_t n = cc_block->size_information;
+        const double x = dataToDouble(sdt, data_int64, data_ieee754);
+        uint32_t i;
+
+        switch(n) {
+        case 0:
+          fprintf(stderr, "Warning: empty table in lookup. Physical value set to 0.0\n");
+          converted_double = 0.0;
+          break;
+        case 1:
           converted_double = cc_block->supplement.tabular.array[0].phys_value;
-        } else if(x >= cc_block->supplement.tabular.array[n-1].int_value) {
-          converted_double = cc_block->supplement.tabular.array[n-1].phys_value;
-        } else {
-          for(i=0;i<n-1;i++) {
-            if(x < cc_block->supplement.tabular.array[i+1].int_value) {
-              double x0 = cc_block->supplement.tabular.array[i].int_value;
-              double x1 = cc_block->supplement.tabular.array[i+1].int_value;
-              double y0 = cc_block->supplement.tabular.array[i].phys_value;
-              double y1 = cc_block->supplement.tabular.array[i+1].phys_value;
-              converted_double = y0 + (y1-y0)*(x-x0)/(x1-x0);
-              /* printf("TABULAR %lf @ (%lf,%lf) -> (%lf,%lf) = %lf\n", */
-              /*             x,x0,x1,y0,y1,converted_double); */
-              break;
+          break;
+        default:
+          if(x < cc_block->supplement.tabular.array[0].int_value) {
+            /* Is x < than Int value 1, Physvalue 1 will be returned. */
+            converted_double = cc_block->supplement.tabular.array[0].phys_value;
+          } else {
+            /* If a value x is located between two table values,
+               (tablevalue[i] ≤ x < tablevalue[i+1]), linear
+               interpolation between physvalue[i] and physvalue[i+1] is
+               used. */
+            for(i = 0; i < n-1; i++) {
+              if(x < cc_block->supplement.tabular.array[i+1].int_value) {
+                double x0 = cc_block->supplement.tabular.array[i].int_value;
+                double x1 = cc_block->supplement.tabular.array[i+1].int_value;
+                double y0 = cc_block->supplement.tabular.array[i].phys_value;
+                double y1 = cc_block->supplement.tabular.array[i+1].phys_value;
+                converted_double = y0 + (y1-y0)*(x-x0)/(x1-x0);
+                /* printf("TABULAR %lf @ (%lf,%lf) -> (%lf,%lf) = %lf\n", */
+                /*             x,x0,x1,y0,y1,converted_double); */
+                break;
+              }
+            } /* end for */
+            /* If x is larger than or equal to the greatest Int value, Phys value n will be returned. */
+            if(i == n-1) {
+              converted_double = cc_block->supplement.tabular.array[n-1].phys_value;
             }
-          }
-        }
-      }
+          } /* end case between two values */
+          break;
+        } /* switch(n) */
+      } /* end tabular with interpolation */
       break;
     case 9: /* rational conversion */
       {
-        double x = dataToDouble(sdt, data_int64, data_ieee754);
-        double p1 = cc_block->supplement.rational.p1;
-        double p2 = cc_block->supplement.rational.p2;
-        double p3 = cc_block->supplement.rational.p3;
-        double p4 = cc_block->supplement.rational.p4;
-        double p5 = cc_block->supplement.rational.p5;
-        double p6 = cc_block->supplement.rational.p6;
-        double denom = x*(x*p4+p5)+p6;
+        const double x = dataToDouble(sdt, data_int64, data_ieee754);
+        const double p1 = cc_block->supplement.rational.p1;
+        const double p2 = cc_block->supplement.rational.p2;
+        const double p3 = cc_block->supplement.rational.p3;
+        const double p4 = cc_block->supplement.rational.p4;
+        const double p5 = cc_block->supplement.rational.p5;
+        const double p6 = cc_block->supplement.rational.p6;
+        const double denom = x*(x*p4+p5)+p6;
         if(denom != 0) {
-          double nom = x*(x*p1+p2)+p3;
+          const double nom = x*(x*p1+p2)+p3;
           converted_double = nom / denom;
         } else {
           converted_double = 0;

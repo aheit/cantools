@@ -1,5 +1,5 @@
 /*  cantomat -- convert CAN log files to MAT files
-    Copyright (C) 2007-2017 Andreas Heitmann
+    Copyright (C) 2007-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -166,9 +166,8 @@ main(int argc, char **argv)
                      |  signalFormat_Name;
       } else {
         fprintf(stderr, "error: format must be 's', 'ms', or 'dms'\n");
-        usage_error();
+        goto usage_error;
       }
-      matFilename = optarg;
       break;
     case 't':
       timeResolution = atoi(optarg);
@@ -181,39 +180,29 @@ main(int argc, char **argv)
     case 'h': help(); exit(0);   break;
     case '?':
       /* getopt_long already printed an error message. */
-      usage_error();
+      goto usage_error;
       break;
     default:
       fprintf(stderr, "error: unknown option %c\n", c);
-      busAssignment_free(busAssignment);
-      usage_error();
+      goto usage_error;
     }
   }
-
-#ifdef YYDEBUG
-  if(debug_flag) {
-    extern int yydebug;
-    yydebug=1;
-  }
-#endif
 
   /* diagnose options */
   if(inputFiles != 1) {
     fprintf(stderr, "error: please specify exactly one input file\n");
-    busAssignment_free(busAssignment);
-    usage_error();
+    goto usage_error;
   }
 
   if(matFilename == NULL) {
     fprintf(stderr, "error: MAT output filename not specified\n");
-    busAssignment_free(busAssignment);
-    usage_error();
+    goto usage_error;
   }
   
   /* parse DBC files */
   if(busAssignment_parseDBC(busAssignment)) {
-    fprintf(stderr, "error: parsing DBC file failed\n");
-    exit(1);
+    fprintf(stderr, "error: parsing of DBC file failed\n");
+    goto error;
   }
   
   /* parse input file */
@@ -241,8 +230,15 @@ main(int argc, char **argv)
     measurement_free(measurement);
   }
   ret = 0;
+  goto normal_exit;
 
 usage_error:  
+  usage_error();
+
+error:
   busAssignment_free(busAssignment);
+  ret = 1;
+
+normal_exit:
   return ret;
 }

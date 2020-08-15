@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 #include <assert.h>
 #include "measurement.h"
 #include "busassignment.h"
@@ -67,7 +68,7 @@ static int signalNames_equal ( void *key1, void *key2 )
 static void signalProc_print(
   const signal_t *s,
   const canMessage_t *canMessage,
-  uint32 rawValue,
+  uint32_t rawValue,
   double physicalValue,
   void *cbData)
 {
@@ -76,8 +77,8 @@ static void signalProc_print(
   char *outputSignalName =
     signalFormat_stringAppend(signalProcCbData->local_prefix, s->name);
   
-  fprintf(stderr,"   %s\t=%f ~ raw=%ld\t~ %d|%d@%d%c (%f,%f)"
-          " [%f|%f] %d %ul \"%s\"\n",
+  fprintf(stderr,"   %s\t=%f ~ raw=%" PRIu32 "\t~ %d|%d@%d%c (%f,%f)"
+          " [%f|%f] %" PRIu32 " %" PRIu32 " \"%s\"\n",
           outputSignalName,
           physicalValue,
           rawValue,
@@ -90,7 +91,7 @@ static void signalProc_print(
           s->min,
           s->max,
           s->mux_type,
-          (unsigned int)s->mux_value,
+          s->mux_value,
           s->comment!=NULL?s->comment:"");
 
   /* free temp. signal name */

@@ -1,5 +1,5 @@
 /*  dbcWriter.c --  function for serializing the DBC model to a file
-    Copyright (C) 2007-2017 Andreas Heitmann
+    Copyright (C) 2007-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
@@ -129,7 +130,7 @@ static void node_list_write(FILE *out, node_list_t *node_list)
 
 static void val_map_entry_write(FILE *out, val_map_entry_t *val_map_entry)
 {
-  fprintf(out, "%lu \"%s\" ",
+  fprintf(out, "%" PRIu32 " \"%s\" ",
           val_map_entry->index,
           val_map_entry->value);
 }
@@ -165,7 +166,7 @@ static void mux_info_write(FILE *out, signal_t *signal)
     fprintf(out, " M");
     break;
   case m_multiplexed:
-    fprintf(out," m%lu",signal->mux_value);
+    fprintf(out," m%" PRIu32,signal->mux_value);
     break;
   case m_signal:
   default:
@@ -202,7 +203,7 @@ static void signal_list_write(FILE *out, signal_list_t *signal_list)
 
 static void message_write(FILE *out, message_t *message)
 {
-  fprintf(out, "BO_ %lu %s: %u %s" NEWLINE,
+  fprintf(out, "BO_ %" PRIu32 " %s: %u %s" NEWLINE,
           message->id,
           message->name,
           message->len,
@@ -238,14 +239,14 @@ static void node_comment_write(FILE *out, node_t *node)
 static void message_comment_write(FILE *out, message_t *message)
 {
   if(message->comment != NULL) {
-    fprintf(out, "CM_ BO_ %lu \"%s\";" NEWLINE, message->id, message->comment);
+    fprintf(out, "CM_ BO_ %" PRIu32 " \"%s\";" NEWLINE, message->id, message->comment);
   }
 }
 
 static void signal_comment_write(FILE *out, uint32 id, signal_t *signal)
 {
   if(signal->comment != NULL) {
-    fprintf(out, "CM_ SG_ %lu ",id);
+    fprintf(out, "CM_ SG_ %" PRIu32 " ",id);
     identifier_write(out, signal->name);
     fputc(' ', out);
     string_write(out, signal->comment);
@@ -312,7 +313,7 @@ static void attribute_definition_write(
 
   switch(attribute_definition->value_type) {
   case vt_integer:
-    fprintf(out," INT %ld %ld", 
+    fprintf(out," INT %" PRIi32 " %" PRIi32, 
             attribute_definition->range.int_range.min,
             attribute_definition->range.int_range.max);
     break;
@@ -329,7 +330,7 @@ static void attribute_definition_write(
     comma_string_list_write(out,attribute_definition->range.enum_list);
     break;
   case vt_hex:
-    fprintf(out," HEX %ld %ld", 
+    fprintf(out," HEX %" PRIi32 " %" PRIi32, 
             attribute_definition->range.hex_range.min,
             attribute_definition->range.hex_range.max);
     break;
@@ -352,7 +353,7 @@ static void value_write(
 {
   switch(value_type) {
   case vt_integer:
-    fprintf(out,"%ld", value.int_val);
+    fprintf(out,"%" PRIi32, value.int_val);
     break;
   case vt_float:
     fprintf(out,"%lg", value.double_val);
@@ -364,7 +365,7 @@ static void value_write(
     string_write(out, value.enum_val);
     break;
   case vt_hex:
-    fprintf(out,"%lu", value.hex_val);
+    fprintf(out,"%" PRIu32, value.hex_val);
     break;
   }
 }
@@ -471,7 +472,7 @@ static void message_attribute_list_write(FILE *out, message_list_t *message_list
   PLIST_ITER(message_list) {
     string_t target = (string_t)malloc(3+1+10+1);
 
-    sprintf(target, "BO_ %lu", message_list->message->id);
+    sprintf(target, "BO_ %" PRIu32, message_list->message->id);
     attribute_list_write(out, message_list->message->attribute_list, target);
     string_free(target);
   }
@@ -486,7 +487,7 @@ static void signal_attribute_list_write(FILE *out, message_list_t *message_list)
       const signal_t *signal = signal_list->signal;
       if(signal->attribute_list != NULL) {
         string_t target = (string_t)malloc(3+1+10+1+strlen(signal->name)+1);
-        sprintf(target, "SG_ %lu %s",
+        sprintf(target, "SG_ %" PRIu32 " %s",
                 message->id,
                 signal->name);
         attribute_list_write(out, signal->attribute_list, target);
@@ -504,7 +505,7 @@ static void attribute_rel_write(
   string_write(out, attribute_rel->name);
   fputs(" BU_SG_REL_ ", out);
   identifier_write(out, attribute_rel->node->name);
-  fprintf(out, " SG_ %lu ", attribute_rel->message->id);
+  fprintf(out, " SG_ %" PRIu32 " ", attribute_rel->message->id);
   identifier_write(out, attribute_rel->signal->name);
   fputs(" " , out);
   attribute_value_write(out, attribute_rel->attribute_value);
@@ -531,7 +532,7 @@ static void signal_val_map_write(FILE *out, message_list_t *message_list)
       val_map_t *val_map = signal->val_map;
       
       if(val_map != NULL) {
-        fprintf(out, "VAL_ %lu %s ", message->id, signal->name);
+        fprintf(out, "VAL_ %" PRIu32 " %s ", message->id, signal->name);
         val_map_write(out, val_map);
         fputs(";" NEWLINE, out);
       }
@@ -547,7 +548,7 @@ static void message_transmitter_list_write(
     const message_t *message = message_list->message;
     
     if(message->transmitter_list != NULL) {
-      fprintf(out, "BO_TX_BU_ %lu : ", message->id);
+      fprintf(out, "BO_TX_BU_ %" PRIu32 " : ", message->id);
       comma_identifier_list_write(out, message->transmitter_list);
       fputs(";" NEWLINE,out);
     }
@@ -556,7 +557,7 @@ static void message_transmitter_list_write(
 
 static void signal_group_write(FILE *out, signal_group_t *signal_group)
 {
-  fprintf(out, "SIG_GROUP_ %lu %s 1 : ",
+  fprintf(out, "SIG_GROUP_ %" PRIu32 " %s 1 : ",
           signal_group->id,
           signal_group->name);
   space_identifier_list_write(out, signal_group->signal_name_list);
@@ -582,9 +583,9 @@ static void signal_valtype_write(FILE *out, message_list_t *message_list)
       const signal_t *signal = signal_list->signal;
       
       if(signal->signal_val_type == svt_float) {
-        fprintf(out, "SIG_VALTYPE_ %lu %s : 1;", message->id, signal->name);
+        fprintf(out, "SIG_VALTYPE_ %" PRIu32 " %s : 1;", message->id, signal->name);
       } else if(signal->signal_val_type == svt_double ) {
-        fprintf(out, "SIG_VALTYPE_ %lu %s : 2;", message->id, signal->name);
+        fprintf(out, "SIG_VALTYPE_ %" PRIu32 " %s : 2;", message->id, signal->name);
       }
     }
   }

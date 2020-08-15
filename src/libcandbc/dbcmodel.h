@@ -176,7 +176,7 @@ DECLARE_PLIST(node_list, node);
 
 /* value map entry */
 typedef struct {
-  uint32   index;
+  uint32_t index;
   string_t value;
 } val_map_entry_t;
 

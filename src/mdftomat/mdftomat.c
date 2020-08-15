@@ -1,5 +1,5 @@
 /*  mdftomat -- convert MDF files to MAT files
-    Copyright (C) 2012-2017 Andreas Heitmann
+    Copyright (C) 2012-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,8 +46,8 @@ sanitize_name(const char *in)
 
   /* initialize transformation table */
   if(!init) {
-    int i;
-    for(i=0;i<sizeof(xtable);i++) {
+    uint16_t i;
+    for(i = 0; i < (uint16_t)sizeof(xtable); i++) {
       if(isupper(i) || islower(i) || isdigit(i) || (i=='_')) {
         xtable[i] = i;
       } else {
@@ -60,11 +60,11 @@ sanitize_name(const char *in)
   /* perform transformation */
   out = malloc(n+1);
   for(j=0;j<n;j++) {
-    out[j] = xtable[in[j]];
+    out[j] = xtable[(int)in[j]];
   }
 
   /* ensure name begins with letter */
-  if(!(isupper(out[0]) || islower(out[0]))) {
+  if(!(isupper((int)out[0]) || islower((int)out[0]))) {
     out[0] = 'X';
   }
 

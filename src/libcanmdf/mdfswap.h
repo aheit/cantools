@@ -1,9 +1,9 @@
 #ifndef MDF_SWAP_H
 #define MDF_SWAP_H
 
-/* mdfswap_swap.h -- Handle swapping for cantools -*- C++ -*-
+/* mdf_swap.h -- Handle swapping for cantools -*- C++ -*-
 
-   Copyright (C) 2006-2017 Free Software Foundation, Inc.
+   Copyright (C) 2006-2020 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <iant@google.com>.
 
    This file is part of cantools.
@@ -59,22 +59,22 @@ inline uint32_t
 mdf_bswap_32(uint32_t v)
 {
   return (  ((v & 0xff000000) >> 24)
-	  | ((v & 0x00ff0000) >>  8)
-	  | ((v & 0x0000ff00) <<  8)
-	  | ((v & 0x000000ff) << 24));
+          | ((v & 0x00ff0000) >>  8)
+          | ((v & 0x0000ff00) <<  8)
+          | ((v & 0x000000ff) << 24));
 }
 
 inline uint64_t
 mdf_bswap_64(uint64_t v)
 {
   return (  ((v & 0xff00000000000000ULL) >> 56)
-	  | ((v & 0x00ff000000000000ULL) >> 40)
-	  | ((v & 0x0000ff0000000000ULL) >> 24)
-	  | ((v & 0x000000ff00000000ULL) >>  8)
-	  | ((v & 0x00000000ff000000ULL) <<  8)
-	  | ((v & 0x0000000000ff0000ULL) << 24)
-	  | ((v & 0x000000000000ff00ULL) << 40)
-	  | ((v & 0x00000000000000ffULL) << 56));
+          | ((v & 0x00ff000000000000ULL) >> 40)
+          | ((v & 0x0000ff0000000000ULL) >> 24)
+          | ((v & 0x000000ff00000000ULL) >>  8)
+          | ((v & 0x00000000ff000000ULL) <<  8)
+          | ((v & 0x0000000000ff0000ULL) << 24)
+          | ((v & 0x000000000000ff00ULL) << 40)
+          | ((v & 0x00000000000000ffULL) << 56));
 }
 #endif /* !GNU >= 4.3 */
 #endif /* !defined(MDF_SWAP_H) */

@@ -1,5 +1,5 @@
 #! /bin/sh
-# Generated automatically by config.status (cantools) 0.26
+# Generated automatically by config.status (cantools) 0.27
 # Libtool was configured on host EUCLID:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
@@ -165,7 +165,7 @@ old_postuninstall_cmds=""
 lock_old_archive_extraction=no
 
 # A C compiler.
-LTCC="/usr/bin/../libexec/ccc-analyzer"
+LTCC="gcc"
 
 # LTCC compiler flags.
 LTCFLAGS="-g -O2"
@@ -328,7 +328,7 @@ reload_cmds="\$LD\$reload_flag -o \$output\$reload_objs"
 old_archive_cmds="\$AR \$AR_FLAGS \$oldlib\$oldobjs~\$RANLIB \$tool_oldlib"
 
 # A language specific compiler.
-CC="/usr/bin/../libexec/ccc-analyzer"
+CC="gcc"
 
 # Is the compiler the GNU compiler?
 with_gcc=yes
@@ -11690,7 +11690,7 @@ reload_cmds="\$LD\$reload_flag -o \$output\$reload_objs"
 old_archive_cmds="\$AR \$AR_FLAGS \$oldlib\$oldobjs~\$RANLIB \$tool_oldlib"
 
 # A language specific compiler.
-CC="/usr/bin/../libexec/c++-analyzer"
+CC="g++"
 
 # Is the compiler the GNU compiler?
 with_gcc=yes

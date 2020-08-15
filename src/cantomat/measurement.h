@@ -30,7 +30,7 @@ typedef struct {
   struct {
     time_t tv_sec;
     uint32_t tv_nsec;
-  } t;                  /* time stamp */
+  } t;                    /* time stamp */
   uint16_t  bus;          /* can bus */
   uint32_t  id;           /* numeric CAN-ID */
   uint8_t   dlc;          /* number of bytes */
@@ -55,8 +55,8 @@ typedef void (* parserFunction_t)(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
 measurement_t *measurement_read(busAssignment_t *busAssignment,
                                 const char *filename,
                                 signalFormat_t signalFormat,
-				int32_t timeResolution,
-				parserFunction_t parserFunction);
+                                int32_t timeResolution,
+                                parserFunction_t parserFunction);
 
 void measurement_free(measurement_t *m);
 

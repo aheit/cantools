@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 #include <assert.h>
 
 #include "dbctypes.h"
@@ -49,7 +50,7 @@ blfCANMessageDump(const canMessage_t* canMessage)
 {
   uint8_t i;
 
-  printf("MSG %ld.%09ld: %d 0x%04x %d [ ",
+  printf("MSG %ld.%09" PRIu32 ": %d 0x%04x %d [ ",
           canMessage->t.tv_sec,
           canMessage->t.tv_nsec,
           canMessage->bus,
@@ -94,7 +95,7 @@ blfVBLCANMessageParseTime(const VBLObjectHeader* header, time_t *sec,
 void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
 {
   VBLObjectHeaderBase base;
-  VBLFileStatisticsEx statistics = { sizeof(statistics) };
+  VBLFileStatisticsEx statistics;
   BLFHANDLE h;
   success_t success;
 
@@ -106,6 +107,7 @@ void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
   }
 
   /* diagnose header */
+  statistics.mStatisticsSize = sizeof(statistics);
   blfGetFileStatisticsEx(h, &statistics);
 
   /* print some file statistics */
@@ -127,110 +129,110 @@ void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
       {
         canMessage_t canMessage;
 
-	/* select type-dependent data structure and setup pointers to
-	   the relevant elements for further processing */
+        /* select type-dependent data structure and setup pointers to
+           the relevant elements for further processing */
         VBLCANMessage message;
         VBLCANMessage2 message2;
-	VBLCANFDMessage fdmessage;
-	VBLCANFDMessage64 fdmessage64;
+        VBLCANFDMessage fdmessage;
+        VBLCANFDMessage64 fdmessage64;
 
-	size_t messageSize;
-	VBLObjectHeaderBase *headerBase;
-	uint8_t  *data;
-	VBLObjectHeader *header;
-	uint8_t  *dlc;
-	void     *channel;
-	size_t    channelSize;
-	uint8_t   maxDLC;
+        size_t messageSize;
+        VBLObjectHeaderBase *headerBase;
+        uint8_t  *data;
+        VBLObjectHeader *header;
+        uint8_t  *dlc;
+        void     *channel;
+        size_t    channelSize;
+        uint8_t   maxDLC;
 
-	switch(base.mObjectType)
-	  {
-	  case BL_OBJ_TYPE_CAN_MESSAGE:
-	    messageSize = sizeof(message);
-	    headerBase = &message.mHeader.mBase;
-	    data = message.mData;
-	    header = &message.mHeader;
-	    dlc = &message.mDLC;
-	    channel = &message.mChannel;
-	    channelSize = sizeof(message.mChannel);
-	    maxDLC = 8;
-	    break;
-	  case BL_OBJ_TYPE_CAN_MESSAGE2:
-	    messageSize = sizeof(message2);
-	    headerBase = &message2.mHeader.mBase;
-	    data = message2.mData;
-	    header = &message2.mHeader;
-	    dlc = &message2.mDLC;
-	    channel = &message2.mChannel;
-	    channelSize = sizeof(message2.mChannel);
-	    maxDLC = 8;
-	    break;
-	  case BL_OBJ_TYPE_CAN_FD_MESSAGE:
-	    messageSize = sizeof(fdmessage);
-	    headerBase = &fdmessage.mHeader.mBase;
-	    data = fdmessage.mData;
-	    header = &fdmessage.mHeader;
-	    dlc = &fdmessage.mDLC;
-	    channel = &fdmessage.mChannel;
-	    channelSize = sizeof(fdmessage.mChannel);
-	    maxDLC = 64;
-	    break;
-	  case BL_OBJ_TYPE_CAN_FD_MESSAGE_64:
-	    messageSize = sizeof(fdmessage64);
-	    headerBase = &fdmessage64.mHeader.mBase;
-	    data = fdmessage64.mData;
-	    header = &fdmessage64.mHeader;
-	    dlc = &fdmessage64.mDLC;
-	    channel = &fdmessage64.mChannel;
-	    channelSize = sizeof(fdmessage64.mChannel);
-	    maxDLC = 64;
-	    break;
-	  }
-	  
+        switch(base.mObjectType)
+          {
+          case BL_OBJ_TYPE_CAN_MESSAGE:
+            messageSize = sizeof(message);
+            headerBase = &message.mHeader.mBase;
+            data = message.mData;
+            header = &message.mHeader;
+            dlc = &message.mDLC;
+            channel = &message.mChannel;
+            channelSize = sizeof(message.mChannel);
+            maxDLC = 8;
+            break;
+          case BL_OBJ_TYPE_CAN_MESSAGE2:
+            messageSize = sizeof(message2);
+            headerBase = &message2.mHeader.mBase;
+            data = message2.mData;
+            header = &message2.mHeader;
+            dlc = &message2.mDLC;
+            channel = &message2.mChannel;
+            channelSize = sizeof(message2.mChannel);
+            maxDLC = 8;
+            break;
+          case BL_OBJ_TYPE_CAN_FD_MESSAGE:
+            messageSize = sizeof(fdmessage);
+            headerBase = &fdmessage.mHeader.mBase;
+            data = fdmessage.mData;
+            header = &fdmessage.mHeader;
+            dlc = &fdmessage.mDLC;
+            channel = &fdmessage.mChannel;
+            channelSize = sizeof(fdmessage.mChannel);
+            maxDLC = 64;
+            break;
+          case BL_OBJ_TYPE_CAN_FD_MESSAGE_64:
+            messageSize = sizeof(fdmessage64);
+            headerBase = &fdmessage64.mHeader.mBase;
+            data = fdmessage64.mData;
+            header = &fdmessage64.mHeader;
+            dlc = &fdmessage64.mDLC;
+            channel = &fdmessage64.mChannel;
+            channelSize = sizeof(fdmessage64.mChannel);
+            maxDLC = 64;
+            break;
+          }
+          
         *headerBase = base;
         success = blfReadObjectSecure(h, headerBase, messageSize);
-	
+        
         if(success) {
           /* diagnose data */
           if(*dlc > maxDLC) {
-            fprintf(stderr, "invalid CAN message: DLC > 8\n");
+            fprintf(stderr, "invalid CAN message lenght: DLC > %d\n", maxDLC);
             goto read_error;
           }
 
-	  /* copy data */
-	  if(channelSize == 2) {
-	    canMessage.bus = *(uint16_t *)channel;
-	  } else {
-	    canMessage.bus = *(uint8_t *)channel;
-	  }
-	  canMessage.dlc = *dlc;
-	  memcpy(canMessage.byte_arr, data, *dlc);
+          /* copy data */
+          if(channelSize == 2) {
+            canMessage.bus = *(uint16_t *)channel;
+          } else {
+            canMessage.bus = *(uint8_t *)channel;
+          }
+          canMessage.dlc = *dlc;
+          memcpy(canMessage.byte_arr, data, *dlc);
 
-	  /* direct copy of message id required due to packed alignment */
-	  switch(base.mObjectType) {
-	  case BL_OBJ_TYPE_CAN_MESSAGE:
-	    canMessage.id = message.mID;
-	    break;
-	  case BL_OBJ_TYPE_CAN_MESSAGE2:
-	    canMessage.id = message2.mID;
-	    break;
-	  case BL_OBJ_TYPE_CAN_FD_MESSAGE:
-	    canMessage.id = fdmessage.mID;
-	    break;
-	  case BL_OBJ_TYPE_CAN_FD_MESSAGE_64:
-	    canMessage.id = fdmessage64.mID;
-	    break;
-	  }
+          /* direct copy of message id required due to packed alignment */
+          switch(base.mObjectType) {
+          case BL_OBJ_TYPE_CAN_MESSAGE:
+            canMessage.id = message.mID;
+            break;
+          case BL_OBJ_TYPE_CAN_MESSAGE2:
+            canMessage.id = message2.mID;
+            break;
+          case BL_OBJ_TYPE_CAN_FD_MESSAGE:
+            canMessage.id = fdmessage.mID;
+            break;
+          case BL_OBJ_TYPE_CAN_FD_MESSAGE_64:
+            canMessage.id = fdmessage64.mID;
+            break;
+          }
 
-	  /* parse time */
-	  blfVBLCANMessageParseTime(header, &(canMessage.t.tv_sec),
-				    &(canMessage.t.tv_nsec));
+          /* parse time */
+          blfVBLCANMessageParseTime(header, &(canMessage.t.tv_sec),
+                                    &(canMessage.t.tv_nsec));
 
-	  /* debug: dump message */
-	  if(debug_flag) {
-	    blfCANMessageDump(&canMessage);
-	  }
-	  
+          /* debug: dump message */
+          if(debug_flag) {
+            blfCANMessageDump(&canMessage);
+          }
+          
           /* invoke canMessage receive callback function */
           msgRxCb(&canMessage, cbData);
 
