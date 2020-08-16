@@ -225,11 +225,12 @@ measurement_t *measurement_read(busAssignment_t *busAssignment,
                                 const char *filename,
                                 signalFormat_t signalFormat,
                                 sint32 timeResolution,
-                                parserFunction_t parserFunction)
+                                parserFunction_t parserFunction,
+				int verbose_level)
 {
   FILE *fp;
   measurement_t *measurement;
-
+  
   measurement = malloc(sizeof(measurement_t));
   if(measurement!= NULL) {
     /* create time series hash */
@@ -259,7 +260,8 @@ measurement_t *measurement_read(busAssignment_t *busAssignment,
          * the parser function is responsible for closing the input
          * file stream
          */
-        parserFunction(fp, canMessage_process, &messageProcCbData);
+        parserFunction(fp, verbose_level,
+		       canMessage_process, &messageProcCbData);
 
       } else {
         fprintf(stderr, "measurement_read(): can't open input file\n");

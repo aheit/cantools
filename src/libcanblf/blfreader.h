@@ -32,7 +32,8 @@
 #include "measurement.h"
 
 /* blfRead function */
-void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
+void blfReader_processFile(FILE *fp, int verbose_level,
+                           msgRxCb_t msgRxCb, void *cbData);
 
 #ifdef __cplusplus
 }

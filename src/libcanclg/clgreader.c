@@ -33,10 +33,12 @@
  * Parser for CLG files.
  *
  * fp       FILE pointer of input file
+ * verbose_level  0: silent, 1: verbose, 2: debug
  * msgRxCb  callback function for received messages
  * cbData   pointer to opaque callback data
  */
-void clgReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
+void clgReader_processFile(FILE *fp, int verbose_level,
+                           msgRxCb_t msgRxCb, void *cbData)
 {
   uint8_t busmap[256];
   size_t ret;

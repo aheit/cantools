@@ -1,5 +1,5 @@
 /*  busAssignment.c -- assign bus id to DBC file
-    Copyright (C) 2007-2017 Andreas Heitmann
+    Copyright (C) 2007-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "busassignment.h"
-
-extern int verbose_flag;
 
 busAssignment_t *busAssignment_create(void)
 {
@@ -44,7 +42,7 @@ void busAssignment_associate(busAssignment_t *busAssignment,
   busAssignment->list[busAssignment->n-1].messageHash = NULL;
 }
 
-int busAssignment_parseDBC(busAssignment_t *busAssignment)
+int busAssignment_parseDBC(busAssignment_t *busAssignment, int verbose_level)
 {
   int i;
   int ret = 0;
@@ -52,7 +50,7 @@ int busAssignment_parseDBC(busAssignment_t *busAssignment)
   for(i = 0; i < busAssignment->n; i++) {
     dbc_t *dbc;
 
-    if(verbose_flag) {
+    if(verbose_level >= 1) {
       fprintf(stderr, "Parsing DBC file %s\n", busAssignment->list[i].filename);
     }
     if(NULL != (dbc = dbc_read_file(busAssignment->list[i].filename))) {

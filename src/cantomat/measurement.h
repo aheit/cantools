@@ -50,13 +50,17 @@ typedef struct {
   double *value;
 } timeSeries_t;
 
-typedef void (* parserFunction_t)(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
+typedef void (* parserFunction_t)(FILE *fp,
+				  int verbose_level,
+				  msgRxCb_t msgRxCb,
+				  void *cbData);
 
 measurement_t *measurement_read(busAssignment_t *busAssignment,
                                 const char *filename,
                                 signalFormat_t signalFormat,
-                                int32_t timeResolution,
-                                parserFunction_t parserFunction);
+                                sint32 timeResolution,
+                                parserFunction_t parserFunction,
+				int verbose_level);
 
 void measurement_free(measurement_t *m);
 

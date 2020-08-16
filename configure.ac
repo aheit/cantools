@@ -1,7 +1,7 @@
 # configuration cantools                        -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-# Copyright (C) 2007-2017 Andreas Heitmann
+# Copyright (C) 2007-2020	 Andreas Heitmann
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.27, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.28, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADER(cantools_config.h)
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -27,7 +27,7 @@ AC_LIBTOOL_WIN32_DLL
 AC_USE_SYSTEM_EXTENSIONS
 
 dnl common library version
-version_info='0:27:0'
+version_info='0:28:0'
 AC_SUBST(version_info)
 
 # custom options
@@ -38,11 +38,9 @@ AM_CONDITIONAL([MATLAB], [test "x$enable_matlab" != "xno"])
 
 # Checks for programs.
  	
-# Turn off shared libraries during beta-testing, since they
-# make the build process take too long.
-LT_INIT([disable_shared])
+#LT_INIT([disable_shared])
+LT_INIT
 AC_PROG_LIBTOOL
-
 AC_SUBST(LIBTOOL_DEPS)
 AC_PROG_YACC
 AC_PROG_CC
@@ -52,9 +50,7 @@ AC_PROG_INSTALL
 AC_PROG_AWK
 AC_PROG_CPP
 AC_PROG_MKDIR_P
-LT_INIT
 AC_PROG_LN_S
-AC_PROG_RANLIB
 
 # Checks for functions
 AC_REPLACE_FUNCS([strtok_r])

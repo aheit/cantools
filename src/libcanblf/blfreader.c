@@ -25,9 +25,6 @@
 #include "blfapi.h"
 #include "measurement.h"
 
-extern int verbose_flag;
-extern int debug_flag;
-
 static void
 blfSystemTimePrint(SYSTEMTIME *const s)
 {
@@ -89,10 +86,12 @@ blfVBLCANMessageParseTime(const VBLObjectHeader* header, time_t *sec,
  * Parser for BLF files.
  *
  * mFile       FILE pointer of input file
+ * verbose_level  0: silent, 1: verbose, 2: debug
  * msgRxCb  callback function for received messages
  * cbData   pointer to opaque callback data
  */
-void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
+void blfReader_processFile(FILE *fp, int verbose_level,
+                           msgRxCb_t msgRxCb, void *cbData)
 {
   VBLObjectHeaderBase base;
   VBLFileStatisticsEx statistics;
@@ -111,7 +110,7 @@ void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
   blfGetFileStatisticsEx(h, &statistics);
 
   /* print some file statistics */
-  if(verbose_flag) {
+  if(verbose_level >= 1) {
     printf("BLF Start  : ");
     blfSystemTimePrint(&statistics.mMeasurementStartTime);
     printf("\nBLF End    : ");
@@ -229,7 +228,7 @@ void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
                                     &(canMessage.t.tv_nsec));
 
           /* debug: dump message */
-          if(debug_flag) {
+          if(verbose_level >= 2) {
             blfCANMessageDump(&canMessage);
           }
           
@@ -244,7 +243,7 @@ void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
     default:
       /* skip all other objects */
       success = blfSkipObject(h, &base);
-      if(debug_flag) {
+      if(verbose_level >= 2) {
         printf("skipping object type = %d\n", base.mObjectType);
       }
       break;

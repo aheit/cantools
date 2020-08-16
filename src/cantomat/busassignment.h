@@ -2,7 +2,7 @@
 #define INCLUDE_BUSASSIGNMENT
 
 /*  busassignment.h -- declarations for busassignment
-    Copyright (C) 2016-2017 Andreas Heitmann
+    Copyright (C) 2016-2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,6 +36,6 @@ busAssignment_t *busAssignment_create(void);
 void busAssignment_associate(busAssignment_t *busAssigment,
                              int bus, char *filename);
 void busAssignment_free(busAssignment_t *busAssigment);
-int busAssignment_parseDBC(busAssignment_t *busAssignment);
+int busAssignment_parseDBC(busAssignment_t *busAssignment, int verbose_level);
 
 #endif

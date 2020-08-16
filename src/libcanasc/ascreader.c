@@ -32,10 +32,12 @@ typedef enum {
  * Parser for ASC files.
  *
  * fp       FILE pointer of input file
+ * verbose_level  0: silent, 1: verbose, 2: debug
  * msgRxCb  callback function for received messages
  * cbData   pointer to opaque callback data
  */
-void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
+void ascReader_processFile(FILE *fp, int verbose_level,
+			   msgRxCb_t msgRxCb, void *cbData)
 {
   char buffer[100];
   char *cp;

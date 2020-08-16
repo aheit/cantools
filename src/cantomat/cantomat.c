@@ -29,8 +29,7 @@
 #include "blfreader.h"
 #include "vsbreader.h"
 
-int verbose_flag = 0;
-int debug_flag   = 0;
+int verbose_level = 0;
 
 const char *program_name;
 
@@ -89,9 +88,9 @@ main(int argc, char **argv)
   while (1) {
     static struct option long_options[] = {
       /* These options set a flag. */
-      {"verbose", no_argument,       &verbose_flag, 1},
-      {"brief",   no_argument,       &verbose_flag, 0},
-      {"debug",   no_argument,       &debug_flag,   1},
+      {"brief",   no_argument,       &verbose_level, 0},
+      {"verbose", no_argument,       &verbose_level, 1},
+      {"debug",   no_argument,       &verbose_level, 2},
       /* These options don't set a flag.
          We distinguish them by their indices. */
       {"asc",     required_argument, 0, 'a'},
@@ -139,7 +138,7 @@ main(int argc, char **argv)
       bus = atoi(optarg);
       break;
     case 'd':
-      if(verbose_flag) {
+      if(verbose_level >= 1) {
         if(bus == -1) {
           fprintf(stderr, "Assigning DBC file %s to all busses\n", optarg);
         } else {
@@ -200,28 +199,30 @@ main(int argc, char **argv)
   }
   
   /* parse DBC files */
-  if(busAssignment_parseDBC(busAssignment)) {
+  if(busAssignment_parseDBC(busAssignment, verbose_level)) {
     fprintf(stderr, "error: parsing of DBC file failed\n");
     goto error;
   }
   
   /* parse input file */
-  if(verbose_flag) {
+  if(verbose_level >= 1) {
     if(inputFilename != NULL) {
       fprintf(stderr,
               "Parsing input file %s\n",
               inputFilename?inputFilename:"<stdin>");
     }
   }
+
   measurement = measurement_read(busAssignment,
                                  inputFilename,
                                  signalFormat,
                                  timeResolution,
-                                 parserFunction);
+                                 parserFunction,
+                                 verbose_level);
   if(measurement != NULL) {
 
     /* write MAT file */
-    if(verbose_flag) {
+    if(verbose_level >= 1) {
       fprintf(stderr, "Writing MAT file %s\n", matFilename);
     }
     matWrite(measurement, matFilename);
