@@ -23,9 +23,11 @@
 #endif
 
 #include <stdio.h>
+#include <assert.h>
 #include <matio.h>
 #include "measurement.h"
 #include "hashtable_itr.h"
+#include "matfile.h"
 
 /*
  * matWrite - write signals from measurement structure to MAT file
@@ -67,15 +69,22 @@ int matWrite(measurement_t *measurement, const char *outFileName)
         dims[0] = timeSeries->n;
         dims[1] = 2;
 
-        /*
-        printf("writing %s (%d,2)\n",signalName,timeSeries->n);
-        */
-        /* output signal to mat structure and free up temp array. */
-        matvar = Mat_VarCreate(signalName, MAT_C_DOUBLE, MAT_T_DOUBLE,
-                               2, dims, timeValue, 0);
-        Mat_VarWrite(mat, matvar, 0);
-        Mat_VarFree(matvar);
+	/* sanitize name */
+	{
+	  char *sanitizedName = sanitize_name(signalName);
 
+	  /*
+	    printf("writing %s (%d,2)\n",signalName,timeSeries->n);
+	  */
+	  /* output signal to mat structure and free up temp array. */
+	  assert(sanitizedName != NULL);
+	  matvar = Mat_VarCreate(sanitizedName, MAT_C_DOUBLE, MAT_T_DOUBLE,
+				 2, dims, timeValue, 0);
+	  Mat_VarWrite(mat, matvar, 0);
+	  Mat_VarFree(matvar);
+
+	  free(sanitizedName);
+	}
         free(timeValue);
       } while (hashtable_iterator_advance(itr));
       free(itr);

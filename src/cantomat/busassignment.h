@@ -22,7 +22,7 @@
 #include "messagehash.h"
 
 typedef struct {
-  int bus;
+  uint16_t bus;
   char *filename;
   messageHash_t *messageHash;
 } busAssignmentEntry_t;

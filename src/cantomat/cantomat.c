@@ -54,17 +54,17 @@ help(void)
           "  -c, --clg <clgfile>        CLG input file\n"
           "  -v, --vsb <vsbfile>        VSB input file\n"
           "  -m, --mat <matfile>        MAT output file\n"
-          "  -f, --format <format>      signal name format\n"
+          "  -p, --prefix <format>      prefix of signal name\n"
           "  -t, --timeres <nanosec>    time resolution\n"
           "      --verbose              verbose output\n"
           "      --brief                brief output (default)\n"
           "      --debug                output debug information\n"
           "      --help                 display this help and exit\n"
           "\n"
-          "<format> is either n, mn, or dmn, specifying the output name format\n"
-          "      n                      signalname\n"
-          "      mn                     messagename_signalname\n"
-          "      dmn                    dbcname_messagename_signalname\n",
+          "<format> is any combination of:\n"
+          "      m                      prefix with message name\n"
+          "      b                      prefix with bus number\n"
+          "      d                      prefix with dbc name\n",
         program_name);
 }
 
@@ -76,7 +76,7 @@ main(int argc, char **argv)
   char *matFilename = NULL;
   busAssignment_t *busAssignment = busAssignment_create();
   int bus = -1;
-  signalFormat_t signalFormat = signalFormat_Name;
+  signalFormat_t signalFormat = 0;
   measurement_t *measurement;
   int ret = 1;
   sint32 timeResolution = 10000;
@@ -98,7 +98,7 @@ main(int argc, char **argv)
       {"bus",     required_argument, 0, 'b'},
       {"clg",     required_argument, 0, 'c'},
       {"dbc",     required_argument, 0, 'd'},
-      {"format",  required_argument, 0, 'f'},
+      {"prefix",  required_argument, 0, 'p'},
       {"mat",     required_argument, 0, 'm'},
       {"timeres", required_argument, 0, 't'},
       {"vsb",     required_argument, 0, 'v'},
@@ -110,7 +110,7 @@ main(int argc, char **argv)
     int option_index = 0;
     int c;
 
-    c = getopt_long (argc, argv, "a:B:b:c:d:f:m:t:v:",
+    c = getopt_long (argc, argv, "a:B:b:c:d:p:m:t:v:",
                      long_options, &option_index);
 
     /* Detect the end of the options. */
@@ -153,19 +153,21 @@ main(int argc, char **argv)
     case 'm':
       matFilename = optarg;
       break;
-    case 'f':
-      if(!strcmp(optarg, "n")) {
-        signalFormat =  signalFormat_Name;
-      } else if(!strcmp(optarg, "mn")) {
-        signalFormat =  signalFormat_Message
-                     |  signalFormat_Name;
-      } else if(!strcmp(optarg, "dmn")) {
-        signalFormat =  signalFormat_Database
-                     |  signalFormat_Message
-                     |  signalFormat_Name;
-      } else {
-        fprintf(stderr, "error: format must be 's', 'ms', or 'dms'\n");
-        goto usage_error;
+    case 'p':
+      {
+	char *optch = optarg;
+	while(*optch) {
+	  switch(*optch) {
+	  case 'b': signalFormat |= signalFormat_Bus; break;
+	  case 'd': signalFormat |= signalFormat_dbcName; break;
+	  case 'm': signalFormat |= signalFormat_Message; break;
+	  default:
+	    fprintf(stderr, "invalid prefix format '%c'\n", *optch);
+	    help();
+	    exit(EXIT_FAILURE);
+	  }
+	  optch++;
+	}
       }
       break;
     case 't':

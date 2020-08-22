@@ -1,8 +1,8 @@
-#ifndef INCLUDE_MATWRITE_H
-#define INCLUDE_MATWRITE_H
+#ifndef INCLUDE_MATFILE
+#define INCLUDE_MATFILE
 
-/*  matwrite.h --  declarations for matwrite
-    Copyright (C) 2016-2017 Andreas Heitmann
+/*  matfile.h -- declarations for MAT file functions
+    Copyright (C) 2020 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,9 +19,6 @@
 
 #include "cantools_config.h"
 
-#include <stdio.h>
-#include "measurement.h"
-
-int matWrite(measurement_t *measurement, const char *filename);
+char *sanitize_name(const char *in);
 
 #endif

@@ -29,7 +29,7 @@ YACC=@YACC@
 # What to build and install
 #
 lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
-	          libcanclg.la libcanblf.la
+	          libcanclg.la libcanblf.la libmatfile.la
 
 bin_PROGRAMS	= dbccopy dbcls cantomat
 if MATLAB
@@ -76,10 +76,11 @@ cantomat_CPPFLAGS = @MATIO_CFLAGS@ \
 		   -I$(top_srcdir)/src/libcanclg \
 		   -I$(top_srcdir)/src/libcandbc \
 		   -I$(top_srcdir)/src/libcanvsb \
+		   -I$(top_srcdir)/src/libmatfile \
 		   -I$(top_srcdir)/src/cantomat \
 		   -I$(top_srcdir)/src/hashtable
 cantomat_LDADD = libcandbc.la libcanasc.la libcanblf.la \
-	         libcanvsb.la libcanclg.la
+	         libcanvsb.la libcanclg.la libmatfile.la
 cantomat_LDADD += @MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@ -lm
 
 #
@@ -88,8 +89,9 @@ cantomat_LDADD += @MATIO_LIBS@ @ZLIB_LIBS@ $(HDF5_LIB) @LIBOBJS@ -lm
 mdftomat_SOURCES = src/mdftomat/mdftomat.c \
                    src/mdftomat/mdftomat.h
 mdftomat_CPPFLAGS  = @MATIO_CFLAGS@ \
-	   -I$(top_srcdir)/src/libcanmdf
-mdftomat_LDADD	   = libcanmdf.la @MATIO_LIBS@ @ZLIB_LIBS@ \
+	   -I$(top_srcdir)/src/libcanmdf \
+	   -I$(top_srcdir)/src/libmatfile
+mdftomat_LDADD	   = libcanmdf.la libmatfile.la @MATIO_LIBS@ @ZLIB_LIBS@ \
                      $(HDF5_LIB) @LIBOBJS@
 
 #
@@ -117,6 +119,7 @@ include_HEADERS= src/libcandbc/dbcmodel.h \
 		 src/libcandbc/dbctypes.h \
 		 src/libcandbc/dbcreader.h \
 		 src/libcandbc/dbcwriter.h \
+		 src/libmatfile/matfile.h \
 		 src/libcanmdf/mdfcg.h \
 		 src/libcanmdf/mdfdg.h \
 		 src/libcanmdf/mdffile.h \
@@ -153,6 +156,8 @@ libcanblf_la_SOURCES= src/libcanblf/blfreader.c \
 libcanvsb_la_SOURCES= src/libcanvsb/vsbreader.c
 
 libcanclg_la_SOURCES= src/libcanclg/clgreader.c
+
+libmatfile_la_SOURCES= src/libmatfile/matfile.c
 
 libcanmdf_la_SOURCES= \
 	src/libcanmdf/mdfcg.c \

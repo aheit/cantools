@@ -23,56 +23,13 @@
 #include <assert.h>
 #include <matio.h>
 #include <getopt.h>
-#include <ctype.h>
 
 #include "mdftomat.h"
 #include "mdfcg.h"
 #include "mdffilter.h"
 #include "mdffile.h"
 #include "mdfdg.h"
-
-/*
- * A valid variable name is a character string of letters, digits, and
- * underscores [...] and beginning with a letter.
- */
-char *
-sanitize_name(const char *in)
-{
-  char *out;
-  static char xtable[256];
-  static int init=0;
-  size_t n = strlen(in);
-  size_t j;
-
-  /* initialize transformation table */
-  if(!init) {
-    uint16_t i;
-    for(i = 0; i < (uint16_t)sizeof(xtable); i++) {
-      if(isupper(i) || islower(i) || isdigit(i) || (i=='_')) {
-        xtable[i] = i;
-      } else {
-        xtable[i] = '_';
-      }
-    }
-    init=1;
-  }
-
-  /* perform transformation */
-  out = malloc(n+1);
-  for(j=0;j<n;j++) {
-    out[j] = xtable[(int)in[j]];
-  }
-
-  /* ensure name begins with letter */
-  if(!(isupper((int)out[0]) || islower((int)out[0]))) {
-    out[0] = 'X';
-  }
-
-  /* terminate name */
-  out[j] = 0;
-
-  return out;
-}
+#include "matfile.h"
 
 static void
 mat_write_signal(const mdf_t *const mdf, 
@@ -109,6 +66,7 @@ mat_write_signal(const mdf_t *const mdf,
        }
       }
     }
+
     /* sanitize variable name */
     filter_signal_name_in = sanitize_name(signal_name);
     filter_message_name_in = sanitize_name(message_name);

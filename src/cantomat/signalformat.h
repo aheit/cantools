@@ -20,9 +20,10 @@
 #include "cantools_config.h"
 
 typedef enum {
-  signalFormat_Name     = 1<<1,
-  signalFormat_Message  = 1<<2,
-  signalFormat_Database = 1<<3,
+  signalFormat_None     = 0,
+  signalFormat_Bus      = 1<<1,
+  signalFormat_dbcName  = 1<<2,
+  signalFormat_Message  = 1<<3,
 } signalFormat_t;
 
 char *signalFormat_stringAppend(const char *in, const char *app);

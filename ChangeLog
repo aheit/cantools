@@ -1,3 +1,9 @@
+2020-08-22  Andreas Heitmann  <andreas.heitmann@gmail.com>
+
+	* all: version 0.28
+	* cantomat: rewrote signal name prefix code
+	* libmatfile: new library for MAT file handling
+
 2020-08-16  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
 	* all: version 0.28

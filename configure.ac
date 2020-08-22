@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.28, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.29, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADER(cantools_config.h)
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -27,7 +27,7 @@ AC_LIBTOOL_WIN32_DLL
 AC_USE_SYSTEM_EXTENSIONS
 
 dnl common library version
-version_info='0:28:0'
+version_info='0:29:0'
 AC_SUBST(version_info)
 
 # custom options
@@ -38,8 +38,8 @@ AM_CONDITIONAL([MATLAB], [test "x$enable_matlab" != "xno"])
 
 # Checks for programs.
  	
-#LT_INIT([disable_shared])
-LT_INIT
+LT_INIT([disable_shared])
+#LT_INIT
 AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 AC_PROG_YACC

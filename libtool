@@ -1,5 +1,5 @@
 #! /bin/sh
-# Generated automatically by config.status (cantools) 0.27
+# Generated automatically by config.status (cantools) 0.29
 # Libtool was configured on host EUCLID:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
@@ -51,7 +51,7 @@ macro_version=2.4.6
 macro_revision=2.4.6
 
 # Whether or not to build shared libraries.
-build_libtool_libs=yes
+build_libtool_libs=no
 
 # Whether or not to build static libraries.
 build_old_libs=yes

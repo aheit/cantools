@@ -20,6 +20,8 @@
 #include <string.h>
 #include <inttypes.h>
 #include <assert.h>
+#include <libgen.h> /* basename() */
+
 #include "measurement.h"
 #include "busassignment.h"
 #include "messagehash.h"
@@ -46,12 +48,13 @@ typedef struct {
 } messageProcCbData_t;
 
 /* simple string hash function for signal names */
-static unsigned int signalName_computeHash( void *k)
+static unsigned int signalName_computeHash(void *k)
 {
+  uint8_t *cp;
   unsigned int hash = 0;
   int c;
 
-  while ((c = *(unsigned char *)k++)) {
+  for(cp = k; (c = *cp) != '\0'; cp++) {
     hash = c + (hash << 6) + (hash << 16) - hash;
   }
 
@@ -164,7 +167,8 @@ static void signalProc_timeSeries(
 /*
  * callback function for processing a CAN message
  */
-static void canMessage_process(canMessage_t *canMessage, void *cbData)
+static void
+canMessage_process(canMessage_t *canMessage, void *cbData)
 {
   messageProcCbData_t *messageProcCbData = (messageProcCbData_t *)cbData;
 
@@ -182,22 +186,46 @@ static void canMessage_process(canMessage_t *canMessage, void *cbData)
       if(NULL != (dbcMessage = hashtable_search(entry->messageHash, &key))) {
 
         /* found the message in the database */
-        char *local_prefix;
-        const char *const prefix = NULL;
+        char *prefix = NULL;
         
-        /* setup and forward message prefix */
+	/* prefix with bus number */
+	if(messageProcCbData->signalFormat & signalFormat_Bus) {
+	  char *ch_str;
+	  char len;
+	  
+	  len = snprintf(NULL, 0, "Ch%" PRIu16, entry->bus);
+	  ch_str = malloc(len);
+	  assert(ch_str != NULL);
+	  len = sprintf(ch_str, "Ch%" PRIu16, entry->bus);
+          prefix = signalFormat_stringAppend(prefix, ch_str);
+	  free(ch_str);
+	}
+
+	/* prefix with dbc name */
+	if(messageProcCbData->signalFormat & signalFormat_dbcName) {
+	  char *fullname = strdup(entry->filename);
+	  char *base;
+	  
+	  /* select just the basename */
+	  assert(fullname != NULL);
+	  base = basename(fullname);
+          prefix = signalFormat_stringAppend(prefix, base);
+	  free(fullname);
+	}
+	
+	/* prefix with message name */
         if(messageProcCbData->signalFormat & signalFormat_Message) {
-          local_prefix = signalFormat_stringAppend(prefix, dbcMessage->name);
-        } else {
-          if(prefix != NULL) local_prefix = strdup(prefix);
-          else               local_prefix = NULL;
+	  char *tmp_prefix = prefix;
+
+          prefix = signalFormat_stringAppend(prefix, dbcMessage->name);
+	  if(tmp_prefix) free(tmp_prefix);
         }
 
         /* call message decoder with time series storage callback */
         {
           signalProcCbData_t signalProcCbData = {
             messageProcCbData->measurement->timeSeriesHash,
-            local_prefix,
+            prefix,
           };
 
           canMessage_decode(dbcMessage,
@@ -207,8 +235,8 @@ static void canMessage_process(canMessage_t *canMessage, void *cbData)
                             &signalProcCbData);
         }
 
-        /* free local prefix */
-        if(local_prefix != NULL) free(local_prefix);
+        /* free signal prefix */
+        if(prefix != NULL) free(prefix);
 
         /* end search if message was found */
         break;
@@ -226,11 +254,11 @@ measurement_t *measurement_read(busAssignment_t *busAssignment,
                                 signalFormat_t signalFormat,
                                 sint32 timeResolution,
                                 parserFunction_t parserFunction,
-				int verbose_level)
+                                int verbose_level)
 {
   FILE *fp;
   measurement_t *measurement;
-  
+
   measurement = malloc(sizeof(measurement_t));
   if(measurement!= NULL) {
     /* create time series hash */
