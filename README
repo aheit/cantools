@@ -73,7 +73,7 @@ Prerequisites: autotools, zlib, zlib-devel, make, gcc
 
 Installation of cantools
 ========================
-Prerequisites: autotools, matio, bison, flex, make, gcc
+Prerequisites: autotools, matio, bison, flex, make, gcc, check, check-devel
 
 download and extract cantools-*.tar.gz
 cd cantools
@@ -92,7 +92,7 @@ CC=clang ./configure
 
 Compilation of cantools on Windows Subsystem for Linux (WSL)
 ====================
-sudo apt-get install gcc libz-dev libmatio-dev pkg-config flex bison check libglib2.0 subversion automake check libtool
+sudo apt-get install gcc libz-dev libmatio-dev pkg-config flex bison check libglib2.0 subversion automake check check-devel libtool
 git clone https://github.com/aheit/cantools cantools-code
 cd cantools-code
 ./configure
@@ -149,3 +149,9 @@ Troubleshooting
    Reason: platform specific automake scripts are not provided by the
    source distribution. 
    Fix: run 'autoreconf -f -i'
+
+6) Error message from make: "checking for CHECK... no
+   configure: error: Package requirements (check >= 0.9.0) were not met:
+   Package 'check', required by 'virtual:world', not found"
+   Reason: check-devel is missing
+   Fix: install check-devel

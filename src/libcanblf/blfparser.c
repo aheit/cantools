@@ -1,5 +1,5 @@
 /*  blfparser.c --  parse BLF files
-    Copyright (C) 2016-2020 Andreas Heitmann
+    Copyright (C) 2016-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -433,7 +433,7 @@ blfHandleClose(BLFHANDLE h)
 
 /* skip forward nBytes */
 success_t
-blfHandleSkip(BLFHANDLE h, uint32_t nBytes)
+blfHandleSkip(BLFHANDLE h, uint32_t nBytes, uint32_t skipPadding)
 {
   success_t success;
   DualStream *const ds = &h->mDualStream;
@@ -444,7 +444,9 @@ blfHandleSkip(BLFHANDLE h, uint32_t nBytes)
     success = blfDualStreamReadOrSkip(ds, NULL, nBytes, 1);
   }
   if(success) {
-    success = blfHandleSkipPadding(h, nBytes);
+    if(skipPadding) {
+      success = blfHandleSkipPadding(h, nBytes);
+    }
   }
   return success;
 }
@@ -486,7 +488,7 @@ blfHandleOpen(BLFHANDLE h, FILE *fp)
   /* if file structure is larger than memory structure, skip the rest
      of the file structure */
   if(nSkip > 0) {
-    if(!blfHandleSkip(h, nSkip)) {
+    if(!blfHandleSkip(h, nSkip, 1)) {
       goto fail;
     }
   }

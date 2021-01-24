@@ -1,3 +1,7 @@
+2021-01-24  Andreas Heitmann  <andreas.heitmann@gmail.com>
+	* all: version 0.29
+	* libcanblf: fix: parsing of TRIGGER_CONDITION object
+
 2020-08-22  Andreas Heitmann  <andreas.heitmann@gmail.com>
 
 	* all: version 0.28

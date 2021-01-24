@@ -1,5 +1,5 @@
 /*  blfReader.c -- parse BLF files
-    Copyright (C) 2016-2020 Andreas Heitmann
+    Copyright (C) 2016-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -144,8 +144,7 @@ void blfReader_processFile(FILE *fp, int verbose_level,
         size_t    channelSize;
         uint8_t   maxDLC;
 
-        switch(base.mObjectType)
-          {
+        switch(base.mObjectType) {
           case BL_OBJ_TYPE_CAN_MESSAGE:
             messageSize = sizeof(message);
             headerBase = &message.mHeader.mBase;
@@ -242,10 +241,10 @@ void blfReader_processFile(FILE *fp, int verbose_level,
       break;
     default:
       /* skip all other objects */
-      success = blfSkipObject(h, &base);
       if(verbose_level >= 2) {
-        printf("skipping object type = %d\n", base.mObjectType);
+        printf("skipping object type = 0x%" PRIx32 "\n", base.mObjectType);
       }
+      success = blfSkipObject(h, &base);
       break;
     }
   }

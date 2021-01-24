@@ -2,7 +2,7 @@
 #define INCLUDE_BLFAPI_H
 
 /*  blfapi.h --  declarations for BLF API
-    Copyright (C) 2016-2017 Andreas Heitmann
+    Copyright (C) 2016-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@ extern "C" {
 #define BL_OBJ_TYPE_CAN_MESSAGE2          86
 #define BL_OBJ_TYPE_CAN_FD_MESSAGE       100  
 #define BL_OBJ_TYPE_CAN_FD_MESSAGE_64    101
+#define BL_OBJ_TYPE_TRIGGER_CONDITION    128
 
 #define BL_OBJ_FLAG_TIME_TEN_MICS 1
 #define BL_OBJ_FLAG_TIME_ONE_NANS       2
