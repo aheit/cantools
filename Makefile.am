@@ -29,11 +29,14 @@ YACC=@YACC@
 # What to build and install
 #
 lib_LTLIBRARIES = libcandbc.la libcanasc.la libcanmdf.la libcanvsb.la \
-	          libcanclg.la libcanblf.la libmatfile.la
-
-bin_PROGRAMS	= dbccopy dbcls cantomat
+	          libcanclg.la libcanblf.la
 if MATLAB
-bin_PROGRAMS	+= mdftomat matdump
+lib_LTLIBRARIES += libmatfile.la
+endif
+
+bin_PROGRAMS	= dbccopy dbcls
+if MATLAB
+bin_PROGRAMS	+= cantomat mdftomat matdump
 endif
 
 #
@@ -119,7 +122,6 @@ include_HEADERS= src/libcandbc/dbcmodel.h \
 		 src/libcandbc/dbctypes.h \
 		 src/libcandbc/dbcreader.h \
 		 src/libcandbc/dbcwriter.h \
-		 src/libmatfile/matfile.h \
 		 src/libcanmdf/mdfcg.h \
 		 src/libcanmdf/mdfdg.h \
 		 src/libcanmdf/mdffile.h \
@@ -131,11 +133,14 @@ include_HEADERS= src/libcandbc/dbcmodel.h \
 		 src/libcanblf/blfparser.h \
 		 src/libcanvsb/vsbreader.h \
 		 src/libcanclg/clgreader.h \
-		 src/cantomat/messagedecoder.h \
 		 src/libcanmdf/mdfcn.h \
 		 src/libcanmdf/mdfswap.h \
 		 src/libcanmdf/mdftypes.h \
 		 cantools_config.h
+if MATLAB
+include_HEADERS += src/libmatfile/matfile.h \
+		 src/cantomat/messagedecoder.h
+endif
 
 libcandbc_la_SOURCES= \
 	src/libcandbc/dbcmodel.c \
@@ -175,27 +180,32 @@ libcandbc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanasc_la_CPPFLAGS= -I$(top_builddir)/src/libcanasc \
 		       -I$(top_srcdir)/src/libcandbc \
-		       -I$(top_srcdir)/src/cantomat \
-                       -I$(top_srcdir)/src/hashtable
+                       -I$(top_srcdir)/src/hashtable \
+                       -I$(top_srcdir)/src/cantomat
+
 libcanasc_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanblf_la_CPPFLAGS= -I$(top_builddir)/src/libcanblf \
 		       -I$(top_srcdir)/src/libcandbc \
-                       -I$(top_srcdir)/src/cantomat \
                        -I$(top_srcdir)/src/hashtable \
-                       -Wunused -pedantic
+                       -Wunused -pedantic \
+                       -I$(top_srcdir)/src/cantomat
+
 libcanblf_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanvsb_la_CPPFLAGS= -I$(top_builddir)/src/libcanvsb \
 		       -I$(top_srcdir)/src/libcandbc \
-		       -I$(top_srcdir)/src/cantomat \
-                       -I$(top_srcdir)/src/hashtable
+                       -I$(top_srcdir)/src/hashtable \
+		       -I$(top_srcdir)/src/cantomat
+
+
 libcanvsb_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanclg_la_CPPFLAGS= -I$(top_builddir)/src/libcanclg \
 		       -I$(top_srcdir)/src/libcandbc \
-	       	       -I$(top_srcdir)/src/cantomat \
-                       -I$(top_srcdir)/src/hashtable
+                       -I$(top_srcdir)/src/hashtable \
+                       -I$(top_srcdir)/src/cantomat
+
 libcanclg_la_LDFLAGS= -no-undefined -version-info @version_info@
 
 libcanmdf_la_CPPFLAGS= -I$(top_builddir)/src/libcanmdf @MATIO_CFLAGS@
@@ -209,6 +219,7 @@ MAINTAINERCLEANFILES = \
 src/libcandbc/parser.h src/libcandbc/parser.c: src/libcandbc/parser.y
 
 install-exec-hook:
+if MATLAB
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) cantomat$(EXEEXT) asctomat$(EXEEXT)
 	cd $(DESTDIR)$(bindir) && \
@@ -217,3 +228,4 @@ install-exec-hook:
 		$(LN_S) cantomat$(EXEEXT) vsbtomat$(EXEEXT)
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) cantomat$(EXEEXT) clgtomat$(EXEEXT)
+endif

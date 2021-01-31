@@ -18,7 +18,7 @@
 
 
 AC_PREREQ(2.69)
-AC_INIT(cantools, 0.29, andreas.heitmann@gmail.com)
+AC_INIT(cantools, 0.30, andreas.heitmann@gmail.com)
 AC_CONFIG_SRCDIR([src/libcandbc/parser.y])
 AC_CONFIG_HEADER(cantools_config.h)
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -27,7 +27,7 @@ AC_LIBTOOL_WIN32_DLL
 AC_USE_SYSTEM_EXTENSIONS
 
 dnl common library version
-version_info='0:29:0'
+version_info='0:30:0'
 AC_SUBST(version_info)
 
 # custom options
@@ -172,7 +172,6 @@ AS_IF([test "x$enable_matlab" != "xno"], [
     PKG_CHECK_MODULES([MATIO], [matio >= 1.5])
 ])
 PKG_CHECK_MODULES([ZLIB],  [zlib >= 1.2])
-#PKG_CHECK_MODULES([HDF5], [hdf5 >= 1.8])
  
 # Checks for library functions.
 #AC_FUNC_ERROR_AT_LINE
