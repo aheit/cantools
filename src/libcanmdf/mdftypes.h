@@ -36,7 +36,8 @@ typedef char           char32_t[32];
 typedef char           char36_t[36];
 typedef char           char80_t[80];
 typedef char           char128_t[128];
-typedef int32_t        link_t;
+/* absolute position in file, 32 bit unsigned int (since MDF 3.20) */
+typedef uint32_t       link_t;
 typedef uint16_t       mdf_bool_t;
 
 #endif

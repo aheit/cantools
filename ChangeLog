@@ -1,4 +1,8 @@
 2021-01-31  Andreas Heitmann  <andreas.heitmann@gmail.com>
+	* version 0.32
+	* libcanmdf: fix: data type of link_t (uint32_t)
+
+2021-01-31  Andreas Heitmann  <andreas.heitmann@gmail.com>
 	* version 0.31
 	* configuration: fix: compile fails with --disable-matlab
 
