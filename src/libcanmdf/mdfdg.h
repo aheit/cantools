@@ -2,7 +2,7 @@
 #define INCLUDE_MDFDG_H
 
 /*  mdfdg.h -- declarations for MDF data groups
-    Copyright (C) 2012-2017 Andreas Heitmann
+    Copyright (C) 2012-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ extern "C" {
 #endif
 
 void mdfProcessDataGroups(const mdf_t *const mdf, const filter_t *const filter,
-			  link_t link, mdfSignalCb_t const mdfSignalCb,
-			  const void *const cbData);
+                          link_t link, mdfSignalCb_t const mdfSignalCb,
+                          const void *const cbData);
 
 #ifdef __cplusplus
 }

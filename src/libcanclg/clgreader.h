@@ -2,7 +2,7 @@
 #define INCLUDE_CLGREADER_H
 
 /*  clgreader.h --  declarations for clgreader
-    Copyright (C) 2014-2020 Andreas Heitmann
+    Copyright (C) 2014-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,7 +48,6 @@ typedef struct {
 } clg_header_t;
 
 /* clgRead function */
-void clgReader_processFile(FILE *fp, int verbose_level,
-                           msgRxCb_t msgRxCb, void *cbData);
+void clgReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
 
 #endif

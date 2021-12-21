@@ -219,8 +219,7 @@ main(int argc, char **argv)
                                  inputFilename,
                                  signalFormat,
                                  timeResolution,
-                                 parserFunction,
-                                 verbose_level);
+                                 parserFunction);
   if(measurement != NULL) {
 
     /* write MAT file */

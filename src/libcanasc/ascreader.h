@@ -2,7 +2,7 @@
 #define INCLUDE_ASCREADER_H
 
 /*  ascreader.h --  declarations for ascreader
-    Copyright (C) 2007-2020 Andreas Heitmann
+    Copyright (C) 2007-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,8 +28,7 @@
 extern "C" {
 #endif
 
-void ascReader_processFile(FILE *fp, int verbose_level,
-			   msgRxCb_t msgRxCb, void *cbData);
+void ascReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
 
 #ifdef __cplusplus
 }

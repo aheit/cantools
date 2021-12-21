@@ -1,5 +1,5 @@
 /*  measurement.c -- process CAN trace file
-    Copyright (C) 2007-2020 Andreas Heitmann
+    Copyright (C) 2007-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -188,37 +188,37 @@ canMessage_process(canMessage_t *canMessage, void *cbData)
         /* found the message in the database */
         char *prefix = NULL;
         
-	/* prefix with bus number */
-	if(messageProcCbData->signalFormat & signalFormat_Bus) {
-	  char *ch_str;
-	  char len;
-	  
-	  len = snprintf(NULL, 0, "Ch%" PRIu16, entry->bus);
-	  ch_str = malloc(len);
-	  assert(ch_str != NULL);
-	  len = sprintf(ch_str, "Ch%" PRIu16, entry->bus);
-          prefix = signalFormat_stringAppend(prefix, ch_str);
-	  free(ch_str);
-	}
+        /* prefix with bus number */
+        if(messageProcCbData->signalFormat & signalFormat_Bus) {
+          char *ch_str;
+          char len;
 
-	/* prefix with dbc name */
-	if(messageProcCbData->signalFormat & signalFormat_dbcName) {
-	  char *fullname = strdup(entry->filename);
-	  char *base;
-	  
-	  /* select just the basename */
-	  assert(fullname != NULL);
-	  base = basename(fullname);
+          len = snprintf(NULL, 0, "Ch%" PRIu16, entry->bus);
+          ch_str = malloc(len);
+          assert(ch_str != NULL);
+          len = sprintf(ch_str, "Ch%" PRIu16, entry->bus);
+          prefix = signalFormat_stringAppend(prefix, ch_str);
+          free(ch_str);
+        }
+
+        /* prefix with dbc name */
+        if(messageProcCbData->signalFormat & signalFormat_dbcName) {
+          char *fullname = strdup(entry->filename);
+          char *base;
+          
+          /* select just the basename */
+          assert(fullname != NULL);
+          base = basename(fullname);
           prefix = signalFormat_stringAppend(prefix, base);
-	  free(fullname);
-	}
-	
-	/* prefix with message name */
+          free(fullname);
+        }
+
+        /* prefix with message name */
         if(messageProcCbData->signalFormat & signalFormat_Message) {
-	  char *tmp_prefix = prefix;
+          char *tmp_prefix = prefix;
 
           prefix = signalFormat_stringAppend(prefix, dbcMessage->name);
-	  if(tmp_prefix) free(tmp_prefix);
+          if(tmp_prefix) free(tmp_prefix);
         }
 
         /* call message decoder with time series storage callback */
@@ -253,8 +253,7 @@ measurement_t *measurement_read(busAssignment_t *busAssignment,
                                 const char *filename,
                                 signalFormat_t signalFormat,
                                 sint32 timeResolution,
-                                parserFunction_t parserFunction,
-                                int verbose_level)
+                                parserFunction_t parserFunction)
 {
   FILE *fp;
   measurement_t *measurement;
@@ -288,9 +287,7 @@ measurement_t *measurement_read(busAssignment_t *busAssignment,
          * the parser function is responsible for closing the input
          * file stream
          */
-        parserFunction(fp, verbose_level,
-		       canMessage_process, &messageProcCbData);
-
+        parserFunction(fp, canMessage_process, &messageProcCbData);
       } else {
         fprintf(stderr, "measurement_read(): can't open input file\n");
         hashtable_destroy(measurement->timeSeriesHash, 0);

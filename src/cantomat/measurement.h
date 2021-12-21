@@ -2,7 +2,7 @@
 #define INCLUDE_MEASUREMENT_H
 
 /*  measurement.h -- declarations for measurement
-    Copyright (C) 2016-2020 Andreas Heitmann
+    Copyright (C) 2016-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -51,16 +51,14 @@ typedef struct {
 } timeSeries_t;
 
 typedef void (* parserFunction_t)(FILE *fp,
-				  int verbose_level,
-				  msgRxCb_t msgRxCb,
-				  void *cbData);
+                                  msgRxCb_t msgRxCb,
+                                  void *cbData);
 
 measurement_t *measurement_read(busAssignment_t *busAssignment,
                                 const char *filename,
                                 signalFormat_t signalFormat,
                                 sint32 timeResolution,
-                                parserFunction_t parserFunction,
-				int verbose_level);
+                                parserFunction_t parserFunction);
 
 void measurement_free(measurement_t *m);
 

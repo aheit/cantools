@@ -2,7 +2,7 @@
 #define INCLUDE_MESSAGEDECODER_H
 
 /*  messagedecoder.h --  declarations for messagedecoder
-    Copyright (C) 2016-2017 Andreas Heitmann
+    Copyright (C) 2016-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#ifdef HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+#ifdef HAVE_STDINT_H
+# include <stdint.h>
+#endif
 #include "dbcmodel.h"
 #include "measurement.h"
 
@@ -27,13 +33,13 @@ extern "C" {
 /* signal procesing callback function */
 typedef void (* signalProcCb_t)(const signal_t     *s,
                                 double              dtime,
-                                uint32              rawValue,
+                                uint32_t            rawValue,
                                 double              physicalValue,
                                 void               *cbData);
 
 void canMessage_decode(message_t      *dbcMessage,
                        canMessage_t   *canMessage,
-                       sint32          timeResolution,
+                       int32_t         timeResolution,
                        signalProcCb_t  signalProcCb,
                        void           *cbData);
 

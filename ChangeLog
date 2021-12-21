@@ -1,4 +1,9 @@
 2021-01-31  Andreas Heitmann  <andreas.heitmann@gmail.com>
+	* version 0.33
+	* cantomat: additional check to prevent reading outside of DLC boundary
+	* cantomat: added decoding of float and double types
+
+2021-01-31  Andreas Heitmann  <andreas.heitmann@gmail.com>
 	* version 0.32
 	* libcanmdf: fix: data type of link_t (uint32_t)
 

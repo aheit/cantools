@@ -2,7 +2,7 @@
 #define INCLUDE_MDFMODEL_H
 
 /*  mdfmodel.h --  declarations for MDF model
-    Copyright (C) 2012-2017 Andreas Heitmann
+    Copyright (C) 2012-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -284,8 +284,8 @@ cc_block_t *  cc_block_get(const mdf_t *const mdf, const link_t lnk);
 char *cn_get_long_name(const mdf_t *const mdf, const cn_block_t *const cn_block);
 char *ce_get_message_name(const ce_block_t *const ce_block);
 void ce_get_message_info(const ce_block_t *const ce_block,
-		    char **const message_name_ptr,
-		    uint32_t *const can_id,
-		    uint32_t *const can_channel);
+                         char **const message_name_ptr,
+                         uint32_t *const can_id,
+                         uint32_t *const can_channel);
 
 #endif

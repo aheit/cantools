@@ -2,7 +2,7 @@
 #define INCLUDE_MDFFILTER_H
 
 /*  mdffilter.h --  declarations for MDF filter
-    Copyright (C) 2012-2017 Andreas Heitmann
+    Copyright (C) 2012-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -44,11 +44,11 @@ extern "C" {
 
 extern char *
 filter_apply(const filter_t *filter, const uint32_t channel,
-	     const char *message, const char *signal);
+             const char *message, const char *signal);
 extern int
 filter_test_channel_group(const mdf_t *const mdf,
-			  const filter_t *const filter,
-			  const cg_block_t *const cg_block);
+                          const filter_t *const filter,
+                          const cg_block_t *const cg_block);
 extern filter_t *
 mdf_filter_create(const char *filename);
 extern void

@@ -2,7 +2,7 @@
 #define INCLUDE_MDFCN_H
 
 /*  mdfcn.h -- MDF channel definitions
-    Copyright (C) 2012-2017 Andreas Heitmann
+    Copyright (C) 2012-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,22 +25,22 @@
 
 void
 mdfProcessChannel(const mdf_t *const mdf,
-		  const cg_block_t *const cg_block,
-		  const cn_block_t *const cn_block,
-		  const filter_t *const filter,
-		  const double *const time,
-		  const double *const value,
-		  mdfSignalCb_t const mdfSignalCb,
-		  const void *const cbData);
+                  const cg_block_t *const cg_block,
+                  const cn_block_t *const cn_block,
+                  const filter_t *const filter,
+                  const double *const time,
+                  const double *const value,
+                  mdfSignalCb_t const mdfSignalCb,
+                  const void *const cbData);
 void
 mdfProcessChannelsSorted(const mdf_t *const mdf,
-			 const filter_t *const filter,
-			 link_t link,
-			 uint32_t number_of_records,
-			 uint16_t number_record_ids,
-			 uint16_t record_size,
-			 uint8_t *data_base,
-			 mdfSignalCb_t const mdfSignalCb,
-			 const void *const cbData);
+                         const filter_t *const filter,
+                         link_t link,
+                         uint32_t number_of_records,
+                         uint16_t number_record_ids,
+                         uint16_t record_size,
+                         uint8_t *data_base,
+                         mdfSignalCb_t const mdfSignalCb,
+                         const void *const cbData);
 
 #endif

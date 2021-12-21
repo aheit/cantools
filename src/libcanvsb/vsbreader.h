@@ -2,7 +2,7 @@
 #define INCLUDE_VSBREADER_H
 
 /*  vsbReader.h -- declarations for vsbReader
-    Copyright (C) 2011-2020 Andreas Heitmann
+    Copyright (C) 2011-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -86,8 +86,7 @@ extern "C" {
 #endif
 
 /* vsbRead function */
-void vsbReader_processFile(FILE *fp, int verbose_level,
-                           msgRxCb_t msgRxCb, void *cbData);
+void vsbReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
 
 #ifdef __cplusplus
 }

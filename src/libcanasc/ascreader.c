@@ -1,5 +1,5 @@
 /*  ascReader.c -- parse ASC files
-    Copyright (C) 2007-2020 Andreas Heitmann
+    Copyright (C) 2007-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@
 #include <ctype.h>
 #include "ascreader.h"
 
+extern int verbose_level;
+
 typedef enum {
   unset = 0,
   decimal = 10,
@@ -32,12 +34,11 @@ typedef enum {
  * Parser for ASC files.
  *
  * fp       FILE pointer of input file
- * verbose_level  0: silent, 1: verbose, 2: debug
  * msgRxCb  callback function for received messages
  * cbData   pointer to opaque callback data
  */
-void ascReader_processFile(FILE *fp, int verbose_level,
-			   msgRxCb_t msgRxCb, void *cbData)
+void ascReader_processFile(FILE *fp,
+                           msgRxCb_t msgRxCb, void *cbData)
 {
   char buffer[100];
   char *cp;

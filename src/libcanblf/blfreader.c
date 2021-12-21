@@ -25,6 +25,8 @@
 #include "blfapi.h"
 #include "measurement.h"
 
+extern int verbose_level;
+
 static void
 blfSystemTimePrint(SYSTEMTIME *const s)
 {
@@ -86,12 +88,10 @@ blfVBLCANMessageParseTime(const VBLObjectHeader* header, time_t *sec,
  * Parser for BLF files.
  *
  * mFile       FILE pointer of input file
- * verbose_level  0: silent, 1: verbose, 2: debug
  * msgRxCb  callback function for received messages
  * cbData   pointer to opaque callback data
  */
-void blfReader_processFile(FILE *fp, int verbose_level,
-                           msgRxCb_t msgRxCb, void *cbData)
+void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData)
 {
   VBLObjectHeaderBase base;
   VBLFileStatisticsEx statistics;

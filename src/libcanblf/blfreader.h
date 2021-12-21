@@ -2,7 +2,7 @@
 #define INCLUDE_BLFREADER_H
 
 /*  blfreader.h --  declarations for blfReader
-    Copyright (C) 2016-2017 Andreas Heitmann
+    Copyright (C) 2016-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,8 +32,7 @@
 #include "measurement.h"
 
 /* blfRead function */
-void blfReader_processFile(FILE *fp, int verbose_level,
-                           msgRxCb_t msgRxCb, void *cbData);
+void blfReader_processFile(FILE *fp, msgRxCb_t msgRxCb, void *cbData);
 
 #ifdef __cplusplus
 }

@@ -2,7 +2,7 @@
 #define INCLUDE_MDFCG_H
 
 /*  mdfcg.h -- access MDF channel groups
-    Copyright (C) 2012-2017 Andreas Heitmann
+    Copyright (C) 2012-2021 Andreas Heitmann
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,21 +34,21 @@ find_time_channel(mdf_t *mdf, cg_block_t *cg_block);
 /* loop over all channel groups */
 void
 mdfProcessChannelGroupsUnsorted(const mdf_t *const mdf,
-				const filter_t *const filter,
-				const link_t cglink,
-				const uint16_t number_record_ids,
-				const uint8_t *const data_base,
-				mdfSignalCb_t const mdfSignalCb,
-				const void *const cbData);
+                                const filter_t *const filter,
+                                const link_t cglink,
+                                const uint16_t number_record_ids,
+                                const uint8_t *const data_base,
+                                mdfSignalCb_t const mdfSignalCb,
+                                const void *const cbData);
 
 void
 mdfProcessChannelGroupsSorted(const mdf_t *const mdf,
-			      const filter_t *const filter,
-			      link_t link,
-			      uint16_t number_record_ids,
-			      uint8_t *data,
-			      mdfSignalCb_t const mdfSignalCb,
-			      const void *const cbData);
+                              const filter_t *const filter,
+                              link_t link,
+                              uint16_t number_record_ids,
+                              uint8_t *data,
+                              mdfSignalCb_t const mdfSignalCb,
+                              const void *const cbData);
 
 #ifdef __cplusplus
 }
