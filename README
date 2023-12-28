@@ -17,7 +17,7 @@ Some tools are available for testing of converters:
 * matdump displays the content of a MAT file as ASCII text
 * dbccopy copies a DBC file
 
-The tools 'asctomat' and 'mdftomat' require the package matio,
+The tools 'cantomat' and 'mdftomat' require the package matio,
 which in turn requires the package hdf5. Support for these
 tools is optional; either disable them with '--disable-matlab'
 configure option or make sure hdf5 and matio dependencies are
@@ -34,10 +34,9 @@ provided:
 * libcandbc, libcanasc, libcanblf, libcanclg, libcanvsb, libcanmdf for 
   parsing of DBC, ASC, BLF, CLG, VSB, MDF files 
 
-
-Installation of hdf5
-=====================
-Prerequisites: zlib-devel, bison, flex, make, gcc
+Installation of hdf5 (cygwin)
+=============================
+Prerequisites: zlib, zlib-devel, bison , flex, make, gcc
 
 matio can be built with libhdf5, here is how to:
 
@@ -54,9 +53,8 @@ matio can be built with libhdf5, here is how to:
 4) install:
    make install
 
-
-Installation of matio
-=====================
+Installation of matio (cygwin)
+==============================
 Prerequisites: autotools, zlib, zlib-devel, make, gcc
 
 1) download matio-1.5.17.tar.gz:
@@ -71,87 +69,24 @@ Prerequisites: autotools, zlib, zlib-devel, make, gcc
 4) build and install:
    make ; make install
 
-Installation of cantools
-========================
-Prerequisites: autotools, matio, bison, flex, make, gcc, check, check-devel
+Installation of zlib, hdf5, matio (linux)
+=======================================
+sudo apt-get install gcc libz-dev libmatio-dev flex bison libbison-dev
 
-download and extract cantools-*.tar.gz
+Building cantools
+=================
+Prerequisites (cygwin): cmake, bison, flex, make, gcc, zlib, zlib-devel
+Prerequisites (linux): cmake, libz-dev, libmatio-dev, flex, bison, libbison-dev, make, gcc
+
+git clone https://github.com/aheit/cantools cantools-code
 cd cantools
-libtoolize
-autoreconf -f -i
-./configure
+mkdir build
+cd build
+cmake ..
 make
 make install
 
-Compilation of cantools with LLVM (or any other compiler toolchain)
-====================
-Prefix ./configure with your compiler frontend, e.g.
+CMAKE configurations options (can be combined):
+cmake -DMATLAB=OFF (default: ON)  - do not build tools with MATLAB backend
+cmake -DMALLOC=ON  (default: OFF) - build with dmalloc debug library
 
-CC=clang ./configure
-
-
-Compilation of cantools on Windows Subsystem for Linux (WSL)
-====================
-sudo apt-get install gcc libz-dev libmatio-dev pkg-config flex bison check libglib2.0 subversion automake check check-devel libtool
-git clone https://github.com/aheit/cantools cantools-code
-cd cantools-code
-./configure
-make
-
-Execute Unit Test(s)
-====================
-     - run 'make check'
-     - all tests should PASS
-
-Debugging DBC parser
-====================
-Edit Makefile:
-     - uncomment the line DEFS=$(YYDEBUG)
-     - add "extern int yydebug; yydebug = 1;" to the main program
-     - recompile
-
-Profiling
-=========
-Edit Makefile:
-     - add flag "-pg" to CFLAGS
-
-Troubleshooting
-===============
-1) Error: ./libtool: line 860: X--tag=CC: command not found
-   Reason: libtool scripts from a different environment are used
-   Fix: execute "autoreconf -f -i; make"
-
-2) Error: matio.h: No such file or directory
-   Reason: matio is not installed
-   Fix: install matio  (see "Installation of matio")
-
-3) Error: configure stops with "Error! You need to install libmatio first."
-   Reason: linker did not find matio in the library path
-   Fix: install matio to /usr instead of /usr/local. Set PREFIX to
-   /usr at configuration time (see "Installation of matio")
-
-4) Error while compiling matio-1.5:
-     libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I. -DZ_PREFIX -c mat.c  -DDLL_EXPORT -DPIC -o .libs/mat.o
-     mat.c: In function `Mat_VarReadInfo':
-     mat.c:1710: warning: dereferencing `void *' pointer
-     mat.c:1710: error: request for member `_flags' in something not a structure or union
-     mat.c: In function `Mat_VarReadNext':
-     mat.c:1762: warning: dereferencing `void *' pointer
-     mat.c:1762: error: request for member `_flags' in something not a structure or union
-   Reason: incorrect definition in _mat_t
-   Fix: in file matio_private.h, replace line 
-    void *fp;               /**< File pointer for the MAT file */
-   by
-    FILE *fp;               /**< File pointer for the MAT file */
-
-5) Error message from make: "configure.ac:36: error: required file
-   './compile' not found" (or similar)
-   Reason: platform specific automake scripts are not provided by the
-   source distribution. 
-   Fix: run 'autoreconf -f -i'
-
-6) Error message from make: "checking for CHECK... no
-   configure: error: Package requirements (check >= 0.9.0) were not met:
-   Package 'check', required by 'virtual:world', not found"
-   Reason: check-devel is missing
-   Fix: install check-devel

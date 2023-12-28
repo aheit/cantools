@@ -31,17 +31,17 @@
 
 /* convert signal to double value */
 double mdf_signal_convert(const uint8_t *const data_int_ptr,
-			  const mdf_t *const mdf,
-			  const cn_block_t *const cn_block);
+                          const mdf_t *const mdf,
+                          const cn_block_t *const cn_block);
 
 /* signal callback function */
 typedef void (* mdfSignalCb_t)(const mdf_t *const mdf, 
-			       const uint32_t can_channel,
-			       const uint32_t number_of_records,
-			       const uint16_t channel_type,
-			       const char_t *const message,
-			       const char_t *const name,
-			       const double *const timeValue,
-			       const filter_t *const filter,
-			       const void *const cbData);
+                               const uint32_t can_channel,
+                               const uint32_t number_of_records,
+                               const uint16_t channel_type,
+                               const char_t *const message,
+                               const char_t *const name,
+                               const double *const timeValue,
+                               const filter_t *const filter,
+                               const void *const cbData);
 #endif

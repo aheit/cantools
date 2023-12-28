@@ -58,9 +58,9 @@ Mat_PrintNumber(enum matio_types type, void *data)
 #endif
             break;
 #endif
-#ifdef HAVE_MAT_UINT64_T
+#ifdef _mat_uint64_t
         case MAT_T_UINT64:
-#if HAVE_INTTYPES_H
+#ifdef HAVE_INTTYPES_H
             printf("%" PRIu64,*(mat_uint64_t*)data);
 #elif defined(_MSC_VER) && _MSC_VER >= 1200
             printf("%I64u",*(mat_uint64_t*)data);
@@ -319,12 +319,12 @@ main(int argc, char **argv)
             program_name, __DATE__, __TIME__);
   }
 
-  /* open mat file */
+  /* open and dump mat file */
   mat = Mat_Open(mat_filename, MAT_ACC_RDONLY);
   if(NULL != mat) {
     mat_dump(mat, argc - optind, &argv[optind]);
   } else {
-    fprintf(stderr,"Error opening MAT file %s",mat_filename);
+    fprintf(stderr,"Error opening MAT file %s\n",mat_filename);
   }
   
   /* close mat file */

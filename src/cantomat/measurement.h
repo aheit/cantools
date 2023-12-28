@@ -20,6 +20,7 @@
 #include "cantools_config.h"
 
 #include <stdio.h>
+#include <time.h>
 
 #include "hashtable.h"
 #include "busassignment.h"
