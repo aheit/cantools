@@ -71,7 +71,7 @@ Prerequisites: autotools, zlib, zlib-devel, make, gcc
 
 Installation of zlib, hdf5, matio (linux)
 =======================================
-sudo apt-get install gcc libz-dev libmatio-dev flex bison libbison-dev
+sudo apt-get install cmake gcc libz-dev libmatio-dev flex bison libbison-dev
 
 Building cantools
 =================
