@@ -10,7 +10,7 @@ formats:
 * cantomat converts log files in ASC, BLF, CLG, VSB format to a MAT
 * file (MATLAB format)
 * mdftomat converts log files in MDF format to a MAT file (up to MDF
-  version 3.x) 
+  version 3.x)
 
 Some tools are available for testing of converters:
 
@@ -31,8 +31,8 @@ https://support.hdfgroup.org/HDF5/faq/compile.html#cross
 Shared libraries for parsing and accessing these files are also
 provided:
 
-* libcandbc, libcanasc, libcanblf, libcanclg, libcanvsb, libcanmdf for 
-  parsing of DBC, ASC, BLF, CLG, VSB, MDF files 
+* libcandbc, libcanasc, libcanblf, libcanclg, libcanvsb, libcanmdf for
+  parsing of DBC, ASC, BLF, CLG, VSB, MDF files
 
 Installation of hdf5 (cygwin)
 =============================
@@ -49,7 +49,7 @@ matio can be built with libhdf5, here is how to:
    ./configure --with-zlib=/usr/include,/lib --prefix=/usr --with-default-api-version=v110
    CFLAGS=-std=c99 make
    CFLAGS=-std=c99 make check
-   
+
 4) install:
    make install
 
@@ -71,7 +71,7 @@ Prerequisites: autotools, zlib, zlib-devel, make, gcc
 
 Installation of zlib, hdf5, matio (linux)
 =======================================
-sudo apt-get install gcc libz-dev libmatio-dev flex bison libbison-dev
+sudo apt-get install cmake gcc libz-dev libmatio-dev flex bison libbison-dev
 
 Building cantools
 =================
@@ -89,4 +89,3 @@ make install
 CMAKE configurations options (can be combined):
 cmake -DMATLAB=OFF (default: ON)  - do not build tools with MATLAB backend
 cmake -DMALLOC=ON  (default: OFF) - build with dmalloc debug library
-
