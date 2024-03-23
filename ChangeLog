@@ -1,5 +1,10 @@
 2023-12-28  Andreas Heitmann  <andreas.heitmann@gmail.com>
 	* version 0.34
+	* CMakeLists.txt: fixed build issue with libmatio-dev on linux
+	  (thanks for reporting, burra) 
+
+2023-12-28  Andreas Heitmann  <andreas.heitmann@gmail.com>
+	* version 0.34
 	* all: autoconf/automake/libtool replaced by cmake
 
 2021-01-31  Andreas Heitmann  <andreas.heitmann@gmail.com>

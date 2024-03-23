@@ -8,7 +8,7 @@ set(PACKAGE_URL "")
 # versions
 set(CMAKE_C_STANDARD 99)
 set(PROJECT_MAJOR_VERSION 0)
-set(PROJECT_MINOR_VERSION 34)
+set(PROJECT_MINOR_VERSION 35)
 set(PROJECT_PATCH_VERSION 0)
 set(PACKAGE_VERSION ${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION})
 set(VERSION ${PACKAGE_VERSION})
@@ -75,11 +75,12 @@ endif()
 configure_file(config.h.cmake cantools_config.h)
 
 # find packages
+find_package(PkgConfig REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 find_package(ZLIB REQUIRED)
 if(WITH_MATLAB)
-  find_package(Matio REQUIRED)
+  pkg_check_modules(Matio REQUIRED IMPORTED_TARGET matio)
   find_package(HDF5 REQUIRED)
 endif(WITH_MATLAB)
 
@@ -202,7 +203,7 @@ if(WITH_MATLAB)
     ${CMAKE_SOURCE_DIR}/src/hashtable
     ${CMAKE_SOURCE_DIR}/src/libcandbc
     ${CMAKE_SOURCE_DIR}/src/libmatfile
-    ${Matio_INCLUDE_DIR} )
+    ${Matio_INCLUDE_DIRS} )
   target_link_libraries(cantomat PRIVATE
     canasc
     canblf
@@ -211,7 +212,7 @@ if(WITH_MATLAB)
     canclg
     matfile
     hashtable
-    ${Matio_LIBRARY}
+    PkgConfig::Matio
     ${ZLIB_LIBRARIES}
     ${HDF5_LIBRARIES}
     -lm -ly ${DMALLOC_LIBRARY})
@@ -227,7 +228,7 @@ if(WITH_MATLAB)
   target_link_libraries(mdftomat PRIVATE
     canmdf
     matfile
-    ${Matio_LIBRARY}
+    PkgConfig::Matio
     ${ZLIB_LIBRARIES}
     ${HDF5_LIBRARIES}
     ${DMALLOC_LIBRARY})
@@ -244,7 +245,7 @@ if(WITH_MATLAB)
   target_link_libraries(matdump PRIVATE
     canmdf
     matfile
-    ${Matio_LIBRARY}
+    PkgConfig::Matio
     ${ZLIB_LIBRARIES}
     ${HDF5_LIBRARIES}
     ${DMALLOC_LIBRARY})

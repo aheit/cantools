@@ -49,7 +49,6 @@ matio can be built with libhdf5, here is how to:
    ./configure --with-zlib=/usr/include,/lib --prefix=/usr --with-default-api-version=v110
    CFLAGS=-std=c99 make
    CFLAGS=-std=c99 make check
-
 4) install:
    make install
 
@@ -75,17 +74,14 @@ sudo apt-get install cmake gcc libz-dev libmatio-dev flex bison libbison-dev
 
 Building cantools
 =================
-Prerequisites (cygwin): cmake, bison, flex, make, gcc, zlib, zlib-devel
-Prerequisites (linux): cmake, libz-dev, libmatio-dev, flex, bison, libbison-dev, make, gcc
+Prerequisites (cygwin): cmake, bison, flex, make, gcc, zlib, zlib-devel, pkg-config
+Prerequisites (linux): cmake, libz-dev, libmatio-dev, flex, bison, libbison-dev, make, gcc, pkg-config
 
 git clone https://github.com/aheit/cantools cantools-code
 cd cantools
-mkdir build
-cd build
-cmake ..
-make
-make install
+cmake -S . -B build
+cmake --build build
 
 CMAKE configurations options (can be combined):
-cmake -DMATLAB=OFF (default: ON)  - do not build tools with MATLAB backend
+cmake -DMATLAB=OFF (default: ON)  - only build tools without MATLAB backend
 cmake -DMALLOC=ON  (default: OFF) - build with dmalloc debug library
