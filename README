@@ -82,6 +82,28 @@ cd cantools
 cmake -S . -B build
 cmake --build build
 
-CMAKE configurations options (can be combined):
-cmake -DMATLAB=OFF (default: ON)  - only build tools without MATLAB backend
-cmake -DMALLOC=ON  (default: OFF) - build with dmalloc debug library
+CMAKE configuration options (can be combined):
+cmake -DWITH_MATLAB=OFF    (default: ON)  - only build tools without MATLAB backend
+cmake -DWITH_DMALLOC=ON    (default: OFF) - build with dmalloc debug library
+cmake -DBUILD_SHARED_LIBS=OFF (default: ON) - build static libraries instead of shared
+
+Using libcandbc as a library
+============================
+When cantools is installed, libcandbc is available as a shared library
+along with its headers and a pkg-config file. To use it in your project:
+
+  pkg-config --cflags --libs libcandbc
+
+Or in CMake:
+
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(CANDBC REQUIRED IMPORTED_TARGET libcandbc)
+  target_link_libraries(myapp PRIVATE PkgConfig::CANDBC)
+
+Installed files:
+  lib/libcandbc.so              (shared library)
+  include/cantools/dbcmodel.h   (data model types and structures)
+  include/cantools/dbcreader.h  (DBC file reader)
+  include/cantools/dbcwriter.h  (DBC file writer)
+  include/cantools/dbctypes.h   (base type definitions)
+  lib/pkgconfig/libcandbc.pc    (pkg-config file)
