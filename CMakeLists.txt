@@ -265,6 +265,7 @@ endif(WITH_MATLAB)
 
 # Install library and headers
 install(TARGETS candbc
+  RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   PUBLIC_HEADER DESTINATION include/cantools)
