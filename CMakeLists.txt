@@ -8,7 +8,7 @@ set(PACKAGE_URL "")
 # versions
 set(CMAKE_C_STANDARD 99)
 set(PROJECT_MAJOR_VERSION 0)
-set(PROJECT_MINOR_VERSION 35)
+set(PROJECT_MINOR_VERSION 36)
 set(PROJECT_PATCH_VERSION 0)
 set(PACKAGE_VERSION ${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION})
 set(VERSION ${PACKAGE_VERSION})
@@ -96,7 +96,11 @@ set(PARSER_OUT "${PARSER_DIR}/dbcparser.c")
 flex_target(LEXER "src/libcandbc/lexer.l" "${LEXER_OUT}" DEFINES_FILE "${PARSER_DIR}/dbclexer.h")
 bison_target(PARSER "src/libcandbc/parser.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/dbcparser.h")
 add_flex_bison_dependency(LEXER PARSER)
-add_library(candbc ${SOURCES_LIBCANDBC} "${LEXER_OUT}" "${PARSER_OUT}")
+if(BUILD_SHARED_LIBS)
+  add_library(candbc SHARED ${SOURCES_LIBCANDBC} "${LEXER_OUT}" "${PARSER_OUT}")
+else()
+  add_library(candbc STATIC ${SOURCES_LIBCANDBC} "${LEXER_OUT}" "${PARSER_OUT}")
+endif()
 target_include_directories(candbc
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/libcandbc>
