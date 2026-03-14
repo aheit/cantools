@@ -8,7 +8,7 @@ set(PACKAGE_URL "")
 # versions
 set(CMAKE_C_STANDARD 99)
 set(PROJECT_MAJOR_VERSION 0)
-set(PROJECT_MINOR_VERSION 35)
+set(PROJECT_MINOR_VERSION 36)
 set(PROJECT_PATCH_VERSION 0)
 set(PACKAGE_VERSION ${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION})
 set(VERSION ${PACKAGE_VERSION})
@@ -32,6 +32,7 @@ include(CheckFunctionExists)
 # options
 option(WITH_DMALLOC "Use dmalloc for memory debugging" OFF)
 option(WITH_MATLAB "Build with MATLAB backend (requires MATIO, HDF5, and zlib)" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 # Check for headers
 check_include_files("stdlib.h;stdarg.h;string.h;float.h" STDC_HEADERS)
@@ -95,10 +96,24 @@ set(PARSER_OUT "${PARSER_DIR}/dbcparser.c")
 flex_target(LEXER "src/libcandbc/lexer.l" "${LEXER_OUT}" DEFINES_FILE "${PARSER_DIR}/dbclexer.h")
 bison_target(PARSER "src/libcandbc/parser.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/dbcparser.h")
 add_flex_bison_dependency(LEXER PARSER)
-add_library(candbc STATIC ${SOURCES_LIBCANDBC} "${LEXER_OUT}" "${PARSER_OUT}")
-target_include_directories(candbc PRIVATE
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_SOURCE_DIR}/src/libcandbc "${PARSER_DIR}")
+if(BUILD_SHARED_LIBS)
+  add_library(candbc SHARED ${SOURCES_LIBCANDBC} "${LEXER_OUT}" "${PARSER_OUT}")
+else()
+  add_library(candbc STATIC ${SOURCES_LIBCANDBC} "${LEXER_OUT}" "${PARSER_OUT}")
+endif()
+target_include_directories(candbc
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/libcandbc>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    $<INSTALL_INTERFACE:include/cantools>
+  PRIVATE
+    "${PARSER_DIR}")
+set_target_properties(candbc PROPERTIES
+  VERSION ${PACKAGE_VERSION}
+  SOVERSION ${PROJECT_MAJOR_VERSION}
+  PUBLIC_HEADER "src/libcandbc/dbctypes.h;src/libcandbc/dbcmodel.h;src/libcandbc/dbcreader.h;src/libcandbc/dbcwriter.h"
+  POSITION_INDEPENDENT_CODE ON)
+target_link_libraries(candbc PUBLIC m)
 
 # libcanasc
 add_library(canasc STATIC
@@ -252,10 +267,23 @@ if(WITH_MATLAB)
 
 endif(WITH_MATLAB)
 
-# Install headers
-install(FILES ${HEADERS} DESTINATION include/cantools)
+# Install library and headers
+install(TARGETS candbc
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  PUBLIC_HEADER DESTINATION include/cantools)
 
-# Install targets
+# Install generated config header needed by dbctypes.h
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cantools_config.h
+  DESTINATION include/cantools)
+
+# Install pkg-config file
+configure_file(libcandbc.pc.in libcandbc.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libcandbc.pc
+  DESTINATION lib/pkgconfig)
+
+# Install binaries
 install(TARGETS dbccopy dbcls RUNTIME DESTINATION bin)
 if(WITH_MATLAB)
 	install(TARGETS cantomat mdftomat matdump RUNTIME DESTINATION bin)

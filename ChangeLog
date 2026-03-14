@@ -1,7 +1,14 @@
+2026-03-14  Andreas Heitmann  <andreas.heitmann@gmail.com>
+	* version 0.36
+	* CMakeLists.txt: install libcandbc as shared library with headers
+	  and pkg-config file (BUILD_SHARED_LIBS option, default ON)
+	* CMakeLists.txt: fix option names in README (WITH_MATLAB, WITH_DMALLOC)
+	* README: document library usage with pkg-config and CMake
+
 2023-12-28  Andreas Heitmann  <andreas.heitmann@gmail.com>
 	* version 0.34
 	* CMakeLists.txt: fixed build issue with libmatio-dev on linux
-	  (thanks for reporting, burra) 
+	  (thanks for reporting, burra)
 
 2023-12-28  Andreas Heitmann  <andreas.heitmann@gmail.com>
 	* version 0.34

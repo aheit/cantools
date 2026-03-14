@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include/cantools
+
+Name: libcandbc
+Description: CAN DBC file parser library
+Version: @PACKAGE_VERSION@
+Libs: -L${libdir} -lcandbc
+Cflags: -I${includedir}
